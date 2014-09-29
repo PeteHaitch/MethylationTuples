@@ -1,0 +1,36 @@
+---
+title: "TODOs"
+author: "Peter Hickey"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  BiocStyle::pdf_document
+---
+
+<!--
+%% \VignetteEngine{knitr::knitr}
+-->
+
+```{r style, echo = FALSE, results = 'asis'}
+BiocStyle::markdown()
+```
+
+# For submission to \Bioconductor{}
+
+These are issues that must be addressed either before or during the 
+\Bioconductor{} submission process.
+
+## Package name
+
+I'm concerned the `r Rpackage("MethylationTuples")` name might be a bit long 
+and clumsy.
+
+I need to settle on a package name. `r Rpackage("MethylationTuples")` mimics 
+the `r Githubpkg("PeteHaitch/GenomicTuples")` that it depends upon. It is also 
+similar to \software{methtuple}, whose output files this package reads in and 
+works with.
+
+On a minor note: that \software{methtuple} is singular, whereas both 
+`r Githubpkg("PeteHaitch/GenomicTuples")` and `r Rpackage("MethylationTuples")` 
+are plural, grates on me.
+
+Possible alternatives:  `r Rpackage("MethTuples")`, other?

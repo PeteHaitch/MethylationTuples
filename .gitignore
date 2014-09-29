@@ -1,0 +1,7 @@
+packrat/lib*/
+.Rproj.user
+.Rhistory
+*.html
+inst/doc
+*.pdf
+packrat/src/
