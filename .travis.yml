@@ -9,7 +9,7 @@ install:
                 biocLite();
                 useDevel();
                 biocLite(c('devtools', 'Rcpp', 'GenomicRanges', 'Biobase', 'testthat', 'knitr', 'BiocStyle'));
-                devtools::install_github("PeteHaitch/GenomicTuples")"
+                devtools::install_github('PeteHaitch/GenomicTuples')"
 
   - ./travis-tool.sh install_deps
 
