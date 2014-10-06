@@ -385,12 +385,24 @@ test_that("tuples,MethPat-method works", {
 })
 
 # TODO: tuples<-
+test_that("tuples<-,MethPat-method works", {
+  tuples(mp1) <- matrix(101:110, ncol = 1)
+  expect_identical(tuples(mp1), 
+                   matrix(101:110, ncol = 1, dimnames = list(NULL, 'pos1')))
+  tuples(mp2) <- matrix(c(101:110, 102:111), ncol = 2)
+  expect_identical(tuples(mp2), 
+                   matrix(c(101:110, 102:111), ncol = 2, 
+                          dimnames = list(NULL, c('pos1', 'pos2'))))
+  tuples(mp3) <- matrix(c(101:110, 102:111, 103:112), ncol = 3)
+  expect_identical(tuples(mp3), 
+                   matrix(c(101:110, 102:111, 103:112), ncol = 3, 
+                          dimnames = list(NULL, c('pos1', 'pos2', 'pos3'))))
+})
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Subsetting
 ###
+context("MethPat subsetting")
 
-# TODO
-
-
-
+# No tests yet. 
+# Subsetting behaviour is entirely inherited via SummarizedExperiment.
