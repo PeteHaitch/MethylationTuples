@@ -107,15 +107,15 @@
 #'  \code{value} is a \code{list} or \code{\link[S4Vectors]{SimpleList}}, each 
 #'  element of which is a \code{\link[base]{matrix}} with the same dimensions 
 #'  as \code{x}.}
-#'  \item{\code{assay(x, i)}, assay(x, i) <- value}:}{A conventient alternative 
-#'  (to \code{assays(x)[[i]]})}, \code{assays(x)[[i]] <- value)} to get or set 
-#'  the \code{i}th (default first) assay element. \code{value} must be a 
-#'  \code{\link[base]{matrix}} of the same dimensions as \code{x}, and with 
-#'  dimension names \code{NULL} or consistent with those of \code{x}.
-#'  \item{\code{rowData(x), rowData(x) <- value}:}{Get or set the row data. 
-#'  \code{value} is a \code{\link[GenomicTuples]{GTuples}} instance. Row names 
-#'  of \code{value} must be \code{NULL} or consistent with the existing row 
-#'  names of \code{x}.}
+#'  \item{\code{assay(x, i)}, \code{assay(x, i) <- value}:}{A conventient 
+#'  alternative (to \code{assays(x)[[i]]}, \code{assays(x)[[i]] <- value)} to 
+#'  get or set the \code{i}th (default first) assay element. \code{value} must 
+#'  be a \code{\link[base]{matrix}} of the same dimensions as \code{x}, and 
+#'  with dimension names \code{NULL} or consistent with those of \code{x}.}
+#'  \item{\code{rowData(x)}, \code{rowData(x) <- value}:}{Get or set the row 
+#'  data. \code{value} is a \code{\link[GenomicTuples]{GTuples}} instance. Row 
+#'  names of \code{value} must be \code{NULL} or consistent with the existing 
+#'  row names of \code{x}.}
 #'  \item{\code{colData(x)}, \code{colData(x) <- value}:}{Get or set the column 
 #'  data. \code{value} is a \code{\link[S4Vectors]{DataFrame}} instance. Row 
 #'  names of \code{value} must be \code{NULL} or consistent with the existing 
@@ -132,6 +132,7 @@
 #'  dimension names. This method implies that \code{rownames}, 
 #'  \code{rownames<-}, \code{colnames}, and \code{colnames<-} are all 
 #'  available.}
+#' }
 #' 
 #' @section GTuples compatibility (rowData access):
 #' Many \code{\link[GenomicTuples]{GTuples}} operations are supported on 
