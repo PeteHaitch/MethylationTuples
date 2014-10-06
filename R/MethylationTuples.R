@@ -14,6 +14,5 @@
 #' @import Rcpp
 #' @import BiocGenerics
 #' @import IRanges
-#' @import S4Vectors
 #' @importFrom Biobase validMsg
 NULL
