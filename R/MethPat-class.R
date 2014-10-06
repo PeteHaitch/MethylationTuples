@@ -426,6 +426,12 @@ setMethod('granges',
 # "Note: method with signature ‘SummarizedExperiment#ANY’ chosen for function 
 # ‘split’, target signature ‘MethPat#Rle’ "ANY#Vector" would also be valid."
 
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### Setters
+###
+
+# Defined via inheritance to SummarizedExperiment or implemented in Tuples 
+# methods
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Tuples methods

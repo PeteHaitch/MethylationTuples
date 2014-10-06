@@ -313,13 +313,78 @@ test_that("inherited split works", {
 ### Setters
 ###
 
-# TODO
+context("MethPat setters")
+
+test_that("SummarizedExperiment inherited setters work", {
+  mp3_ <- mp3
+  # TODO: Why isn't there a seqnames<-,SummarizedExperiment-method?
+  expect_error(seqnames(mp3_) <- rev(seqnames(mp3)), 
+               paste0("unable to find an inherited method for function ", 
+                      sQuote("seqnames<-"), " for signature ", 
+                      sQuote("\"MethPat\"")))
+  mp3_ <- mp3
+  ranges(mp3_) <- rev(ranges(mp3))
+  expect_identical(ranges(mp3_), rev(ranges(mp3)))
+  mp3_ <- mp3
+  strand(mp3_) <- rev(strand(mp3))
+  expect_identical(strand(mp3_), rev(strand(mp3)))
+  mp3_ <- mp3
+  mcols(mp3_) <- DataFrame(score = rev(mcols(mp3)$score))
+  expect_identical(mcols(mp3_), DataFrame(score = rev(mcols(mp3)$score)))
+  mp3_ <- mp3
+  seqinfo(mp3_) <- Seqinfo(seqnames = c("chr1", "chr2", "chr3"), 
+                           seqlengths = c(10000L, 20000L, 15000L), 
+                           isCircular = c(NA, NA, NA), 
+                           genome = c("mock1", "mock1", "mock1"))
+  expect_identical(seqinfo(mp3_), Seqinfo(seqnames = c("chr1", "chr2", "chr3"), 
+                                          seqlengths = c(10000L, 20000L, 
+                                                         15000L), 
+                                          isCircular = c(NA, NA, NA), 
+                                          genome = c("mock1", "mock1", 
+                                                     "mock1")))
+  mp3_ <- mp3
+  seqlevels(mp3_) <- c('chrI', 'chrII', 'chrIII')
+  expect_identical(seqlevels(mp3_), c('chrI', 'chrII', 'chrIII'))
+  mp3_ <- mp3
+  seqlengths(mp3_) <- c(10000L, 20000L, 15000L)
+  expect_identical(seqlengths(mp3_), c('chr1' = 10000L, 'chr2' = 20000L, 
+                                       'chr3' = 15000L))
+  mp3_ <- mp3
+  isCircular(mp3_) <- c('chr1' = TRUE, 'chr2' = FALSE, 'chr3' = FALSE)
+  expect_identical(isCircular(mp3_), c('chr1' = TRUE, 'chr2' = FALSE, 
+                                       'chr3' = FALSE))
+  mp3_ <- mp3
+  genome(mp3_) <- 'foo'
+  expect_identical(genome(mp3_), c('chr1' = 'foo', 'chr2' = 'foo', 
+                                   'chr3' = 'foo'))
+})
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Tuples methods
 ###
 
-# TODO: IPD, IPD, size, tuples, tuples<-
+test_that("IPD,Methpat-method works", {
+  expect_error(IPD(mp0), "Cannot compute IPD from an empty GTuples.")
+  expect_error(IPD(mp1), "It does not make sense to compute IPD when size = 1.")
+  expect_identical(IPD(mp2), IPD(gt2))
+  expect_identical(IPD(mp3), IPD(gt3))
+})
+
+test_that("size,MethPat-method works", {
+  expect_identical(size(mp0), NA_integer_)
+  expect_identical(size(mp1), 1L)
+  expect_identical(size(mp2), 2L)
+  expect_identical(size(mp3), 3L)
+})
+
+test_that("tuples,MethPat-method works", {
+  expect_identical(tuples(mp0), tuples(gt0))
+  expect_identical(tuples(mp1), tuples(gt1))
+  expect_identical(tuples(mp2), tuples(gt2))
+  expect_identical(tuples(mp3), tuples(gt3))
+})
+
+# TODO: tuples<-
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Subsetting
