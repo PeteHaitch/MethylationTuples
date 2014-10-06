@@ -34,3 +34,7 @@ On a minor note: that \software{methtuple} is singular, whereas both
 are plural, grates on me.
 
 Possible alternatives:  `r Rpackage("MethTuples")`, other?
+
+## Update `.travis.yml`
+
+See related issue [https://github.com/PeteHaitch/GenomicTuples/issues/10](https://github.com/PeteHaitch/GenomicTuples/issues/10)

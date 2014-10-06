@@ -8,7 +8,7 @@ install:
   - Rscript -e "source('http://bioconductor.org/biocLite.R');
                 biocLite();
                 useDevel();
-                biocLite(c('Rcpp', 'GenomicRanges', 'Biobase', 'testthat', 'knitr', 'BiocStyle'));
+                biocLite(c('devtools', 'Rcpp', 'GenomicRanges', 'Biobase', 'testthat', 'knitr', 'BiocStyle'));
                 devtools::install_github("PeteHaitch/GenomicTuples")"
 
   - ./travis-tool.sh install_deps
