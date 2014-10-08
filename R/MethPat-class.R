@@ -218,8 +218,9 @@
 #'  }
 #'
 #' @section Combining:
-#' In the code snippets below, \code{...} are \code{MethPat} instances to be 
-#' combined.
+#' In the code snippets below, \code{x}, \code{y} and \code{...} are 
+#' \code{MethPat} instances to be combined. All \code{MethPat} instances must 
+#' have the same \code{\link{size}} tuples and have compatible \code{seqinfo}.
 #' \describe{
 #'  \item{\code{cbind(...), rbind(...)}:}{\code{cbind} combines objects with 
 #'  identical tuples (\code{rowData}) but different samples (columns in 
@@ -230,6 +231,23 @@
 #'  \code{rbind} combines objects with different tuples (\code{rowData}) and 
 #'  the same subjects in (columns in \code{assays}). Duplicate columns of 
 #'  \code{colData} must contain the same data.
+#'  
+#'  \code{exptData} from all objects are combined into a 
+#'  \code{\link[S4Vectors]{SimpleList} with no name checking.}
+#'  }
+#'  \item{\code{combine(x, y, ...)}:}{\code{combine} combines objects with 
+#'  different tuples (\code{rowData}) and different samples (columns in 
+#'  \code{assays}) using an "incomplete" union strategy. Please read 
+#'  \code{\link[BiocGenerics]{combine}} for the difference between the union 
+#'  and intersection strategies; the current method is "incomplete" because it 
+#'  requires that the samples (columns in \code{assays}) are distinct across 
+#'  \code{x}, \code{y} and \code{...}. This behaviour may change in future 
+#'  versions so that data from the same sample that is stored across multiple 
+#'  objects can be safely combined.
+#'  
+#'  The colnames in \code{colData} must 
+#'  match or an error is thrown. Duplicate columns of 
+#'  \code{mcols(rowData(MethPat))} must contain the same data.
 #'  
 #'  \code{exptData} from all objects are combined into a 
 #'  \code{\link[S4Vectors]{SimpleList} with no name checking.}
@@ -348,8 +366,6 @@ MethPat <- function(assays = SimpleList(), rowData = GTuples(),
 # Currently requires that colnames are unique across MethPat objects, i.e., you 
 # are combining objects that contain distinct samples.
 
-
-# TODO: Document combine,MethPat-method
 # TODO: A general combine,SummarizedExperiment-method would be great, e.g.,
 # combine(x, y, ..., nomatch = NA_integer_), that uses a complete union 
 # strategy, i.e., properly combines objects containing potentially duplicate 
@@ -359,9 +375,11 @@ setMethod("combine",
           c("MethPat", "MethPat"), 
           function(x, y, ...) {
             args <- list(x, y, ...)
-            rowData <- unique(do.call(c, lapply(args, function(i) {
+            rowData <- do.call(c, lapply(args, function(i) {
               slot(i, "rowData")
-            })))
+            }))
+            # Remove duplicate tuples
+            rowData <- unique(rowData)
             nr <- length(rowData)
             colnames <- unlist(lapply(args, colnames))
             if (anyDuplicated(colnames)) {
@@ -472,4 +490,3 @@ setMethod("IPD",
             IPD(rowData(x))
           }
 )
-

@@ -227,8 +227,9 @@ columns
 
 \section{Combining}{
 
-In the code snippets below, \code{...} are \code{MethPat} instances to be
-combined.
+In the code snippets below, \code{x}, \code{y} and \code{...} are
+\code{MethPat} instances to be combined. All \code{MethPat} instances must
+have the same \code{\link{size}} tuples and have compatible \code{seqinfo}.
 \describe{
  \item{\code{cbind(...), rbind(...)}:}{\code{cbind} combines objects with
  identical tuples (\code{rowData}) but different samples (columns in
@@ -239,6 +240,23 @@ combined.
  \code{rbind} combines objects with different tuples (\code{rowData}) and
  the same subjects in (columns in \code{assays}). Duplicate columns of
  \code{colData} must contain the same data.
+
+ \code{exptData} from all objects are combined into a
+ \code{\link[S4Vectors]{SimpleList} with no name checking.}
+ }
+ \item{\code{combine(x, y, ...)}:}{\code{combine} combines objects with
+ different tuples (\code{rowData}) and different samples (columns in
+ \code{assays}) using an "incomplete" union strategy. Please read
+ \code{\link[BiocGenerics]{combine}} for the difference between the union
+ and intersection strategies; the current method is "incomplete" because it
+ requires that the samples (columns in \code{assays}) are distinct across
+ \code{x}, \code{y} and \code{...}. This behaviour may change in future
+ versions so that data from the same sample that is stored across multiple
+ objects can be safely combined.
+
+ The colnames in \code{colData} must
+ match or an error is thrown. Duplicate columns of
+ \code{mcols(rowData(MethPat))} must contain the same data.
 
  \code{exptData} from all objects are combined into a
  \code{\link[S4Vectors]{SimpleList} with no name checking.}

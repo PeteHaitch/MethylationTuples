@@ -117,9 +117,18 @@ test_that("MethPat constructor returns errors on bad input", {
 context("Combining MethPat objects")
 
 test_that("cbind,MethPat-method works on good input", {
-  expect_is(cbind(mp1, mp1), "MethPat")
-  expect_is(cbind(mp2, mp2), "MethPat")
-  expect_is(cbind(mp3, mp3), "MethPat")
+  expect_is(z <- cbind(mp1, mp1), "MethPat")
+  expect_identical(dim(z), c(10L, 4L))
+  expect_is(z <- cbind(mp1, mp1, mp1), "MethPat")
+  expect_identical(dim(z), c(10L, 6L))
+  expect_is(z <- cbind(mp2, mp2), "MethPat")
+  expect_identical(dim(z), c(10L, 4L))
+  expect_is(z <- cbind(mp2, mp2, mp2), "MethPat")
+  expect_identical(dim(z), c(10L, 6L))
+  expect_is(z <- cbind(mp3, mp3), "MethPat")
+  expect_identical(dim(z), c(10L, 4L))
+  expect_is(z <- cbind(mp3, mp3, mp3), "MethPat")
+  expect_identical(dim(z), c(10L, 6L))
 })
 
 test_that("cbind,MethPat-method returns error on bad input", {
@@ -135,9 +144,18 @@ test_that("cbind,MethPat-method returns error on bad input", {
 })
 
 test_that("rbind,MethPat-method works on good input", {
-  expect_is(rbind(mp1, mp1), "MethPat")
-  expect_is(rbind(mp2, mp2), "MethPat")
-  expect_is(rbind(mp3, mp3), "MethPat")
+  expect_is(z <- rbind(mp1, mp1), "MethPat")
+  expect_identical(dim(z), c(20L, 2L))
+  expect_is(z <- rbind(mp1, mp1, mp1), "MethPat")
+  expect_identical(dim(z), c(30L, 2L))
+  expect_is(z <- rbind(mp2, mp2), "MethPat")
+  expect_identical(dim(z), c(20L, 2L))
+  expect_is(z <- rbind(mp2, mp2, mp2), "MethPat")
+  expect_identical(dim(z), c(30L, 2L))
+  expect_is(z <- rbind(mp3, mp3), "MethPat")
+  expect_identical(dim(z), c(20L, 2L))
+  expect_is(z <- rbind(mp3, mp3, mp3), "MethPat")
+  expect_identical(dim(z), c(30L, 2L))
 })
 
 test_that("rbind,MethPat-method returns error on bad input", {
@@ -229,7 +247,6 @@ test_that("combine,MethPat-method works for two MethPat objects", {
                  rowData = rowData(mp3)[1:3]
                )
   )
-  
 })
 
 test_that("combine,MethPat-method returns error on bad input", {
@@ -255,7 +272,17 @@ test_that("combine,MethPat-method returns error on bad input", {
                                           dimnames = list(NULL, c('C', 'D')))))
   expect_error(combine(x, y), 
                "'MethPat' objects must all contain the same assays.")
-  
+  x <- mp3
+  y <- mp3
+  genome(y) <- 'mock2'
+  expect_error(combine(x, y), 
+               "sequences chr1, chr2, chr3 have incompatible genomes")
+  y <- mp3
+  colnames(y) <- c('C', 'D')
+  seqlevelsStyle(y) <- 'NCBI'
+  expect_warning(combine(x, y), 
+               paste0("Each of the 2 combined objects has sequence levels not ", 
+                      "in the other"))
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -384,7 +411,6 @@ test_that("tuples,MethPat-method works", {
   expect_identical(tuples(mp3), tuples(gt3))
 })
 
-# TODO: tuples<-
 test_that("tuples<-,MethPat-method works", {
   tuples(mp1) <- matrix(101:110, ncol = 1)
   expect_identical(tuples(mp1), 
