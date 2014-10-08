@@ -241,6 +241,8 @@
 #' 
 #' @seealso \code{\link[GenomicRanges]{SummarizedExperiment}}
 #' 
+#' @export
+#' 
 #' @examples
 #' ## TODO
 #' 

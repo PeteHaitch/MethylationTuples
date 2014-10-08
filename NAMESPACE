@@ -2,6 +2,7 @@
 
 export(.make_methpat_names)
 export(MethPat)
+exportClasses(MethPat)
 exportMethods("tuples<-")
 exportMethods(IPD)
 exportMethods(combine)
