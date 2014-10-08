@@ -1,5 +1,5 @@
 ### =========================================================================
-### MTuples objects: methylation patterns at genomic tuples
+### MethPat objects: methylation patterns at genomic tuples
 ### -------------------------------------------------------------------------
 ###
 
