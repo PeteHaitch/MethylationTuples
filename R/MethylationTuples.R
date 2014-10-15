@@ -14,5 +14,8 @@
 #' @import Rcpp
 #' @import BiocGenerics
 #' @import IRanges
+#' @import data.table
 #' @importFrom Biobase validMsg
+#' @importFrom BiocParallel bplapply
+#' @importFrom R.utils gunzip
 NULL

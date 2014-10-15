@@ -1,7 +1,7 @@
 ---
 title: "TODOs"
 author: "Peter Hickey"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+date: "`r paste0('Modified: 09 October, 2014. Compiled: ', format(Sys.time(), '%d %B, %Y'))`"
 output:
   BiocStyle::pdf_document
 ---
@@ -33,8 +33,11 @@ On a minor note: that \software{methtuple} is singular, whereas both
 `r Githubpkg("PeteHaitch/GenomicTuples")` and `r Rpackage("MethylationTuples")` 
 are plural, grates on me.
 
-Possible alternatives:  `r Rpackage("MethTuples")`, other?
+Possible alternatives:  `r Rpackage("MethTuples")`, other? Can't use 
+`r Rpackage("MethPat")` as this is already being used.
 
-## Update `.travis.yml`
+## Dependencies
 
-See related issue [https://github.com/PeteHaitch/GenomicTuples/issues/10](https://github.com/PeteHaitch/GenomicTuples/issues/10)
+The package will require `BSgenome`, but at this stage I'm not sure whether it 
+should be in DEPENDS or IMPORTS. Various `BSgenome`-organism packages should be 
+listed in SUGGESTS.

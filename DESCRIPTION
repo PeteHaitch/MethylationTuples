@@ -16,15 +16,28 @@ biocViews: DNAMethylation, DataImport, Software, MethylSeq
 VignetteBuilder: knitr
 Depends:
     R (>= 2.10),
-    GenomicTuples (>= 0.99.0)
+    GenomicTuples (>= 1.1.2)
 Imports:
     BiocGenerics (>= 0.11.5),
     Rcpp (>= 0.11.2),
     Biobase,
-    IRanges
+    IRanges,
+    data.table,
+    BiocParallel,
+    R.utils
 Suggests:
     testthat,
     knitr,
     BiocStyle
 LinkingTo: Rcpp
 License: Artistic-2.0
+Collate:
+    'AllGenerics.R'
+    'AllUtilities.R'
+    'MethInfo-class.R'
+    'MTuples-class.R'
+    'MTuplesList-class.R'
+    'MethPat-class.R'
+    'MethylationTuples.R'
+    'RcppExports.R'
+    'read.methtuple.R'
