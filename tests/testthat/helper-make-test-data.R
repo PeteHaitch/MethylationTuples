@@ -1,4 +1,10 @@
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### MethPat objects used in tests
+###
+
+mi <- MethInfo("CG")
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### GTuples objects used in tests
 ###
 
@@ -36,6 +42,15 @@ q3 <- c(GTuples('chr1', matrix(as.integer(c(1, 1, 1, 3, 3, 5, 7, 9, 7)),
                                ncol = 3), strand = '-'))
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### MTuples objects used in tests
+###
+mt0 <- MTuples(gt0, mi)
+mt1 <- MTuples(gt1, mi)
+mt2 <- MTuples(gt2, mi)
+mt3 <- MTuples(gt3, mi)
+mq3 <- MTuples(q3, mi)
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### MethPat objects used in tests
 ###
 # Empty MethPat object
@@ -46,7 +61,7 @@ mp1 <- MethPat(assays =
                                          dimnames = list(NULL, c('A', 'B'))), 
                             'U' = matrix(c(11:20, 20:11), ncol = 2,
                                          dimnames = list(NULL, c('A', 'B')))), 
-               rowData = gt1)
+               rowData = mt1)
 # 2-tuples
 mp2 <- MethPat(assays = 
                  SimpleList('MM' = matrix(c(10:1, 1:10), ncol = 2,
@@ -57,7 +72,7 @@ mp2 <- MethPat(assays =
                                           dimnames = list(NULL, c('A', 'B'))), 
                             'UU' = matrix(c(40:31, 31:40), ncol = 2,
                                           dimnames = list(NULL, c('A', 'B')))), 
-               rowData = gt2)
+               rowData = mt2)
 # 3-tuples
 mp3 <- MethPat(assays = 
                  SimpleList('MMM' = matrix(c(10:1, 1:10), ncol = 2,
@@ -76,4 +91,4 @@ mp3 <- MethPat(assays =
                                            dimnames = list(NULL, c('A', 'B'))), 
                             'UUU' = matrix(c(80:71, 71:80), ncol = 2,
                                            dimnames = list(NULL, c('A', 'B')))), 
-               rowData = gt3)
+               rowData = mt3)
