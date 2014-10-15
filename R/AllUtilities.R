@@ -30,3 +30,26 @@
   sort(do.call(paste0, 
                expand.grid(lapply(seq_len(m), function(x) {c('M', 'U')}))))
 }
+
+## TODO: Tests
+#' Is the methylation type valid
+#' 
+#' @param methtype A character.
+#' @export
+#' @keywords internal
+#' @return Returns \code{TRUE} if a valid methylation type, \code{FALSE} 
+#' otherwise.
+.valid_methtype <- function(methtype) {
+  if (any(is.na(methtype))) {
+    if (length(methtype) == 1L) {
+      val <- TRUE
+    } else {
+      val <- FALSE
+    }
+  } else {
+    VALID_METHTYPE <- c('CG', 'CHG', 'CHH', 'CNN')
+    val <- all(methtype %in% VALID_METHTYPE)
+  }
+  
+  return(val)
+}
