@@ -6,32 +6,32 @@
 ###
 context("MethPat validity methods")
 
-test_that(".valid.MethPat.rowData works for empty GTuples", {
+test_that(".valid.MethPat.rowData works for empty MTuples", {
   expect_error(MethPat(rowData = granges(gt0)), 
                paste0("'rowData' slot of a 'MethPat' object must be a ", 
-                      "'GTuples' object."))
+                      "'MTuples' object."))
 })
 
 test_that(".valid.MethPat.rowData works for 1-tuples", {
-  expect_error(MethPat(rowData = granges(gt1)), 
+  expect_error(MethPat(rowData = granges(mt1)), 
                paste0("'rowData' slot of a 'MethPat' object must be a ", 
-                      "'GTuples' object."))
+                      "'MTuples' object."))
 })
 
 test_that(".valid.MethPat.rowData works for 2-tuples", {
-  expect_error(MethPat(rowData = granges(gt2)), 
+  expect_error(MethPat(rowData = granges(mt2)), 
                paste0("'rowData' slot of a 'MethPat' object must be a ", 
-                      "'GTuples' object."))
+                      "'MTuples' object."))
 })
 
 test_that(".valid.MethPat.rowData works for 3-tuples", {
-  expect_error(MethPat(rowData = granges(gt3)), 
+  expect_error(MethPat(rowData = granges(mt3)), 
                paste0("'rowData' slot of a 'MethPat' object must be a ", 
-                      "'GTuples' object."))
+                      "'MTuples' object."))
 })
 
 test_that(".valid.MethPat.assays works for 1-tuples", {
-  expect_error(MethPat(assays = list(), rowData = gt1), 
+  expect_error(MethPat(assays = list(), rowData = mt1), 
                paste0("Assay names must include all of: M, U"))
   # Extra assays are allowed
   ea <- c(assays(mp1), list('extraAssay' = 
@@ -49,7 +49,7 @@ test_that(".valid.MethPat.assays works for 1-tuples", {
 })
 
 test_that(".valid.MethPat.assays works for 2-tuples", {
-  expect_error(MethPat(assays = list(), rowData = gt2), 
+  expect_error(MethPat(assays = list(), rowData = mt2), 
                paste0("Assay names must include all of: MM, MU, UM, UU"))
   # Extra assays are allowed
   ea <- c(assays(mp2), list('extraAssay' = 
@@ -67,7 +67,7 @@ test_that(".valid.MethPat.assays works for 2-tuples", {
 })
 
 test_that(".valid.MethPat.assays works for 3-tuples", {
-  expect_error(MethPat(assays = list(), rowData = gt3), 
+  expect_error(MethPat(assays = list(), rowData = mt3), 
                paste0("Assay names must include all of: MMM, MMU, MUM, MUU, ", 
                       "UMM, UMU, UUM, UUU"))
   # Extra assays are allowed
@@ -134,7 +134,7 @@ test_that("cbind,MethPat-method works on good input", {
 test_that("cbind,MethPat-method returns error on bad input", {
   # TODO: Write a more informative error message.
   expect_error(cbind(mp1, mp2), 
-               "Cannot compare 'GTuples' objects of different 'size'.")
+               "Cannot compare 'MTuples' objects of different 'size'.")
   # TODO: Write a more informative error message.
   expect_error(cbind(mp1, mp1[1:3]), 
                "'...' object ranges \\(rows\\) are not compatible")
@@ -159,9 +159,9 @@ test_that("rbind,MethPat-method works on good input", {
 })
 
 test_that("rbind,MethPat-method returns error on bad input", {
-  # TODO: Write a more informative error message.
+  # TODO: Check error message is improved in new version of GenomicTuples
   expect_error(rbind(mp1, mp2), 
-               "Cannot combine GTuples containing tuples of different 'size'.")
+               "Cannot combine MTuples containing tuples of different 'size'.")
   mp1_ <- mp1
   colnames(mp1_) <- c('A', 'b')
   expect_error(rbind(mp1, mp1_), "'...' objects must have the same colnames")
@@ -254,14 +254,15 @@ test_that("combine,MethPat-method returns error on bad input", {
   y <- mp1[2:3]
   expect_error(combine(x, y), 
                "Cannot combine 'MethPat' objects with duplicate colnames.")
-  # TODO: Write a more informative error message.
+  # TODO: Check error message is improved in new version of GenomicTuples
   expect_error(combine(mp1, mp2), 
-               "Cannot combine GTuples containing tuples of different 'size'.")
+               "Cannot combine MTuples containing tuples of different 'size'.")
   x <- mp1[1:2]
   y <- mp1[2:3]
   colnames(y) <- c('C', 'D')
   mcols(y) <- NULL
-  # TODO: Write a more informative error message.
+  # TODO: Write a more informative error message - might need to be specified 
+  # for SummarizedExperiment.
   expect_error(combine(x, y), 
                "number of columns for arg 2 do not match those of first arg")
   x <- mp1[1:2]
@@ -281,8 +282,10 @@ test_that("combine,MethPat-method returns error on bad input", {
   colnames(y) <- c('C', 'D')
   seqlevelsStyle(y) <- 'NCBI'
   expect_warning(combine(x, y), 
-               paste0("Each of the 2 combined objects has sequence levels not ", 
-                      "in the other"))
+               "The 2 combined objects have no sequence levels in common")
+  y <- renameSeqlevels(y, c('chr1', '2', '3'))
+  expect_identical(seqlevels(combine(x, y)), 
+                   c('chr1', 'chr2', 'chr3', '2', '3'))
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -310,9 +313,15 @@ test_that("SummarizedExperiment inherited getters work", {
   expect_identical(isCircular(mp3), isCircular(mp3@rowData@seqinfo))
   expect_identical(genome(mp3), genome(mp3@rowData@seqinfo))
   expect_identical(seqlevelsStyle(mp3), seqlevelsStyle(mp3@rowData@seqinfo))
-  # TODO: Perhaps granges,SummarizedExperiment-method should return 
-  # granges(rowData(x)) rather than rowData(x)
-  expect_identical(granges(mp3), granges(mp3@rowData))  
+  # TODO: Notifiy Bioc-Devel that granges,SummarizedExperiment-method should 
+  # return granges(rowData(x)) rather than rowData(x) since rowData may not be 
+  # a GRanges object (e.g. might be a GTuples object)
+  expect_identical(granges(mp3), granges(mp3@rowData))
+})
+
+test_that("methinfo getters work", {
+  expect_identical(methinfo(mp1), methinfo(rowData(mp1)))
+  expect_identical(methtype(mp1), methtype(rowData(mp1)))
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -386,15 +395,23 @@ test_that("SummarizedExperiment inherited setters work", {
                                    'chr3' = 'foo'))
 })
 
+test_that("methinfo setters work", {
+  methinfo(mp1) <- MethInfo(c('CG', 'CHG'))
+  expect_identical(methinfo(mp1), MethInfo(c('CG', 'CHG')))
+  methtype(mp1) <- c("CG", "CHG", "CHH")
+  expect_identical(methtype(mp1), c("CG", "CHG", "CHH"))
+})
+
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Tuples methods
 ###
 
 test_that("IPD,Methpat-method works", {
-  expect_error(IPD(mp0), "Cannot compute IPD from an empty GTuples.")
-  expect_error(IPD(mp1), "It does not make sense to compute IPD when size = 1.")
-  expect_identical(IPD(mp2), IPD(gt2))
-  expect_identical(IPD(mp3), IPD(gt3))
+  expect_error(IPD(mp0), "Cannot compute IPD from an empty 'MTuples'.")
+  expect_error(IPD(mp1), 
+               "It does not make sense to compute IPD when 'size' = 1.")
+  expect_identical(IPD(mp2), IPD(mt2))
+  expect_identical(IPD(mp3), IPD(mt3))
 })
 
 test_that("size,MethPat-method works", {
@@ -406,9 +423,9 @@ test_that("size,MethPat-method works", {
 
 test_that("tuples,MethPat-method works", {
   expect_identical(tuples(mp0), tuples(gt0))
-  expect_identical(tuples(mp1), tuples(gt1))
-  expect_identical(tuples(mp2), tuples(gt2))
-  expect_identical(tuples(mp3), tuples(gt3))
+  expect_identical(tuples(mp1), tuples(mt1))
+  expect_identical(tuples(mp2), tuples(mt2))
+  expect_identical(tuples(mp3), tuples(mt3))
 })
 
 test_that("tuples<-,MethPat-method works", {

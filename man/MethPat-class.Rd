@@ -16,10 +16,10 @@ there are 4 required assays that must be named \code{MM}, \code{MU},
 \strong{TODO:} Should the \code{.make_methpat_names} function be exported
 and referenced here?}
 
-\item{rowData}{A \code{\link[GenomicTuples]{GTuples}} instance describing
-the genomic tuples. Row names, if present, become the row names of the
-\code{MethPat}. The length of the \code{\link[GenomicTuples]{GTuples}} must
-equal the number of rows of the matrices in \code{assays}.}
+\item{rowData}{A \code{\link{MTuples}} instance describing
+the genomic tuple of the methylation loci. Row names, if present, become the
+row names of the \code{MethPat}. The length of the \code{\link{MTuples}}
+must equal the number of rows of the matrices in \code{assays}.}
 
 \item{colData}{An optional, but recommended,
 \code{\link[S4Vectors]{DataFrame}} describing the samples. Row names, if
@@ -90,7 +90,7 @@ The \code{MethPat} class extends the
 \code{\link[GenomicRanges]{SummarizedExperiment}} class. The key
 differences are:
 \itemize{
- \item The \code{rowData} must be a \code{\link[GenomicTuples]{GTuples}}
+ \item The \code{rowData} must be a \code{\link{MTuples}}
  object rather than a \code{\link[GenomicRanges]{GRanges}} object.
  \item Certain \code{assays} are required. See \code{assays} argument below.
 }
@@ -116,7 +116,7 @@ In the following code snippets, \code{x} is a \code{MethPat} instance.
  be a \code{\link[base]{matrix}} of the same dimensions as \code{x}, and
  with dimension names \code{NULL} or consistent with those of \code{x}.}
  \item{\code{rowData(x)}, \code{rowData(x) <- value}:}{Get or set the row
- data. \code{value} is a \code{\link[GenomicTuples]{GTuples}} instance. Row
+ data. \code{value} is a \code{\link{MTuples}} instance. Row
  names of \code{value} must be \code{NULL} or consistent with the existing
  row names of \code{x}.}
  \item{\code{colData(x)}, \code{colData(x) <- value}:}{Get or set the column
@@ -138,10 +138,11 @@ In the following code snippets, \code{x} is a \code{MethPat} instance.
 }
 }
 
-\section{GTuples compatibility (rowData access)}{
+\section{MTuples/GTuples compatibility (rowData access)}{
 
-Many \code{\link[GenomicTuples]{GTuples}} operations are supported on
-\code{MetPath} and derived instances, using \code{rowData}.
+Since an \code{MTuples} classes (used in the \code{rowData}) slot) extends
+the \code{GTuples}, many \code{\link[GenomicTuples]{GTuples}} operations are
+supported on \code{MetPath} and derived instances, using \code{rowData}.
 
 \strong{WARNING:} The preferred getter/setter of tuple information is
 \code{tuples(x)}/\code{tuples(x) <- value}. In short, the use of
@@ -198,6 +199,9 @@ because they do not make sense for \code{MethPat} objects (e.g.,
 \code{splitAsList}), involve non-trivial combination or splitting of rows
 (e.g., unique), or have not yet been implemented (\code{window},
 \code{window<-}).
+
+Additionally, all \code{MTuples}-specific methods are also defined, such as
+\code{\link{methinfo}} and \code{\link{methtype}}.
 }
 
 \section{Subsetting}{
