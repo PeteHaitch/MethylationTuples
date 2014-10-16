@@ -3,12 +3,6 @@
 ### -------------------------------------------------------------------------
 ###
 
-# TODO: This will be very basic, e.g. a character vector recording the 
-# "methylation type" or "context". NB: This is info about the object as a whole 
-# and not the individual loci or tuples.
-# TODO: There should be a merge function similar to 
-# merge,Seqinfo,Seqinfo-method.
-
 #' MethInfo objects
 #' 
 #' @description 

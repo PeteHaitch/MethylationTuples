@@ -3,18 +3,13 @@
 ### -------------------------------------------------------------------------
 ###
 
-## TODO: Make a constructor that is tailed to the MethPat object and not just a 
-## thin-wrapper of SummarizedExperiment.
+## TODO: Make a constructor that is tailored to the MethPat object and not just 
+## a thin-wrapper of SummarizedExperiment.
 ## TODO: Look into using a file-based storage system like NetCDF or the ff 
 ## package (see ?SummarizedExperiment).
 ## TODO: Note, new("MethPat") won't return a valid object although MethPath()
 ## will. This isn't ideal - I find it merely an annoyance but it may be a 
 ## bigger problem than I realise.
-
-## TODO: Decide whether to export the class definition; 
-## see vignette(topic = 'namespace', package = 'roxygen2').
-## TODO: Decide if sample names and methylation type are mandatory arguments 
-## and, if so, document these.
 ## TODO: Usage section (will differ from SummarizedExperiment usage section)
 #' MethPat instances
 #' 
@@ -398,7 +393,7 @@ setMethod("combine",
             if (any(sapply(an, function(x, y) any(is.na(match(x, y))), y = an[[1]]))) {
               stop("'MethPat' objects must all contain the same assays.")
             }
-              
+            
             # TODO: I suspect that there are faster and more efficient ways to 
             # combine the assays.
             assays <- endoapply(assays(args[[1]]), function(i, nr, colnames) {
@@ -563,3 +558,4 @@ setMethod("show",
             if (dlen[[2]]) scat("colnames(%d): %s\n", dimnames[[2]])
             else cat("colnames: NULL\n")
             scat("colData names(%d): %s\n", names(colData(object)))
+          })
