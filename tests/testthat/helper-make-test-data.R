@@ -1,3 +1,5 @@
+# NB: Additional test data are defined in tests/testthat/fake_data/
+
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### MethPat objects used in tests
 ###
@@ -8,7 +10,8 @@ mi <- MethInfo("CG")
 ### GTuples objects used in tests
 ###
 
-seqinfo <- Seqinfo(paste0("chr", 1:3), c(1000, 2000, 1500), NA, "mock1")
+seqinfo <- Seqinfo(paste0("chr", 1:3), c(1000, 2000, 1500), rep(FALSE, 3), 
+                   rep("mock1", 3))
 # Empty GTuples object
 gt0 <- GTuples(seqinfo = seqinfo)
 # 1-tuples

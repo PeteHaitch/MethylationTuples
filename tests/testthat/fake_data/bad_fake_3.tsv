@@ -1,0 +1,4 @@
+chr	strand	pos1	pos2	pos3	MMM	MMU	MUM	MUU	UMM	UMU	UUM	UUU
+chr1	+	69	71	84	0	0	0	0	0	1	1	0
+chr1	*	71	84	89	0	0	1	0	1	0	0	0
+chr1	-	85	90	94	2	0	0	0	0	1	0	0
