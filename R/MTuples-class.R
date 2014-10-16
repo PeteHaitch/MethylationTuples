@@ -3,6 +3,7 @@
 ### -------------------------------------------------------------------------
 ###
 
+# TODO: Base documentation on GTuples
 # TODO: Methods to create MTuples from GRanges and BSgenome objects.
 #' MTuples objects
 #' 
@@ -14,13 +15,16 @@
 #' The \code{MTuples} class extends the 
 #' \code{\link[GenomicTuples]{GTuples}} class by adding the 
 #' \code{methinfo} slot, which records the information about the type of 
-#' methylation loci that are stored in the object. 
+#' methylation loci that are stored in the object.
 #' 
-#' @param methinfo A \code{\link{MethInfo}} object containing information about 
-#' the methylation loci present in the \code{MTuples} object.
+#' @usage
+#' MTuples(gtuples = GTuples(), methinfo = MethInfo())
+#' 
 #' @param gtuples A \code{\link{GTuples}} object containing the positions of 
 #' the methylation loci as genomic tuples.
-#' 
+#' @param methinfo A \code{\link{MethInfo}} object containing information about 
+#' the methylation loci present in the \code{MTuples} object.
+#'  
 #' @seealso \code{\link{findMTuples}} to find genomic tuples of methylation 
 #' loci in a \code{\link[BSgenome]{BSgenome}} object, and
 #' \code{\link[GenomicTuples]{GTuples}} for the class from which \code{MTuples} 
@@ -28,6 +32,9 @@
 #'
 #' @export
 #' @include MethInfo-class.R
+#' @author Peter Hickey
+#' @examples
+#' ## TODO
 setClass("MTuples",
          contains = "GTuples",
          representation(
@@ -58,7 +65,7 @@ MTuples <- function(gtuples = GTuples(), methinfo = MethInfo()) {
 
 # TODO: Need to keep this up to date with the show,GTuples-method
 showMTuples <- function(x, margin = "", print.classinfo = FALSE, 
-                        print.seqinfo = TRUE, print.methinfo = TRUE) {
+                        print.seqinfo = FALSE, print.methinfo = FALSE) {
   if (!identical(print.classinfo, FALSE)) {
     stop("'print.classinfo' not implemented")
   }
@@ -168,7 +175,6 @@ setMethod("c",
 ### Getters
 ###
 
-# TODO: methinfo, methtype
 #' @export
 setMethod("methinfo", 
           "MTuples", 

@@ -3,12 +3,15 @@
 \name{MTuples-class}
 \alias{MTuples-class}
 \title{MTuples objects}
+\usage{
+MTuples(gtuples = GTuples(), methinfo = MethInfo())
+}
 \arguments{
-\item{methinfo}{A \code{\link{MethInfo}} object containing information about
-the methylation loci present in the \code{MTuples} object.}
-
 \item{gtuples}{A \code{\link{GTuples}} object containing the positions of
 the methylation loci as genomic tuples.}
+
+\item{methinfo}{A \code{\link{MethInfo}} object containing information about
+the methylation loci present in the \code{MTuples} object.}
 }
 \description{
 The \code{MTuples} class is a container for the genomic locations
@@ -19,6 +22,12 @@ The \code{MTuples} class extends the
 \code{\link[GenomicTuples]{GTuples}} class by adding the
 \code{methinfo} slot, which records the information about the type of
 methylation loci that are stored in the object.
+}
+\examples{
+## TODO
+}
+\author{
+Peter Hickey
 }
 \seealso{
 \code{\link{findMTuples}} to find genomic tuples of methylation
