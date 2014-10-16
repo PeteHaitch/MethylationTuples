@@ -58,8 +58,8 @@ test_that("methtype<-,MethInfo-method works", {
 ###
 
 test_that("summary,MethInfo-method works", {
-  expect_identical(summary(mi), "methylation type is CG")
-  expect_identical(summary(MethInfo()), "methylation type is NA")
+  expect_identical(summary(mi), "CG methylation type")
+  expect_identical(summary(MethInfo()), "NA methylation type")
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

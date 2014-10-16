@@ -146,7 +146,7 @@ setMethod("summary",
             } else {
               ans <- paste0(sort(methtype(object)), collapse = '/')
             }
-            paste0("methylation type is ", ans)
+            paste0(ans, " methylation type")
           }
 )
 
