@@ -1,3 +1,4 @@
+# TODO: Only import what is needed from each package
 #' Tools for analysing methylation patterns at genomic tuples.
 #'
 #' \pkg{MethylationTuples} provides tools for analysing, managing and 
@@ -15,7 +16,7 @@
 #' @import BiocGenerics
 #' @import IRanges
 #' @import data.table
+#' @import R.utils
 #' @importFrom Biobase validMsg
 #' @importFrom BiocParallel bplapply
-#' @importFrom R.utils gunzip
 NULL
