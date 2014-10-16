@@ -529,4 +529,37 @@ setMethod("IPD",
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Tuples methods
 ###
-# TODO: Include methinfo in show,MethPat-method ?
+
+# Based on show,SummarizedExperiment-method
+#' @export
+setMethod("show", 
+          "MethPat", 
+          function(object) {
+            selectSome <- BiocGenerics:::selectSome
+            scat <- function(fmt, vals = character(), exdent = 2, ...)
+            {
+              vals <- ifelse(nzchar(vals), vals, "''")
+              lbls <- paste(BiocGenerics:::selectSome(vals), collapse = " ")
+              txt <- sprintf(fmt, length(vals), lbls)
+              cat(strwrap(txt, exdent = exdent, ...), sep = "\n")
+            }
+            cat("class:", class(object), "\n")
+            cat("dim:", dim(object), "\n")
+            cat("methinfo:", summary(methinfo(object)), "\n")
+            expt <- names(exptData(object))
+            if (is.null(expt))
+              expt <- character(length(exptData(object)))
+            scat("exptData(%d): %s\n", expt)
+            nms <- names(assays(object, withDimnames = FALSE))
+            if (is.null(nms))
+              nms <- character(length(assays(object, withDimnames = FALSE)))
+            scat("assays(%d): %s\n", nms)
+            dimnames <- dimnames(object)
+            dlen <- sapply(dimnames, length)
+            if (dlen[[1]]) scat("rownames(%d): %s\n", dimnames[[1]])
+            else scat("rownames: NULL\n")
+            scat("rowData metadata column names(%d): %s\n",
+                 names(mcols(rowData(object))))
+            if (dlen[[2]]) scat("colnames(%d): %s\n", dimnames[[2]])
+            else cat("colnames: NULL\n")
+            scat("colData names(%d): %s\n", names(colData(object)))
