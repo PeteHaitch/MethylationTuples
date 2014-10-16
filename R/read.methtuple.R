@@ -3,24 +3,13 @@
 ### -------------------------------------------------------------------------
 ###
 
-# TODO: Add bzip2 support. Do this by adding a bzip2 function to R.utils.
-# TODO: Improved support of compressed files, e.g., better recognition of file 
-# type and decompression to temporary folder.
 # TODO: Allow parallel reading of files or at least determine why it's not 
-# possible.
-# TODO: Make verbose argument a verbosity argument with multiple levels. 
-# 0 = no output, 1 = progress reports, 2 = full verbosity.
-# TODO: Should I print/cat/message progress reports
-# TODO: unit tests
-# TODO: Use a different delimiter to '.' when adding sample names to count 
-# names. Otherwise a sample name with '.' in it will break the code. Whatever 
-# delimiter I end up using, add a check that this delimiter is not present in 
-# any of the sample_names.
+# possible. ANSWER: Reading-in in parallel is not a problem, rather, the 
+# problem is with parallel merging of the files. This is complicated and so I 
+# defer this for now.
 # TODO: Profile.
 # TODO: Add timing output?
 # TODO: Compute approximate memory usage.
-# TODO: Check that all files only contain either strand %in% '*' or strand 
-# %in% c('+', '-'); otherwise the resulting object is a bit of a mess.
 
 #' Read \code{.tsv} output files from \code{methtuple} software.
 #'
@@ -35,7 +24,8 @@
 #'
 #' @param files The \code{.tsv} files created by \code{comethylation}. These 
 #' files may be compressed with gzip or bzip2 (not yet implemented). All files 
-#' must contain the same sized m-tuples.
+#' must contain the same sized m-tuples. Files will be decompressed to a 
+#' temporary directory via a call to \code{\link[base]{tempdir}}.
 #' @param sample_names The sample names of each file. Must be unique.
 #' @param methinfo A \code{\link{MethInfo}} object containing information about 
 #' the the methylation loci in the \code{files}. This should be the minimal 
@@ -46,10 +36,17 @@
 #' that you only store samples with the same \code{methinfo} in each 
 #' \code{MethPat} object.
 #' @param seqinfo A \code{\link[GenomeInfoDb]{Seqinfo}} object containing 
-#' information about the reference genome of the samples.
+#' information about the reference genome of the samples. If none is supplied 
+#' (\code{NULL}) then a bare-bones \code{\link[GenomeInfoDb]{Seqinfo}} object 
+#' will be created containing only the \code{seqnames} inferred from the 
+#' \code{files}.
 #' @param verbose A \code{\link{logical(1)}} indicating whether messages about 
-#' the reading of the data (with \code{data.table::\link[data.table]{fread}}) 
-#' and about data coercion during construction should be printed.
+#' the reading of the data (via \code{data.table::\link[data.table]{fread}}) 
+#' and about data coercion during construction of the \code{\link{MethPat}} 
+#' object should be printed. Regardless of whether \code{verbose} is 
+#' \code{TRUE} or \code{FALSE}, \code{read.methtuple} reports its progress via 
+#' calls to \code{\link[base]{message}}; these can be suppressed by wrapped the 
+#' call to \code{read.methtuple} in \code{\link[base]{suppressMesssages}}.
 #' @param bpparam A \code{\link[BiocParallel]{bpparam}} object specifying the 
 #' parallelisation strategy, if any. See below for a discussion of 
 #' parallelisation options available with \code{read.methtuple}.
@@ -63,59 +60,78 @@
 #' Please consult the \pkg{BiocParallel} documentation for details on 
 #' registering a parallel backend and parallelisation support available on 
 #' different operating systems.
-#' 
-#' @note The compression of \code{files} is determined by the file extensions: 
-#' \code{.gz} for compressed with gzip and \code{.bz2} for compressed with 
-#' bzip2. In all other cases the file is assumed to be uncompressed.
-#' 
-#' Files will be decompressed to a temporary directory.
 #'
 #' @seealso \code{\link{MethPat}}
 #' @return A \code{\link{MethPat}} object
 #' @examples
-#' ## TODO
+#' # Using example data supplied with the MethylationTuples package
+#' # Each file contains data on 20,000 tuples from a whole-genome 
+#' # bisulfite-sequencing experiment on a human frontal cortex sample
+#' # (http://www.ncbi.nlm.nih.gov/sra/?term=SRR949193).
+#' 
+#' # 1-tuples
+#' x <- read.methtuple(system.file("extdata", "SRR949193_20k.rmdup.CG.1.tsv.gz", 
+#' package = "MethylationTuples"), sample_names = "SRR949193_20k", 
+#' methinfo = MethInfo('CG'), seqinfo = Seqinfo(seqnames = 'chr1', 
+#' seqlengths = 249250621, isCircular = FALSE, genome = 'hg19'))
+#' 
+#' # 3-tuples
+#' y <- read.methtuple(system.file("extdata", "SRR949193_20k.rmdup.CG.3.tsv.gz", 
+#' package = "MethylationTuples"), sample_names = "SRR949193_20k", 
+#' methinfo = MethInfo('CG'), seqinfo = Seqinfo(seqnames = 'chr1', 
+#' seqlengths = 249250621, isCircular = FALSE, genome = 'hg19'))
+#' 
+#' # Can't mix 1-tuples and 3-tuples
+#' \dontrun{
+#' read.methtuple(c(system.file("extdata", "SRR949193_20k.rmdup.CG.1.tsv.gz", 
+#' package = "MethylationTuples"), system.file("extdata", 
+#' "SRR949193_20k.rmdup.CG.3.tsv.gz", package = "MethylationTuples")))
+#' }
 #' 
 #' @export
 read.methtuple <- function(files, 
                            sample_names = paste0('sample_', seq_along(files)), 
-                           methinfo = MethInfo(), seqinfo = Seqinfo(), 
-                           verbose = FALSE, bpparam = bpparam()) {
+                           methinfo = MethInfo(), seqinfo = NULL, 
+                           verbose = getOption('verbose'), bpparam = bpparam()) {
   
   # Check that there is a unique sample name for each filename
   if (length(sample_names) != length(files) | 
         length(sample_names) != length(unique(sample_names))) {
-    stop("Each file must have a unique sample name.")
+    stop("'sample_names' must be unique.")
   }
   
-  # Decompress files (if required).
-  if (any(grepl("\\.gz$", files) || any(grepl("\\.bz2$", files)))) {
-    print("Decompressing files...")
-    
-    my_unzip <- function(files, verbose) {
-      bplapply(files, function(file, verbose) {
-        if (grepl("\\.gz$", file)){
-          file <- gunzip(file, temporary = TRUE, remove = FALSE)
-        } else if (grepl("\\.bz2$", file)){
-          stop("Sorry, can't yet handle ", sQuote('bzip2'), 
-               " compressed files.")
-          # TODO: Uncomment once I have a way to deal with bzip files
-          # file <- bzip(file, temporary = TRUE, remove = FALSE)
-        } else {
-          # Nothing to do!
-        }
-        return(file)
-      })
-    }
-    files <- unlist(my_unzip(files, verbose))
-  } else {
-    # Nothing to do!
+  # Check that the sample names don't contain the delimeter used in appending 
+  # sample names to variables. While this could be a function argument, for now 
+  # I simply choose a delimeter that is very unlikely to appear in sample names 
+  # and include a check; this keeps a simpler interface to the function.
+  DELIMETER <- '@@@'
+  DELIMETER_REGEXP <- '@@@'
+  if (any(grepl(pattern = DELIMETER_REGEXP, sample_names))) {
+    stop("'sample_names' must not contain '", DELIMETER, "'.")
   }
+
+  # Decompress files (if required).
+  my_unzip <- function(files, verbose) {
+    bplapply(files, function(file, verbose) {
+      if (isGzipped(file)) {
+        file <- gunzip(file, temporary = TRUE, remove = FALSE, skip = TRUE)
+      } else if (isBzipped(file)) {
+        file <- bunzip2(file, temporary = TRUE, remove = FALSE, skip = TRUE)
+      }
+      return(file)
+    })
+  }
+  if (any(sapply(files, isGzipped)) || any(sapply(files, isBzipped))) {
+    message("Decompressing files ...")
+  }
+  files <- unlist(my_unzip(files, verbose))
   
   # Read in file(s) serially and, if more than one file, merge these files.
   if (length(files) == 1L) {
-    print(paste0("Reading file ", files))
+    message(paste0("Reading file ", files))
   } else {
-    print(paste0("Reading file ", files[1]))
+    message("Reading and merging files ...")
+    message(paste0("\tReading ", files[1]))
   }
   mtsv <- fread(input = files[1], header = TRUE, verbose = verbose)
   keys <- c("chr", "strand", 
@@ -124,46 +140,82 @@ read.methtuple <- function(files,
   # Append the sample name to the names of the counts, e.g. 'M' -> 'M.sample_1'
   wn <- which(!(names(mtsv) %in% keys))
   setnames(mtsv, c(names(mtsv)[seq_len(ncol(mtsv))[-wn]], 
-                   paste(names(mtsv)[wn], sample_names[1], sep = ".")))
+                   paste(names(mtsv)[wn], sample_names[1], sep = DELIMETER)))
+  m <- sum(grepl(pattern = '^pos', x = names(mtsv)))
+  strand <- unique(mtsv[, strand])
+  if ('*' %in% strand && ('+' %in% strand || '-' %in% strand)) {
+    warning(paste0("Some tuples are stranded ('strand' = '+' or '-') and ", 
+                   "some are unstranded ('strand' = '*').\nIt is ", 
+                   "recommended that all 'files' are identically stranded ", 
+                   "or unstranded."))
+  }
+  
   if (length(files) > 1) {
     for(i in seq_along(files)[-1]) {
-      print(paste0("Reading and merging ", files[i]))
-      ## TODO: try-catch the merge in case files with different sized m-tuples
-      ## are supplied by the user because the error message supplied by 
-      ## merge is a bit hard to understand.
-      tmp <- fread(input = x$file[i], header = TRUE, verbose = verbose)
+      message(paste0("\tReading ", files[i]))
+      tmp <- fread(input = files[i], header = TRUE, verbose = verbose)
+      strand <- unique(c(strand, unique(tmp[, strand])))
+      if ('*' %in% strand && ('+' %in% strand || '-' %in% strand)) {
+        warning(paste0("Some tuples are stranded ('strand' = '+' or '-') and ", 
+                       "some are unstranded ('strand' = '*').\nIt is ", 
+                       "recommended that all 'files' are identically stranded ", 
+                       "or unstranded."))
+      }
+      message(paste0("\t\tMerging ", files[i]))
       setkeyv(x = tmp, cols = keys, verbose = verbose)
-      wn <- which(!(names(tmp) %in% keys))
+      mm <- sum(grepl(pattern = '^pos', x = names(tmp)))
+      if (m != mm) {
+        stop(paste0("'files' contain different sized tuples: ", m, " and ", mm))
+      }
       setnames(tmp, c(names(tmp)[seq_len(ncol(tmp))[-wn]], 
-                      paste(names(tmp)[wn], sample_names[i], sep = ".")))
+                      paste(names(tmp)[wn], sample_names[i], sep = DELIMETER)))
       mtsv <- merge(mtsv, tmp, by = keys, all = TRUE)
     }
   }
   
-  # Combine the counts into the assays list
-  print("Creating assays...")
-  assay_names <- unique(sapply(strsplit(grep(pattern = '\\.', x = names(mtsv), 
-                                             value = TRUE),
-                                        split = '\\.'), '[[', 1))
+  # Create the MethPat object
+  message("Creating MethPat object ...")
+  
+  # Combine the counts of methylation patterns into the assays list
+  assay_names <- unique(sapply(strsplit(grep(pattern = DELIMETER_REGEXP, 
+                                             x = names(mtsv), value = TRUE),
+                                        split = DELIMETER_REGEXP), '[[', 1))
   assays <- lapply(assay_names, function(an, mtsv) {
     pat <- paste0('^', an, '.')
     i <- grep(pattern = pat, x = names(mtsv), value = TRUE)
-    sn <- sapply(strsplit(x = i, split = '\\.'), '[[', 2)
+    sn <- sapply(strsplit(x = i, split = DELIMETER_REGEXP), '[[', 2)
     as.matrix(setnames(mtsv[, i, with = FALSE], sn))
   }, mtsv = mtsv)
   names(assays) <- assay_names
   
+  sn <- unique(mtsv[, chr])
+  if (is.null(seqinfo) || any(is.na(seqinfo@seqnames)) || 
+        any(is.na(seqinfo@seqlengths)) || any(is.na(seqinfo@genome))) {
+    warning(paste0("It is recommended that you supply a complete 'seqinfo' ", 
+                   "including 'seqnames', 'seqlengths', 'isCircular' and ", 
+                   "'genome'."))
+    # Create a bare-bones Seqinfo object (can only infer seqnames from 'files').
+    seqinfo <- Seqinfo(seqnames = sn)
+  }
+  sn_match <- match(sn, seqnames(seqinfo))
+  if (any(is.na(sn_match))) {
+    warning(paste0("'files' contain seqnames not found in 'seqinfo': ", 
+                sn[which(is.na(sn_match))], "\n", 
+                "Will try to create new seqinfo with all seqnames."))
+    seqinfo <- merge(seqinfo, 
+                     Seqinfo(seqnames = 
+                               sn[which(is.na(sn_match))]))
+  }
+  
   rowData <- MTuples(
     gtuples = GTuples(seqnames = mtsv[, chr], 
                       strand = mtsv[, strand], 
-                      pos = as.matrix(mtsv[, grep(pattern = '^pos', 
-                                                  x = colnames(mtsv)), 
-                                           with = FALSE]), 
+                      tuples = as.matrix(mtsv[, grep(pattern = '^pos', 
+                                                     x = colnames(mtsv)), 
+                                              with = FALSE]), 
                       seqinfo = seqinfo), 
     methinfo = methinfo)
   
-  # Create the MethPat object
-  print("Creating MethPat object...")
   new("MethPat", SummarizedExperiment(assays = assays, rowData = rowData,  
                                       verbose = verbose))
 }

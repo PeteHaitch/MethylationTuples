@@ -4,13 +4,14 @@
 \title{Read \code{.tsv} output files from \code{methtuple} software.}
 \usage{
 read.methtuple(files, sample_names = paste0("sample_", seq_along(files)),
-  methinfo = MethInfo(), seqinfo = Seqinfo(), verbose = FALSE,
+  methinfo = MethInfo(), seqinfo = NULL, verbose = getOption("verbose"),
   bpparam = bpparam())
 }
 \arguments{
 \item{files}{The \code{.tsv} files created by \code{comethylation}. These
 files may be compressed with gzip or bzip2 (not yet implemented). All files
-must contain the same sized m-tuples.}
+must contain the same sized m-tuples. Files will be decompressed to a
+temporary directory via a call to \code{\link[base]{tempdir}}.}
 
 \item{sample_names}{The sample names of each file. Must be unique.}
 
@@ -24,11 +25,18 @@ that you only store samples with the same \code{methinfo} in each
 \code{MethPat} object.}
 
 \item{seqinfo}{A \code{\link[GenomeInfoDb]{Seqinfo}} object containing
-information about the reference genome of the samples.}
+information about the reference genome of the samples. If none is supplied
+(\code{NULL}) then a bare-bones \code{\link[GenomeInfoDb]{Seqinfo}} object
+will be created containing only the \code{seqnames} inferred from the
+\code{files}.}
 
 \item{verbose}{A \code{\link{logical(1)}} indicating whether messages about
-the reading of the data (with \code{data.table::\link[data.table]{fread}})
-and about data coercion during construction should be printed.}
+the reading of the data (via \code{data.table::\link[data.table]{fread}})
+and about data coercion during construction of the \code{\link{MethPat}}
+object should be printed. Regardless of whether \code{verbose} is
+\code{TRUE} or \code{FALSE}, \code{read.methtuple} reports its progress via
+calls to \code{\link[base]{message}}; these can be suppressed by wrapped the
+call to \code{read.methtuple} in \code{\link[base]{suppressMesssages}}.}
 
 \item{bpparam}{A \code{\link[BiocParallel]{bpparam}} object specifying the
 parallelisation strategy, if any. See below for a discussion of
@@ -46,13 +54,6 @@ All files should contain the same size m-tuples, e.g., all 2-tuples. All
 files should be mapped against the same reference genome, which is supplied
 as the \code{seqinfo} argument.
 }
-\note{
-The compression of \code{files} is determined by the file extensions:
-\code{.gz} for compressed with gzip and \code{.bz2} for compressed with
-bzip2. In all other cases the file is assumed to be uncompressed.
-
-Files will be decompressed to a temporary directory.
-}
 \section{Parallelisation}{
 
 Parallelisation of \code{read.methtuple} is partially supported. Files
@@ -65,7 +66,29 @@ registering a parallel backend and parallelisation support available on
 different operating systems.
 }
 \examples{
-## TODO
+# Using example data supplied with the MethylationTuples package
+# Each file contains data on 20,000 tuples from a whole-genome
+# bisulfite-sequencing experiment on a human frontal cortex sample
+# (http://www.ncbi.nlm.nih.gov/sra/?term=SRR949193).
+
+# 1-tuples
+x <- read.methtuple(system.file("extdata", "SRR949193_20k.rmdup.CG.1.tsv.gz",
+package = "MethylationTuples"), sample_names = "SRR949193_20k",
+methinfo = MethInfo('CG'), seqinfo = Seqinfo(seqnames = 'chr1',
+seqlengths = 249250621, isCircular = FALSE, genome = 'hg19'))
+
+# 3-tuples
+y <- read.methtuple(system.file("extdata", "SRR949193_20k.rmdup.CG.3.tsv.gz",
+package = "MethylationTuples"), sample_names = "SRR949193_20k",
+methinfo = MethInfo('CG'), seqinfo = Seqinfo(seqnames = 'chr1',
+seqlengths = 249250621, isCircular = FALSE, genome = 'hg19'))
+
+# Can't mix 1-tuples and 3-tuples
+\dontrun{
+read.methtuple(c(system.file("extdata", "SRR949193_20k.rmdup.CG.1.tsv.gz",
+package = "MethylationTuples"), system.file("extdata",
+"SRR949193_20k.rmdup.CG.3.tsv.gz", package = "MethylationTuples")))
+}
 }
 \seealso{
 \code{\link{MethPat}}
