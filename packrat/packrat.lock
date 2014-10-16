@@ -241,6 +241,12 @@ Version: 1.8.1
 Hash: 6a287219196e18bc6261dc11b41b1ca0
 Requires: Rcpp
 
+Package: pryr
+Source: CRAN
+Version: 0.1
+Hash: 3eb403f0428b071ad876dbd4666f5444
+Requires: Rcpp, stringr
+
 Package: R.methodsS3
 Source: CRAN
 Version: 1.6.1

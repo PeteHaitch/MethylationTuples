@@ -17,6 +17,6 @@
 #' @import IRanges
 #' @import data.table
 #' @import R.utils
+#' @import BiocParallel
 #' @importFrom Biobase validMsg
-#' @importFrom BiocParallel bplapply
 NULL
