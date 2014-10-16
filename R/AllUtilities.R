@@ -23,15 +23,12 @@
 #' .make_methpat_names(2L)
 #' .make_methpat_names(3L)
 #' @return A character vector
-.make_methpat_names <- function(m){
-  if (!is.integer(m) || m < 1){
-    stop("'m' must be an int. 'm' must be greater than 0.")
-  }
+.make_methpat_names <- function(m) {
+  m <- as.integer(m)
   sort(do.call(paste0, 
                expand.grid(lapply(seq_len(m), function(x) {c('M', 'U')}))))
 }
 
-## TODO: Tests
 #' Is the methylation type valid
 #' 
 #' @param methtype A character.
