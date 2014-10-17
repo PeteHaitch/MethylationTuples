@@ -156,17 +156,61 @@ setMethod("show",
 ### Combining.
 ###
 
+.MethInfo.merge <- function(...) {
+  args <- unname(list(...))
+  # Drop any NULLs
+  arg_is_null <- sapply(args, is.null)
+  if (any(arg_is_null)) {
+    args[arg_is_null] <- NULL
+  }
+  x <- args[[1L]]
+  if (!all(sapply(args, is, class(x)))) {
+    stop("all arguments must be ", class(x), " objects (or NULLs)")
+  }
+  methtype <- unlist(lapply(args, methtype))
+  if (any(is.na(methtype))) {
+    methtype <- NA_character_
+  } else {
+    methtype <- sort(unique(methtype))
+  }
+  new("MethInfo", methtype = methtype) 
+}
+
 #' @export
 setMethod("merge", 
           c("MethInfo", "MethInfo"), 
+          function(x, y, ...) {
+            .MethInfo.merge(x, y, ...)
+          }
+)
+
+#' @export
+setMethod("merge", 
+          c("MethInfo", "missing"), 
           function(x, y, ...) { 
-            args <- list(x, y, ...)
-            methtype <- unlist(lapply(args, methtype))
-            if (any(is.na(methtype))) {
-              methtype <- NA_character_
-            } else {
-              methtype <- sort(unique(methtype))
-            }
-            new("MethInfo", methtype = methtype)
+            .MethInfo.merge(x, ...)
+          }
+)
+
+#' @export
+setMethod("merge", 
+          c("MethInfo", "NULL"), 
+          function(x, y, ...) {
+            .MethInfo.merge(x, ...)
+          })
+
+#' @export
+setMethod("merge", 
+          c("NULL", "MethInfo"), 
+          function(x, y, ...) {
+            .MethInfo.merge(y, ...)
+          }
+)
+
+#' @export
+setMethod("merge", 
+          c("missing", "MethInfo"), 
+          function(x, y, ...) {
+            .MethInfo.merge(y, ...)
           }
 )

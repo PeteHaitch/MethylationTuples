@@ -65,9 +65,23 @@ test_that("summary,MethInfo-method works", {
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Combining.
 ###
+
+# TODO: All the various combinations of MethInfo, NULL and missing
 test_that("merge,MethInfo-method works", {
   expect_identical(merge(MethInfo('CHG'), MethInfo('CG')), 
                    MethInfo(c('CG', 'CHG')))
   expect_identical(merge(mi, mi), mi)
   expect_identical(merge(mi, MethInfo()), MethInfo())
+  expect_identical(merge(mi), mi)
+  expect_identical(merge(mi, NULL), mi)
+  expect_identical(merge(NULL, mi), mi)
+  expect_identical(merge(mi), mi)
+  expect_identical(merge(y = mi), mi)
+  expect_identical(merge(mi, NULL, NULL, MethInfo('CHG')), 
+                   MethInfo(c('CG', 'CHG')))
+  expect_identical(merge(y = mi, NULL, MethInfo('CHH')), 
+                   MethInfo(c('CG', 'CHH')))
+  expect_error(merge(mi, 'a'), 
+               paste0("cannot coerce class \"structure\\(\"MethInfo\", ", 
+                      "package = \"MethylationTuples\"\\)\" to a data.frame"))
 })
