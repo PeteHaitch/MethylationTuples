@@ -54,6 +54,15 @@ mt3 <- MTuples(gt3, mi)
 mq3 <- MTuples(q3, mi)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### MTuplesList objects used in tests
+###
+mtl0 <- MTuplesList(mt0)
+mtl1 <- MTuplesList(mt1)
+mtl2 <- MTuplesList(mt2)
+mtl3 <- MTuplesList(mt3)
+mql3 <- MTuplesList(mq3)
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### MethPat objects used in tests
 ###
 # Empty MethPat object
