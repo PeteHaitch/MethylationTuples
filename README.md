@@ -11,7 +11,8 @@ __This package is in early development and requires the use of the development v
 ```R
 source("http://bioconductor.org/biocLite.R")
 useDevel()
-biocLite(c('devtools', 'Rcpp', 'GenomicTuples','testthat', 'knitr', 'BiocStyle'))
+biocLite(c('devtools', 'Rcpp', 'testthat', 'knitr', 'BiocStyle'))
+devtools::install_github("PeteHaitch/GenomicTuples")
 devtools::install_github("PeteHaitch/MethylationTuples")
 ```
 
