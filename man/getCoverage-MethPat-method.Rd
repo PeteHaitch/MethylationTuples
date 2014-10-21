@@ -2,6 +2,7 @@
 \docType{methods}
 \name{getCoverage,MethPat-method}
 \alias{getCoverage,MethPat-method}
+\title{Compute sequencing coverage of m-tuples.}
 \usage{
 \S4method{getCoverage}{MethPat}(x)
 }
@@ -11,5 +12,8 @@
 \value{
 A \code{\link[base]{matrix}}, with the same dimensions and dimension
 names as \code{x}, of sequencing coverage of each tuple in each sample.
+}
+\description{
+Compute sequencing coverage of m-tuples.
 }
 

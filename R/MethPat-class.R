@@ -449,6 +449,7 @@ setMethod("methtype",
 
 ## TODO: Document.
 ## TODO: Unit tests.
+#' Compute beta-values.
 #' @param x A \code{\link{MethPat}} object containing 1-tuples.
 #' @param min_cov An \code{integer} specifying the minimum coverage required 
 #' in order order to compute a beta-value. Samples/sites with coverage less 
@@ -479,6 +480,7 @@ setMethod("betaVal",
 ## TODO: Document.
 ## TODO: Unit tests.
 ## TODO: Export
+#' Compute sequencing coverage of m-tuples.
 #' @param x A \code{\link{MethPat}} object.
 #' 
 #' @return A \code{\link[base]{matrix}}, with the same dimensions and dimension 

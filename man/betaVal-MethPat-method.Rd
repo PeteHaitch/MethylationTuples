@@ -2,6 +2,7 @@
 \docType{methods}
 \name{betaVal,MethPat-method}
 \alias{betaVal,MethPat-method}
+\title{Compute beta-values.}
 \usage{
 \S4method{betaVal}{MethPat}(x, min_cov = 0L)
 }
@@ -15,5 +16,8 @@ than \code{min_cov} will have the corresponding beta-value set to \code{NA}.}
 \value{
 A \code{\link[base]{matrix}}, with the same dimensions and dimension
 names as \code{x}, of beta-values at each methylation loci in each sample.
+}
+\description{
+Compute beta-values.
 }
 
