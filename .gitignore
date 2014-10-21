@@ -6,3 +6,4 @@ inst/doc
 *.pdf
 packrat/src/
 src/*.o
+src/*.so
