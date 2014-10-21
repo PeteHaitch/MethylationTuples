@@ -5,3 +5,4 @@ packrat/lib*/
 inst/doc
 *.pdf
 packrat/src/
+src/*.o

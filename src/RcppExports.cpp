@@ -5,15 +5,16 @@
 
 using namespace Rcpp;
 
-// timesTwo
-int timesTwo(int x);
-RcppExport SEXP MethylationTuples_timesTwo(SEXP xSEXP) {
+// makeAllPairs
+List makeAllPairs(IntegerVector s, int max_ipd);
+RcppExport SEXP MethylationTuples_makeAllPairs(SEXP sSEXP, SEXP max_ipdSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< int >::type x(xSEXP );
-        int __result = timesTwo(x);
+        Rcpp::traits::input_parameter< IntegerVector >::type s(sSEXP );
+        Rcpp::traits::input_parameter< int >::type max_ipd(max_ipdSEXP );
+        List __result = makeAllPairs(s, max_ipd);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

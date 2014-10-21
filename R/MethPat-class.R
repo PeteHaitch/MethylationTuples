@@ -447,6 +447,53 @@ setMethod("methtype",
           }
 )
 
+## TODO: Document.
+## TODO: Unit tests.
+#' @param x A \code{\link{MethPat}} object containing 1-tuples.
+#' @param min_cov An \code{integer} specifying the minimum coverage required 
+#' in order order to compute a beta-value. Samples/sites with coverage less 
+#' than \code{min_cov} will have the corresponding beta-value set to \code{NA}.
+#' 
+#' @return A \code{\link[base]{matrix}}, with the same dimensions and dimension 
+#' names as \code{x}, of beta-values at each methylation loci in each sample.
+#' 
+#' @export 
+setMethod("betaVal", 
+          "MethPat", 
+          function(x, min_cov = 0L) {
+            if (size(x) != 1L) {
+              stop(paste0("It does not make sense to compute beta-values ",
+                          "unless 'size' = 1."))
+            }
+            if (min_cov == 0L) { 
+              assay(methpat, 'M') / getCoverage(x)
+            } else if (min_cov > 0L) {
+              cov <- getCoverage(x)
+              beta <- assay(methpat, 'M') / getCoverage(x)
+              beta[cov < min_cov] <- NA_integer_
+              beta
+            }
+          }
+)
+
+## TODO: Document.
+## TODO: Unit tests.
+## TODO: Export
+#' @param x A \code{\link{MethPat}} object.
+#' 
+#' @return A \code{\link[base]{matrix}}, with the same dimensions and dimension 
+#' names as \code{x}, of sequencing coverage of each tuple in each sample.
+setMethod("getCoverage", 
+          "MethPat", 
+          function(x) {
+            Reduce(f = '+', 
+                   x = lapply(.make_methpat_names(size(x)), function(an, x) {
+                     assay(x, an)
+                   }, x = x)
+            )
+          }
+)
+
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Splitting
 ###
@@ -558,4 +605,5 @@ setMethod("show",
             if (dlen[[2]]) scat("colnames(%d): %s\n", dimnames[[2]])
             else cat("colnames: NULL\n")
             scat("colData names(%d): %s\n", names(colData(object)))
-          })
+          }
+)

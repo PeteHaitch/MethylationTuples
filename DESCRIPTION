@@ -40,6 +40,8 @@ Collate:
     'MethPat-class.R'
     'MethylationTuples.R'
     'RcppExports.R'
+    'betaCor.R'
     'findMTuples.R'
+    'pair_makers.R'
     'read.methtuple.R'
     'tmp_fixes.R'
