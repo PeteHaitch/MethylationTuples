@@ -2,7 +2,6 @@
 ### bestCor: Compute within-sample correlations of beta-values.
 ###
 
-# TODO: Add min_cov parameter to be passed to betaVal()
 # TODO: Update docs
 
 #' Compute within-sample correlations of pairs of beta-values.
@@ -36,8 +35,6 @@
 #' \code{\link[GenomicRanges]{GRanges}} object must be disjoint (see 
 #' \code{\link[GenomicRanges]{isDisjoint}}). The \code{feature}Please see the 
 #' below section, "Stratifying pairs by a genomic feature", for details.
-#' @param feature_name A character string with the name of the feature, which 
-#' is used in the output, e.g., "CpG island".
 #' 
 #' @section Constructing pairs of beta-values:
 #' There are two algorithms for constructing pairs of beta-values: 
@@ -92,11 +89,11 @@
 #' }
 #'
 #' @export 
-betaCor <- function(methpat, min_cov = 5L,
-                    pair_type = c('all', 'adjacent', 'ref_adjacent'), 
+betaCor <- function(methpat, pair_type = c('all', 'adjacent', 'ref_adjacent'), 
                     ipd = seq_len(2000L), ref_loci,
                     method = c('pearson', 'spearman'), 
-                    feature, feature_name) {
+                    min_cov = 5L,
+                    feature) {
   if (!is(methpat, "MethPat") || size(methpat) != 1L) {
     stop("'methpat' must be a 'MethPat' object containing 1-tuples.")
   }
@@ -135,11 +132,6 @@ betaCor <- function(methpat, min_cov = 5L,
     if (!is(feature, "GRanges") || !isDisjoint(feature)) {
       stop("'feature' must be a 'GRanges' object with disjoint ranges.")
     }
-
-    if (missing(feature_name)) {
-      warning(paste0("It is recommended that you supply a 'feature_name'.\n",
-                     "Instead, using the default, 'feature'."))
-    }
   }
   
   # Order methpat and extract sorted rowData
@@ -169,8 +161,11 @@ betaCor <- function(methpat, min_cov = 5L,
   
   # Get the "feature status" (feature_status) of each loci.
   # feature_status = TRUE if overlaps feature, FALSE otherwise
-  feature_status <- overlapsAny(methpat_rd_sorted, feature)
-  
+  if (!missing(feature)) {
+    feature_status <- overlapsAny(methpat_rd_sorted, feature)
+  } else {
+    feature_status <- rep(FALSE, length(methpat_rd_sorted))
+  }
   # Create map between seqnames-strand-IPD-feature_status and an integer ID.
   # Need to define possible IPDs in order to create map.
   if (pair_type == "adjacent" || pair_type == "ref_adjacent") {
@@ -191,24 +186,27 @@ betaCor <- function(methpat, min_cov = 5L,
     # TODO: Benchmark and profile. 
     # 2-3 hours for a MethPat object with 1 sample + 56M CpGs which makes 
     # 1.6 billion pairs and is ~40GB in size.
-    pairs <- setkey(setDT(.Call(.makeAllPairsCpp, 
+    pairs <- setkey(setDT(.Call(Cpp_MethylationTuples_makeAllPairs, 
                                 methpat_order,
                                 as.character(seqnames(methpat_rd_sorted)), 
                                 as.character(strand(methpat_rd_sorted)),
-                                feature_status, 
-                                start(methpat_rd_sorted), 
-                                betas, id_dt)), ID, sample)
+                                start(methpat_rd_sorted),                                 
+                                feature_status,
+                                ipd,
+                                betas, 
+                                id_dt)), ID, sample)    
   } else if (pair_type == 'adjacent' || pair_type == 'ref_adjacent') {
     # TODO: Benchmark and profile. 
     # 4-5 minutes for a MethPat object with 3 samples and 54 million CpGs.
     # Returns a data.table with 162 million rows and is ~4GB in size.
-    pairs <- setkey(setDT(.Call(.makeAdjacentPairsCpp, 
+    pairs <- setkey(setDT(.Call(Cpp_MethylationTuples_makeAdjacentPairs, 
                                 methpat_order,
                                 as.character(seqnames(methpat_rd_sorted)), 
                                 as.character(strand(methpat_rd_sorted)),
-                                feature_status, 
-                                start(methpat_rd_sorted), 
-                                betas, id_dt)), ID, sample)
+                                start(methpat_rd_sorted),                                
+                                feature_status,
+                                betas,
+                                id_dt)), ID, sample)
   }
   
   # Compute correlations
@@ -218,8 +216,10 @@ betaCor <- function(methpat, min_cov = 5L,
                 by = list(ID, sample)]
   
   # Join cors and id_dt. Add sample names back.
-  # TODO: Add feature_name to output
   val <- id_dt[cors]
   val[, c("ID", "KEY") := list(NULL, NULL)][, sample := colnames(methpat)[val$sample]]
+  if (missing(feature)) {
+    val[, feature_status := NULL]
+  }
   return(val)
 }

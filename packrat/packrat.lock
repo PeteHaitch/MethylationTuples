@@ -25,11 +25,6 @@ Version: 1.7
 Hash: 88f8e8d164fc720cdec4349169cabe75
 Requires: checkmate
 
-Package: BH
-Source: CRAN
-Version: 1.54.0-4
-Hash: 240790420ebcf7321eed885d421a8335
-
 Package: Biobase
 Source: Bioconductor
 Version: 2.26.0
