@@ -10,6 +10,12 @@
 # TODO: Profile.
 # TODO: Add timing output?
 # TODO: Compute approximate memory usage.
+# TODO: Do argument checks before reading in the file, e.g., check seqinfo is a 
+# valid seqinfo, so that functions fails fast+early.
+# TODO: Will report 2 warnings if seqinfo is 'incorrect/insufficient'. The 
+# second might better be suppressed, "2: In .Seqinfo.mergexy(x, y) :
+# The 2 combined objects have no sequence levels in common. (Use
+# suppressWarnings() to suppress this warning.)""
 
 #' Read \code{.tsv} output files from \code{methtuple} software.
 #'
