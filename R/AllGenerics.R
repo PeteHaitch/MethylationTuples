@@ -50,6 +50,7 @@ setGeneric("betaVal",
 ###
 
 ## TODO: Decide on a name and export
+#' @export
 setGeneric("getCoverage", 
            function(x) {
              standardGeneric("getCoverage")

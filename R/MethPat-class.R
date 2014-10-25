@@ -467,11 +467,11 @@ setMethod("betaVal",
                           "unless 'size' = 1."))
             }
             if (min_cov == 0L) { 
-              assay(methpat, 'M') / getCoverage(x)
+              assay(x, 'M') / getCoverage(x)
             } else if (min_cov > 0L) {
               cov <- getCoverage(x)
-              beta <- assay(methpat, 'M') / getCoverage(x)
-              beta[cov < min_cov] <- NA_integer_
+              beta <- assay(x, 'M') / getCoverage(x)
+              beta[cov < min_cov] <- NA_real_
               beta
             }
           }
@@ -485,6 +485,7 @@ setMethod("betaVal",
 #' 
 #' @return A \code{\link[base]{matrix}}, with the same dimensions and dimension 
 #' names as \code{x}, of sequencing coverage of each tuple in each sample.
+#' @export
 setMethod("getCoverage", 
           "MethPat", 
           function(x) {
