@@ -65,8 +65,7 @@ List makeAdjacentPairs(IntegerVector methpat_order,
       // pair_feature_status: out/out (0); in/out or out/in (1); in/in (2)
       std::string pair_feature_status_string = 
         Rcpp::toString(feature_status[i] + feature_status[i + 1]);
-      std::string id_key = seqnames[i] + strand[i] + ipd_string + "_" + 
-        pair_feature_status_string;
+      std::string id_key = ipd_string + strand[i] + pair_feature_status_string;
       // Look-up id_key in id_map to get the value and store in id_out
       int id_val = id_map[id_key];
       // Loop over samples and extract beta values for pair

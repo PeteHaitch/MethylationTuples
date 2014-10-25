@@ -3,15 +3,12 @@
 \alias{betaCor}
 \title{Compute within-sample correlations of pairs of beta-values.}
 \usage{
-betaCor(methpat, min_cov = 5L, pair_type = c("all", "adjacent",
-  "ref_adjacent"), ipd = seq_len(2000L), ref_loci, method = c("pearson",
-  "spearman"), feature, feature_name)
+betaCor(methpat, pair_type = c("adjacent", "all", "ref_adjacent"),
+  ipd = seq_len(2000L), ref_loci, method = c("pearson", "spearman"),
+  min_cov = 5L, feature)
 }
 \arguments{
 \item{methpat}{A \code{\link{MethPat}} object containing 1-tuples.}
-
-\item{min_cov}{An \code{integer} specifying the minimum sequencing coverage
-required to use a beta-value.}
 
 \item{pair_type}{A character string giving the type of pairs to be
 constructed when computing correlations. One of "\code{neighbours}" or "\code{all}", can be abbreviated. Please see the below section, "Construction
@@ -26,14 +23,14 @@ section, "Construction of pairs of beta-values", for details.}
 to be computed. One of "\code{pearson}" (default) or "\code{spearman}", can
 be abbreviated.}
 
+\item{min_cov}{An \code{integer} specifying the minimum sequencing coverage
+required to use a beta-value.}
+
 \item{feature}{An optional \code{\link[GenomicRanges]{GRanges}} object with
 the locations of a "genomic feature". This
 \code{\link[GenomicRanges]{GRanges}} object must be disjoint (see
 \code{\link[GenomicRanges]{isDisjoint}}). The \code{feature}Please see the
 below section, "Stratifying pairs by a genomic feature", for details.}
-
-\item{feature_name}{A character string with the name of the feature, which
-is used in the output, e.g., "CpG island".}
 
 \item{max_ipd}{An \code{integer} specifying the maximal IPD of pairs
 (default: 2000). Only required if \code{pair_type = "all"} and otherwise

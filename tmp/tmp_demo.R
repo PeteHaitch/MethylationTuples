@@ -5,12 +5,10 @@ betas <- betaVal(methpat)
 #ipd <- 1:2000
 ipd <- sort(unique(diff(start(methpat_rd_sorted))))
 ipd <- ipd[ipd > 0]
-id_dt <- setDT(expand.grid(seqnames = seqlevels(methpat), 
+id_dt <- setDT(expand.grid(IPD = ipd, 
                            strand = levels(strand(methpat)), 
-                           IPD = ipd, 
                            feature_status = 0:3))
-id_dt[, c("KEY", "ID") := list(paste(seqnames, strand, IPD, '_', 
-                                     feature_status, sep = ''),
+id_dt[, c("KEY", "ID") := list(paste(IPD, strand, feature_status, sep = ''),
                                seq_len(nrow(id_dt)))]
 setkey(id_dt, ID)
 method <- 'pearson'
