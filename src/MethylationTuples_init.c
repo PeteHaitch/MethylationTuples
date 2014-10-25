@@ -5,10 +5,10 @@
 
 #include <R_ext/Rdynload.h>
 
-SEXP MethylationTuples_makeAllPairs(SEXP sSEXP, SEXP max_ipdSEXP);
+SEXP MethylationTuples_makeAllPairs(SEXP methpat_orderSEXP, SEXP seqnamesSEXP, SEXP strandSEXP, SEXP posSEXP, SEXP feature_statusSEXP, SEXP ipdSEXP, SEXP betasSEXP, SEXP id_dtSEXP);
 
 R_CallMethodDef callMethods[]  = {
-  {"Cpp_MethylationTuples_makeAllPairs", (DL_FUNC) &MethylationTuples_makeAllPairs, 2},
+  {"Cpp_MethylationTuples_makeAllPairs", (DL_FUNC) &MethylationTuples_makeAllPairs, 8},
   {NULL, NULL, 0}
 };
 

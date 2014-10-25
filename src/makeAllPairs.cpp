@@ -1,50 +1,117 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// Assumes input is sorted by seqnames-strand-pos.
+
+// NOTE: Could require seqnames and strand to be IntegerVector rather than 
+// CharacterVector to save memory but with added complication of 
+// back-converting integers to seqnames and strand
+
+//' Create all pairs of beta-values with given IPDs.
+//' 
+//' In the description below, \code{x} is a \code{\link{MethPat}} object 
+//' containing 1-tuples. The argument descriptions are chosen for clarity, not 
+//' because they are necessarily an efficient way to obtain said arguments.
+//' 
+//' @param methpat_order \code{order(x)}.
+//' @param seqnames \code{as.character(seqnames(sort(x)))}.
+//' @param strand \code{as.character(sort(x))}.
+//' @param pos \code{start(sort(x))}.
+//' @param feature_status \code{overlapsAny(x, feature)}.
+//' @param ipd An integer vector of IPD, e.g., \code{ipd = 1:100}.
+//' @param betas \code{betaVal(x)}
+//' @param id_dt A \code{\link[data.table]{data.table}} mapping the
+//' \code{seqnames-strand-IPD-feature_status} combination to an integer ID.
+//' 
+//' @keywords internal
+//' 
+//' @value A \code{list} with the \code{ID}, \code{sample}, \code{beta1} and 
+//' \code{beta2} of each pair.
 // [[Rcpp::export(".makeAllPairsCpp")]]
-
-List makeAllPairs(IntegerVector s, int max_ipd) {
+List makeAllPairs(const std::vector<int>& methpat_order,
+                     std::vector<std::string> seqnames,
+                     std::vector<std::string> strand, 
+                     const std::vector<int>& pos,
+                     LogicalVector feature_status,
+                     IntegerVector ipd,
+                     NumericMatrix betas,
+                     DataFrame id_dt) {
   
-  // Initiate vectors to store results.
-  std::vector<int> xx;
-  std::vector<int> yy;
-
-  // Create variables used in the for-loop.
-  int n = s.size();
+  // Initialise vectors to store results.
+  std::vector<int> id_out;
+  std::vector<double> beta1_out;
+  std::vector<double> beta2_out;
+  
+  // Reserve memory for output vectors.
+  // Hard to estimate this given each loci can be part of multiple pairs and 
+  // the number of pairs depends on the genome and the ipd vector.
+  // n is an initial guess that assumes each loci is involved in 10 pairs 
+  // (which is probably an underestimate but better than no estimate).
+  int nr = seqnames.size();
+  int nc = betas.ncol();
+  int n = nr * nc * 10;
+  id_out.reserve(n);
+  beta1_out.reserve(n);
+  beta2_out.reserve(n);
+  
+  // Create idMap from idDF
+  int nid = id_dt.nrows();
+  std::map<std::string, int> id_map;
+  CharacterVector key = id_dt["key"];
+  IntegerVector val = id_dt["val"];
+  for (int i = 0; i < nid; i++) {
+    String tmp_key = key[i];
+    id_map[tmp_key] = val[i];
+  }
+  
+  // Initialise variables used in the for-loop.
   int j = 0;
-  int k = 1;
+  int max_ipd = max(ipd);
   
-  // Loop over start positions, s, and find pairs with ipd <= max_ipd
-  for (int i = 0; i < (n - 1); i++) {
+  // Loop over start loci and find pairs with IPD %in% ipd.
+  for (int i = 0; i < (nr - 1); i++) {
     j = i + 1;
-    while (j <= (n - 1)) {
-      /* 
-      Ideally, would use (s[j] - s[i]) %in% ipd but there is no %in% sugar 
-      operator. Instead, use this monstrosity. 
-      Note need to wrap in is_true() (see 
-      http://lists.r-forge.r-project.org/pipermail/rcpp-devel/2013-May/005807.html)
-      */
-      if ( (s[j] - s[i]) <= max_ipd) {
-        
-        /* 
-        (i, j) are a pair, so add to x and y.
-        Record (i + 1, j + 1) because R vectors are 1-based and C++ vectors 
-        are 0-based. 
-        */
-        xx.push_back(i + 1); 
-        yy.push_back(j + 1);
-        j += 1;
-        k += 1;
+    while (j <= (nr - 1)) {
+      if (seqnames[i] == seqnames[j] and strand[i] == strand[j]) {
+        int ipd_ = pos[j] - pos[i];
+        if (std::find(ipd.begin(), ipd.end(), ipd_) != ipd.end()) {
+          // (i, j) are a pair, so add to id_out, beta1_out and beta2_out
+          std::string ipd_string = Rcpp::toString(ipd_);
+          // pair_feature_status: out/out (0); in/out or out/in (1); in/in (2)
+          std::string pair_feature_status_string = 
+          Rcpp::toString(feature_status[i] + feature_status[j]);
+          std::string id_key = seqnames[i] + strand[i] + ipd_string + "_" + 
+          pair_feature_status_string;
+          // Look-up id_key in idMap to get the value and store in id_out
+          int id_val = id_map[id_key];
+          // Loop over samples and extract beta values for pair
+          for (int k = 0; k < nc; k++) {
+            id_out.push_back(id_val);
+            beta1_out.push_back(betas(methpat_order[i] - 1, k));
+            beta2_out.push_back(betas(methpat_order[j] - 1, k));
+          }
+          j += 1;
+        } else if (ipd_ < max_ipd) {
+          // (i, j) not a pair but (i, j + 1) might be, so keep looking.
+          j += 1;
+        } else {
+          // (i, j) not a pair and (i, j + 1) can't be.
+          // So move onto pairs with (i + 1) as the first co-ordinate.
+          break;
+        }
       } else {
-        /*
-        (i, j) aren't a pair and (i, j + 1) can't be, so move onto pairs 
-        with x = i + 1.
-        */
+        // (i, j) not a pair and (i, j + 1) can't be.
+        // So move onto pairs with (i + 1) as the first co-ordinate.
         break;
       }
     }
   }
   
-  return List::create(_["xx"] = xx, _["yy"] = yy);
+  // Add sample names to output
+  List dimnames = betas.attr("dimnames");
+  CharacterVector sn = dimnames[1];
+  CharacterVector sample_names = Rcpp::rep(sn, id_out.size() / nc);
   
+  return List::create(_["id"] = id_out, _["sample"] = sample_names, 
+  _["beta1"] = beta1_out, _["beta2"] = beta2_out);  
 }
