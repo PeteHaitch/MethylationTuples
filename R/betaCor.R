@@ -3,6 +3,9 @@
 ###
 
 # TODO: Get confidence interval for correlations, e.g., via cor.test
+# TODO: Should betaCor return unstratified estimates along with stratified 
+# estimates? Not hard, just join id_dt[pairs] and then compute correlations 
+# ignore feature_status.
 # TODO: Update docs
 
 #' Compute within-sample correlations of pairs of beta-values.
@@ -165,6 +168,7 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
   if (!missing(feature)) {
     feature_status <- overlapsAny(methpat_rd_sorted, feature)
   } else {
+    # TODO: feature_status NA if no feature is supplied.
     feature_status <- rep(FALSE, length(methpat_rd_sorted))
   }
   # Create map between IPD-strand-feature_status and an integer ID.
