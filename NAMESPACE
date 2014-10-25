@@ -2,8 +2,6 @@
 
 export("methinfo<-")
 export("methtype<-")
-export(.makeAllPairsIdx)
-export(.makeNeighbourPairsIdx)
 export(.make_methpat_names)
 export(.valid_methtype)
 export(MTuples)

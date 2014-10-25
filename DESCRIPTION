@@ -42,6 +42,5 @@ Collate:
     'RcppExports.R'
     'betaCor.R'
     'findMTuples.R'
-    'pair_makers.R'
     'read.methtuple.R'
     'tmp_fixes.R'
