@@ -3,6 +3,10 @@
 ### These are used by betaCor()
 ###
 
+# TODO: Move as much as possible to C++ and use iterators rather than explicit
+# index vectors. This is ridiculously slow for what it does!
+#' @export
+#' @keywords internal
 .makeNeighbourPairsIdx <- function(methpat_rd, mtuples) {
   # x and y index the first and second methlyation loci in each pair, 
   # respectively. The index is with respect to mtuples.
@@ -37,6 +41,13 @@
   list(x = xx, y = yy)
 }
 
+# TODO: Move as much as possible to C++ and use iterators rather than explicit
+# index vectors.
+# TODO: Cpp_MethylationTuples_makeAllPairs uses obscene amounts of memory 
+# because it will make many pairs that are later thrown away, since they are not
+# on the same chromosome or have the same strand. Do this smarter.
+#' @export
+#' @keywords internal
 .makeAllPairsIdx <- function(methpat_rd, max_ipd) {
   # p is a list of candidate pairs.
   # p$xx (resp. p$yy) indexes the first (resp. last) element of each pair. 

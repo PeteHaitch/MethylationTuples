@@ -2,10 +2,8 @@
 ### bestCor: Compute within-sample correlations of beta-values.
 ###
 
-# TODO: Note that care should be taken with strand. Perhaps I should force
-# unstrand the feature.
-# TODO: Currently I drop pairs that span the boundary of a feature. Should I 
-# return these as their own category?
+# TODO: Add min_cov parameter to be passed to betaVal()
+# TODO: Update docs
 
 #' Compute within-sample correlations of pairs of beta-values.
 #' 
@@ -17,10 +15,12 @@
 #' \code{feature} (if supplied) of the pairs.
 #' 
 #' @param methpat A \code{\link{MethPat}} object containing 1-tuples.
+#' @param min_cov An \code{integer} specifying the minimum sequencing coverage 
+#' required to use a beta-value.
 #' @param pair_type A character string giving the type of pairs to be 
 #' constructed when computing correlations. One of "\code{neighbours}" or "\code{all}", can be abbreviated. Please see the below section, "Construction 
 #' of pairs of beta-values", for details.
-#' @param mtuples An \code{\link{MTuples}} object with the locations of all 
+#' @param ref_loci An \code{\link{MTuples}} object with the locations of all 
 #' methylation loci 1-tuples in the sample/reference genome. Only required if 
 #' \code{pair_type = "neighbours"} and otherwise ignored. Please see the below 
 #' section, "Construction of pairs of beta-values", for details.
@@ -36,9 +36,6 @@
 #' \code{\link[GenomicRanges]{GRanges}} object must be disjoint (see 
 #' \code{\link[GenomicRanges]{isDisjoint}}). The \code{feature}Please see the 
 #' below section, "Stratifying pairs by a genomic feature", for details.
-#' @param same_feature A \code{logical(1)}. When stratifying by \code{feature}, 
-#' should a pair be required to be in the "same element" of the feature. Please 
-#' see the below section, "Stratifying pairs by a genomic feature", for details.
 #' @param feature_name A character string with the name of the feature, which 
 #' is used in the output, e.g., "CpG island".
 #' 
@@ -93,91 +90,136 @@
 #'   are discarded, e.g., those where both loci that make up the pair are in a 
 #'   CpG island but lie in distinct CpG islands.}
 #' }
-#' 
-#' @export
-betaCor <- function(methpat, pair_type = c('neighbours', 'all'), mtuples,
-                    max_ipd = 2000, method = c('pearson', 'spearman'),
-                    feature, same_feature = FALSE, feature_name) {
+#'
+#' @export 
+betaCor <- function(methpat, min_cov = 5L,
+                    pair_type = c('all', 'adjacent', 'ref_adjacent'), 
+                    ipd = seq_len(2000L), ref_loci,
+                    method = c('pearson', 'spearman'), 
+                    feature, feature_name) {
   if (!is(methpat, "MethPat") || size(methpat) != 1L) {
     stop("'methpat' must be a 'MethPat' object containing 1-tuples.")
   }
   pair_type <- match.arg(pair_type)
-  if (pair_type == "neighbours") {
-    if (missing(mtuples) || !is(mtuples, "MTuples") || size(mtuples) != 1) {
-      stop("If 'pair_type' = 'neighbours', then must supply 'mtuples'.")
-      seqinfo <-try(merge(seqinfo(methpat), seqinfo(mtuples)), silent = TRUE)
+  if (pair_type == 'all') {
+    if (!is.numeric(ipd) || !is.vector(ipd)) {
+      stop("'ipd' must be an integer vector.")
+    }
+    ipd <- as.integer(ipd)
+  } else if (pair_type == 'adjacent') {
+    # NOTHING TODO
+  } else if (pair_type == "ref_adjacent") {
+    stop("Sorry, 'pair_type = \"ref_adjacent\"' not yet implemented.")
+    # TODO: Check how many samples in methpat. It's easiest to implement 
+    # ref_adjacent if there is only 1 sample in methpat. Otherwise have to have 
+    # a different ref_loci for each sample and deal with that.
+    if (missing(ref_loci) || !is(ref_loci, "MTuples") || size(ref_loci) != 1) {
+      stop("If 'pair_type' = 'ref_adjacent', then must supply 'ref_loci'.")
+      seqinfo <- try(merge(seqinfo(methpat), seqinfo(ref_loci)), silent = TRUE)
       if (is(seqinfo, "try-error")) {
+        # TODO: Stricter check of seqinfo compatability, e.g., identical?
+        stop("'methpat' and 'ref_loci' have incompatible 'seqinfo'.")
+      }
+      if (!all(methtype(methpat) %in% methtype(ref_loci))) {
         stop("'methpat' and 'mtuples' have incompatible 'seqinfo'.")
       }
-      if (!all(methtype(methpat) %in% methpat(mtuples))) {
-        stop("'methpat' and 'mtuples' have incompatible 'seqinfo'.")
-      }
-      if (isTRUE(any(countOverlaps(methpat, mtuples) == 0L))) {
-        stop("All loci in 'methpat' must also be present in 'mtuples'.")
+      # TODO: This is very slow. Should it return an error or report the loci 
+      # that have no match (or their count) 
+      if (isTRUE(any(!overlapsAny(methpat, ref_loci)))) {
+        stop("All loci in 'methpat' must also be present in 'ref_loci'.")
       }
     }
-  } else if (pair_type == 'all') {
-    if (!is.numeric(max_ipd)) {
-      stop("'max_ipd' must be an integer.")
-    }
-    max_ipd <- as.integer(max_ipd)
-  }
+  } 
   method <- match.arg(method)
   if (!missing(feature)) {
     if (!is(feature, "GRanges") || !isDisjoint(feature)) {
       stop("'feature' must be a 'GRanges' object with disjoint ranges.")
     }
-    if (!isTRUEorFALSE(same_feature)) {
-      stop("'same_feature' must be TRUE or FALSE.")
-    }
+
     if (missing(feature_name)) {
       warning(paste0("It is recommended that you supply a 'feature_name'.\n",
                      "Instead, using the default, 'feature'."))
     }
-    if (!isTRUEorFALSE(ignore_strand)) {
-      stop("'ignore_strand' must be TRUE or FALSE")
-    }
   }
   
   # Order methpat and extract sorted rowData
-  methpat_rd_order <- order(methpat)
-  methpat_rd <- rowData(methpat)[methpat_rd_order]
-  mtuples <- sort(mtuples)
-  beta <- betaVal(methpat)
-  
-  # Get indices of pairs
-  # Should return a list, l(x, y), where x is index of first loci in pair and
-  # y is index of second loci in pair wrt to methpath_rd_order
-  if (pair_type == 'neighbours') {
-    idx <- .makeNeighbourPairsIdx(methpat_rd, mtuples)
-  } else if (pair_type == 'all') {
-    idx <- .makeAllPairsIdx(methpat_rd, max_ipd)
+  if (pair_type == 'ref_adjacent') {
+    # TODO: Add "missing" loci to methpat, i.e., those loci that have 
+    # insufficient sequencing coverage in the sample. 
+    # E.g., methpat <- rbind(methpat, MethPat(loci_not_in_methpat))
+    # TODO: Find out if is.unsorted works on GTuples Could save an expensive 
+    # sort if data are already sorted.
+    #     if (is.unsorted(ref_loci)) {
+    #       ref_loci <- sort(ref_loci)
+    #     }
+    ref_loci <- sort(ref_loci)
   }
-  # Create pairs
-  pairs <- GRanges(seqnames = seqnames(methpat_rd)[idx$x], 
-                   ranges = IRanges(start(methpat_rd)[idx$x],
-                                    start(methpat_rd)[idx$y]),
-                   strand = strand(methpat_rd)[idx$x])
+  # TODO: Check whether is.unsorted works on GTuples. Could save an expensive 
+  # sort if data are already sorted.
+  #   if (is.unsorted(rowData(methpat))) {
+  #     methpat_order <- order(methpat)
+  #     methpat_rd_sorted <- rowData(methpat)[methpat_order]
+  #   } else {
+  #     methpat_order <- seq_len(nrow(methpat))
+  #     methpat_rd_sorted <- rowData(methpat)
+  #   }
+  methpat_order <- order(methpat)
+  methpat_rd_sorted <- rowData(methpat)[methpat_order]
+  betas <- betaVal(methpat, min_cov)
   
-  # TODO: Extend feature_idx to include "first in, last out" and 
-  # "first out, last in". Should be doable with compare,IRanges-method
-  # [Optional] Stratify pairs by feature
-  # feature_idx = 2 (inside), 1 (spanning), 0 (outside)
-  if (!missing(feature)) {
-    if (same_feature) {
-      feature_idx <- overlapsAny(pairs, feature, type = 'within') + 
-        overlapsAny(pairs, feature, type = 'any')
-    } else {
-      feature_idx <- overlapsAny(resize(pairs, width = 1, fix = 'start'),
-                                 feature, type = 'within') +
-        overlapsAny(resize(pairs, width = 1, fix = 'end'), 
-                    feature, type = 'within')
-    }
+  # Get the "feature status" (feature_status) of each loci.
+  # feature_status = TRUE if overlaps feature, FALSE otherwise
+  feature_status <- overlapsAny(methpat_rd_sorted, feature)
+  
+  # Create map between seqnames-strand-IPD-feature_status and an integer ID.
+  # Need to define possible IPDs in order to create map.
+  if (pair_type == "adjacent" || pair_type == "ref_adjacent") {
+    ipd <- sort(unique(diff(start(methpat_rd_sorted))))
+    ipd <- ipd[ipd > 0]
+  }
+  id_dt <- setDT(expand.grid(seqnames = seqlevels(methpat), 
+                             strand = levels(strand(methpat)), 
+                             IPD = ipd, 
+                             feature_status = 0:3))
+  id_dt[, c("KEY", "ID") := list(paste(seqnames, strand, IPD, '_', 
+                                       feature_status, sep = ''),
+                                 seq_len(nrow(id_dt)))]
+  setkey(id_dt, ID)
+  
+  # Create pairs of beta-values
+  if (pair_type == 'all') {
+    # TODO: Benchmark and profile. 
+    # 2-3 hours for a MethPat object with 1 sample + 56M CpGs which makes 
+    # 1.6 billion pairs and is ~40GB in size.
+    pairs <- setkey(setDT(.Call(.makeAllPairsCpp, 
+                                methpat_order,
+                                as.character(seqnames(methpat_rd_sorted)), 
+                                as.character(strand(methpat_rd_sorted)),
+                                feature_status, 
+                                start(methpat_rd_sorted), 
+                                betas, id_dt)), ID, sample)
+  } else if (pair_type == 'adjacent' || pair_type == 'ref_adjacent') {
+    # TODO: Benchmark and profile. 
+    # 4-5 minutes for a MethPat object with 3 samples and 54 million CpGs.
+    # Returns a data.table with 162 million rows and is ~4GB in size.
+    pairs <- setkey(setDT(.Call(.makeAdjacentPairsCpp, 
+                                methpat_order,
+                                as.character(seqnames(methpat_rd_sorted)), 
+                                as.character(strand(methpat_rd_sorted)),
+                                feature_status, 
+                                start(methpat_rd_sorted), 
+                                betas, id_dt)), ID, sample)
   }
   
-  # Compute correlations stratified by IPD and feature_idx
-  # Create data.table of IPD, feature, beta-values
-  beta_pairs <- data.table(ipd = width(pairs) - 1L, feature = feature_idx, 
-                           beta_1 = beta[idx$x], beta_2 = beta[idx$y])
-  beta_pairs[feature != 1][, list(cor = cor(beta_1, beta_2)), by = list(ipd, feature)]
+  # Compute correlations
+  cors <- pairs[, list(cor = suppressWarnings(cor(beta1, beta2, 
+                                                  use = "na.or.complete", 
+                                                  method = method))), 
+                by = list(ID, sample)]
+  
+  # Join cors and id_dt. Add sample names back.
+  # TODO: Add feature_name to output
+  val <- id_dt[cors]
+  val[, c("ID", "KEY") := list(NULL, NULL)][, sample := colnames(methpat)[val$sample]]
+  return(val)
 }

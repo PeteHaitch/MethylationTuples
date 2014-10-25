@@ -3,26 +3,24 @@
 \alias{betaCor}
 \title{Compute within-sample correlations of pairs of beta-values.}
 \usage{
-betaCor(methpat, pair_type = c("neighbours", "all"), mtuples,
-  max_ipd = 2000, method = c("pearson", "spearman"), feature,
-  same_feature = FALSE, feature_name)
+betaCor(methpat, min_cov = 5L, pair_type = c("all", "adjacent",
+  "ref_adjacent"), ipd = seq_len(2000L), ref_loci, method = c("pearson",
+  "spearman"), feature, feature_name)
 }
 \arguments{
 \item{methpat}{A \code{\link{MethPat}} object containing 1-tuples.}
+
+\item{min_cov}{An \code{integer} specifying the minimum sequencing coverage
+required to use a beta-value.}
 
 \item{pair_type}{A character string giving the type of pairs to be
 constructed when computing correlations. One of "\code{neighbours}" or "\code{all}", can be abbreviated. Please see the below section, "Construction
 of pairs of beta-values", for details.}
 
-\item{mtuples}{An \code{\link{MTuples}} object with the locations of all
+\item{ref_loci}{An \code{\link{MTuples}} object with the locations of all
 methylation loci 1-tuples in the sample/reference genome. Only required if
 \code{pair_type = "neighbours"} and otherwise ignored. Please see the below
 section, "Construction of pairs of beta-values", for details.}
-
-\item{max_ipd}{An \code{integer} specifying the maximal IPD of pairs
-(default: 2000). Only required if \code{pair_type = "all"} and otherwise
-ignored. Please see the below section, "Construction of pairs of
-beta-values", for details.}
 
 \item{method}{A character string indicating which correlation coefficient is
 to be computed. One of "\code{pearson}" (default) or "\code{spearman}", can
@@ -34,12 +32,13 @@ the locations of a "genomic feature". This
 \code{\link[GenomicRanges]{isDisjoint}}). The \code{feature}Please see the
 below section, "Stratifying pairs by a genomic feature", for details.}
 
-\item{same_feature}{A \code{logical(1)}. When stratifying by \code{feature},
-should a pair be required to be in the "same element" of the feature. Please
-see the below section, "Stratifying pairs by a genomic feature", for details.}
-
 \item{feature_name}{A character string with the name of the feature, which
 is used in the output, e.g., "CpG island".}
+
+\item{max_ipd}{An \code{integer} specifying the maximal IPD of pairs
+(default: 2000). Only required if \code{pair_type = "all"} and otherwise
+ignored. Please see the below section, "Construction of pairs of
+beta-values", for details.}
 }
 \description{
 Given a \code{\link{MethPat}} object containing 1-tuples, \code{betaCor}
