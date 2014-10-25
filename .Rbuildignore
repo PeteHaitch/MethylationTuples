@@ -6,3 +6,4 @@ TODO.pdf
 .travis.yml
 .Rprofile
 ^\.travis\.yml$
+^tmp/
