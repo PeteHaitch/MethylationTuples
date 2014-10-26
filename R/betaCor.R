@@ -2,10 +2,11 @@
 ### bestCor: Compute within-sample correlations of beta-values.
 ###
 
-# TODO: Get confidence interval for correlations, e.g., via cor.test
+# TODO: Get confidence interval for Spearman and Kendall correlation 
+# coefficients.
 # TODO: Should betaCor return unstratified estimates along with stratified 
 # estimates? Not hard, just join id_dt[pairs] and then compute correlations 
-# ignore pair_feature_status.
+# ignoring pair_feature_status.
 # TODO: Update docs
 
 #' Compute within-sample correlations of pairs of beta-values.
@@ -95,7 +96,8 @@
 #' @export 
 betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'), 
                     ipd = seq_len(2000L), ref_loci,
-                    method = c('pearson', 'spearman'), 
+                    method = c("pearson", "kendall", "spearman"), 
+                    conf.level = 0.95,
                     min_cov = 5L,
                     feature) {
   if (!is(methpat, "MethPat") || size(methpat) != 1L) {
@@ -220,10 +222,8 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
   }
   
   # Compute correlations
-  cors <- pairs[, list(cor = suppressWarnings(cor(beta1, beta2, 
-                                                  use = "na.or.complete", 
-                                                  method = method))), 
-                by = list(ID, sample)]
+  cors <- pairs[, .my_cor(beta1, beta2, method = method, 
+                          conf.level = conf.level), by = list(ID, sample)]
   
   # Join cors and id_dt. Add sample names back.
   val <- id_dt[cors]

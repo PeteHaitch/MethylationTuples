@@ -50,3 +50,24 @@
   
   return(val)
 }
+
+# TODO: Documentation and unit tests
+#' Compute correlation coefficient and confidence interval.
+#' 
+#' Basically, a wrapper around \code{\link[stats]{cor.test}}.
+#' 
+#' @keywords internal
+.my_cor <- function(x, y, method = c("pearson", "kendall", "spearman"), 
+                    conf.level = 0.95) {
+  method <- match.arg(method)
+  z <- try(cor.test(x, y, method = method, conf.level = conf.level), 
+      silent = TRUE)
+  if (is(z, "try-error")) {
+    val <- list(cor = NA_real_, CI_lower = NA_real_, CI_upper = NA_real_)
+  } else {
+    val <- list(cor = z$estimate, CI_lower = z$conf.int[1], 
+                CI_upper = z$conf.int[2])
+    val[sapply(val, is.null)] <- NA_real_
+  }
+  return(val)
+}
