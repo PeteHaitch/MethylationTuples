@@ -200,9 +200,6 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
   
   # Create pairs of beta-values
   if (pair_type == 'all') {
-    # TODO: setDT will fail if the length of the vectors in the list returned 
-    # by .makeAllPairsCpp are longer than .Machine$integer.max because each 
-    # column of a data.frame/data.table must have length < .Machine$integer.max.
     # TODO: Benchmark and profile. 
     pairs_idx <- .Call(Cpp_MethylationTuples_makeAllPairs, 
                        methpat_order,
@@ -211,25 +208,20 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
                        start(methpat_rd_sorted),                                 
                        in_feature,
                        ipd,
-                       betas, 
                        id_dt)  
   } else if (pair_type == 'adjacent' || pair_type == 'ref_adjacent') {
-    # TODO: setDT will fail if the length of the vectors in the list returned 
-    # by .makeAllPairsCpp are longer than .Machine$integer.max because each 
-    # column of a data.frame/data.table must have length < .Machine$integer.max.
     # TODO: Benchmark and profile.
-    pairs <- setkey(setDT(.Call(Cpp_MethylationTuples_makeAdjacentPairs, 
-                                methpat_order,
-                                as.character(seqnames(methpat_rd_sorted)), 
-                                as.character(strand(methpat_rd_sorted)),
-                                start(methpat_rd_sorted),                                
-                                in_feature,
-                                betas,
-                                id_dt)), ID, sample)
+    pairs_idx <- .Call(Cpp_MethylationTuples_makeAdjacentPairs, 
+                   methpat_order,
+                   as.character(seqnames(methpat_rd_sorted)), 
+                   as.character(strand(methpat_rd_sorted)),
+                   start(methpat_rd_sorted),                                
+                   in_feature,
+                   id_dt)
   }
   
   # Compute correlations
-  # TODO: Try using bplapply. Don't know that it will be worth it.
+  # TODO: bplapply.
   cors_list <- lapply(colnames(methpat), function(sample_name, 
                                                   pairs_idx, betas) {
     beta_pairs <- data.table(ID = pairs_idx[["ID"]], 

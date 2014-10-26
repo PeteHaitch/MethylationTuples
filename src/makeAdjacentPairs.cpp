@@ -40,8 +40,8 @@ List makeAdjacentPairs(IntegerVector methpat_order,
   
   // Initialise vectors to store results.
   std::vector<int> id_out;
-  std::vector<double> i_out;
-  std::vector<double> j_out;
+  std::vector<int> i_out;
+  std::vector<int> j_out;
   
   // Reserve memory for output vectors.
   // n is an upper bound on the number of pairs created.
