@@ -60,8 +60,8 @@
 .my_cor <- function(x, y, method = c("pearson", "kendall", "spearman"), 
                     conf.level = 0.95) {
   method <- match.arg(method)
-  z <- try(cor.test(x, y, method = method, conf.level = conf.level), 
-      silent = TRUE)
+  z <- try(suppressWarnings(cor.test(x, y, method = method, 
+                                     conf.level = conf.level), silent = TRUE))
   if (is(z, "try-error")) {
     val <- list(cor = NA_real_, CI_lower = NA_real_, CI_upper = NA_real_)
   } else {
