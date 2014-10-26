@@ -82,3 +82,13 @@ List test7(LogicalVector x, LogicalVector y) {
                       _["z_iv_sugar"] = z_iv_sugar,
                       _["z_cv_sugar"] = z_cv_sugar));
 }
+
+// [[Rcpp::export]]
+int f(IntegerVector x) {
+  return x.size();
+}
+
+// [[Rcpp::export]]
+double g(NumericVector x) {
+  return x.size();
+}
