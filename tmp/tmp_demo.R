@@ -5,22 +5,27 @@ betas <- betaVal(methpat)
 #ipd <- 1:2000
 ipd <- sort(unique(diff(start(methpat_rd_sorted))))
 ipd <- ipd[ipd > 0]
+in_feature <- rep(NA_integer_, nrow(methpat))
+in_feature_levels <- unique(in_feature)
+pair_feature_status <- sort(unique(rowSums(expand.grid(in_feature_levels, 
+                                                       in_feature_levels))),
+                            na.last = FALSE)
 id_dt <- setDT(expand.grid(IPD = ipd, 
-                           strand = levels(strand(methpat)), 
-                           feature_status = 0:3))
-id_dt[, c("KEY", "ID") := list(paste(IPD, strand, feature_status, sep = ''),
+                           strand = levels(strand(methpat)),
+                           pair_feature_status = pair_feature_status))
+id_dt[, c("KEY", "ID") := list(paste(IPD, strand, pair_feature_status, 
+                                     sep = ''),
                                seq_len(nrow(id_dt)))]
 setkey(id_dt, ID)
-method <- 'pearson'
 
 seqnames <- as.character(seqnames(methpat_rd_sorted))
 strand <- as.character(strand(methpat_rd_sorted))
 pos <- start(methpat_rd_sorted)
-feature_status <- rep(FALSE, length(methpat_rd_sorted))
+method <- 'pearson'
 
 system.time({pairs <- setkey(setDT(
   .makeAllPairsCpp(
-    methpat_order, seqnames, strand, pos, feature_status, ipd, betas, id_dt)), 
+    methpat_order, seqnames, strand, pos, in_feature, ipd, betas, id_dt)), 
   ID, sample)})
 
 system.time({cors <- pairs[, list(cor = cor(beta1, beta2, use = "na.or.complete", 

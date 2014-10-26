@@ -5,7 +5,7 @@
 # TODO: Get confidence interval for correlations, e.g., via cor.test
 # TODO: Should betaCor return unstratified estimates along with stratified 
 # estimates? Not hard, just join id_dt[pairs] and then compute correlations 
-# ignore feature_status.
+# ignore pair_feature_status.
 # TODO: Update docs
 
 #' Compute within-sample correlations of pairs of beta-values.
@@ -163,23 +163,29 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
   methpat_rd_sorted <- rowData(methpat)[methpat_order]
   betas <- betaVal(methpat, min_cov)
   
-  # Get the "feature status" (feature_status) of each loci.
-  # feature_status = TRUE if overlaps feature, FALSE otherwise
   if (!missing(feature)) {
-    feature_status <- overlapsAny(methpat_rd_sorted, feature)
+    # in_feature = 1 (TRUE) or 0 (FALSE).
+    # Use integers rather than logicals because they're easier to work with in 
+    # Rcpp.
+    in_feature <- overlapsAny(methpat_rd_sorted, feature)
   } else {
-    # TODO: feature_status NA if no feature is supplied.
-    feature_status <- rep(FALSE, length(methpat_rd_sorted))
+    # TODO: in_feature NA if no feature is supplied.
+    in_feature <- rep(NA, length(methpat_rd_sorted))
+    #in_feature <- rep(FALSE, length(methpat_rd_sorted))
   }
-  # Create map between IPD-strand-feature_status and an integer ID.
+  # Create map between IPD-strand-in_feature and an integer ID.
   # Need to define possible IPDs in order to create map.
   if (pair_type == "adjacent" || pair_type == "ref_adjacent") {
     ipd <- sort(unique(diff(start(methpat_rd_sorted))))
     ipd <- ipd[ipd > 0]
   }
+  in_feature_levels <- unique(in_feature)
+  pair_feature_status <- sort(unique(rowSums(expand.grid(in_feature_levels, 
+                                                         in_feature_levels))),
+                                     na.last = FALSE)
   id_dt <- setDT(expand.grid(IPD = ipd, 
                              strand = levels(strand(methpat)),
-                             pair_feature_status = 0:3))
+                             pair_feature_status = pair_feature_status))
   id_dt[, c("KEY", "ID") := list(paste(IPD, strand, pair_feature_status, 
                                        sep = ''),
                                  seq_len(nrow(id_dt)))]
@@ -195,10 +201,10 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
                                 as.character(seqnames(methpat_rd_sorted)), 
                                 as.character(strand(methpat_rd_sorted)),
                                 start(methpat_rd_sorted),                                 
-                                feature_status,
+                                in_feature,
                                 ipd,
                                 betas, 
-                                id_dt)), ID, sample)    
+                                id_dt)), ID, sample)
   } else if (pair_type == 'adjacent' || pair_type == 'ref_adjacent') {
     # TODO: Benchmark and profile. 
     # 4-5 minutes for a MethPat object with 3 samples and 54 million CpGs.
@@ -208,7 +214,7 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
                                 as.character(seqnames(methpat_rd_sorted)), 
                                 as.character(strand(methpat_rd_sorted)),
                                 start(methpat_rd_sorted),                                
-                                feature_status,
+                                in_feature,
                                 betas,
                                 id_dt)), ID, sample)
   }
@@ -222,8 +228,8 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
   # Join cors and id_dt. Add sample names back.
   val <- id_dt[cors]
   val[, c("ID", "KEY") := list(NULL, NULL)][, sample := colnames(methpat)[val$sample]]
-  if (missing(feature)) {
-    val[, pair_feature_status := NULL]
-  }
+#   if (missing(feature)) {
+#     val[, pair_feature_status := NULL]
+#   }
   return(val)
 }

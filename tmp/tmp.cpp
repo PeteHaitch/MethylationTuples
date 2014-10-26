@@ -58,4 +58,27 @@ IntegerVector test6(int n) {
   return seq_len(n);
 }
 
-
+// TODO: Ask Rcpp-devel about this behaviour: 
+// x <- c(NA, TRUE, TRUE, FALSE, FALSE), y <- c(NA, TRUE, FALSE, TRUE, FALSE)
+// [[Rcpp::export]]
+List test7(LogicalVector x, LogicalVector y) {
+  int n = x.size();
+  LogicalVector z_lv(n);
+  IntegerVector z_iv(n);
+  CharacterVector z_cv(n);
+  LogicalVector z_lv_sugar(n);
+  IntegerVector z_iv_sugar(n);
+  CharacterVector z_cv_sugar(n);
+  for (int i = 0; i < n; i++) {
+    z_lv[i] = x[i] + y[i];
+    z_iv[i] = x[i] + y[i];
+    z_cv[i] = x[i] + y[i];
+  }
+  z_lv_sugar = x + y;
+  z_iv_sugar = x + y;
+  z_cv_sugar = x + y;
+  return(List::create(_["z_lv"] = z_lv, _["z_iv"] = z_iv, _["z_cv"] = z_cv, 
+                      _["z_lv_sugar"] = z_lv_sugar, 
+                      _["z_iv_sugar"] = z_iv_sugar,
+                      _["z_cv_sugar"] = z_cv_sugar));
+}

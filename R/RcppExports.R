@@ -11,17 +11,18 @@
 #' @param seqnames \code{as.character(seqnames(sort(x)))}.
 #' @param strand \code{as.character(sort(x))}.
 #' @param pos \code{start(sort(x))}.
-#' @param feature_status \code{overlapsAny(x, feature)}.
+#' @param in_feature \code{overlapsAny(x, feature)} or \code{rep(NA, nrow(x))} 
+#' if no feature is supplied to \code{betaCor}.
 #' @param betas \code{betaVal(x)}
 #' @param id_dt A \code{\link[data.table]{data.table}} mapping the
-#' \code{seqnames-strand-IPD-feature_status} combination to an integer ID.
+#' \code{seqnames-strand-IPD-in_feature} combination to an integer ID.
 #' 
 #' @keywords internal
 #' 
 #' @return A \code{list} with the \code{ID}, \code{sample}, \code{beta1} and 
 #' \code{beta2} of each pair.
-.makeAdjacentPairsCpp <- function(methpat_order, seqnames, strand, pos, feature_status, betas, id_dt) {
-    .Call('MethylationTuples_makeAdjacentPairs', PACKAGE = 'MethylationTuples', methpat_order, seqnames, strand, pos, feature_status, betas, id_dt)
+.makeAdjacentPairsCpp <- function(methpat_order, seqnames, strand, pos, in_feature, betas, id_dt) {
+    .Call('MethylationTuples_makeAdjacentPairs', PACKAGE = 'MethylationTuples', methpat_order, seqnames, strand, pos, in_feature, betas, id_dt)
 }
 
 #' Create all pairs of beta-values with given IPDs.
@@ -34,17 +35,20 @@
 #' @param seqnames \code{as.character(seqnames(sort(x)))}.
 #' @param strand \code{as.character(sort(x))}.
 #' @param pos \code{start(sort(x))}.
-#' @param feature_status \code{overlapsAny(x, feature)}.
+#' @param in_feature \code{overlapsAny(x, feature)} or \code{rep(NA, nrow(x))} 
+#' if no feature is supplied to \code{betaCor}.
+#' \code{rep(NA_integer_, nrow(x))} if no feature is supplied to 
+#' \code{betaCor}.
 #' @param ipd An integer vector of IPD, e.g., \code{ipd = 1:100}.
 #' @param betas \code{betaVal(x)}
 #' @param id_dt A \code{\link[data.table]{data.table}} mapping the
-#' \code{seqnames-strand-IPD-feature_status} combination to an integer ID.
+#' \code{seqnames-strand-IPD-in_feature} combination to an integer ID.
 #' 
 #' @keywords internal
 #' 
 #' @return A \code{list} with the \code{ID}, \code{sample}, \code{beta1} and 
 #' \code{beta2} of each pair.
-.makeAllPairsCpp <- function(methpat_order, seqnames, strand, pos, feature_status, ipd, betas, id_dt) {
-    .Call('MethylationTuples_makeAllPairs', PACKAGE = 'MethylationTuples', methpat_order, seqnames, strand, pos, feature_status, ipd, betas, id_dt)
+.makeAllPairsCpp <- function(methpat_order, seqnames, strand, pos, in_feature, ipd, betas, id_dt) {
+    .Call('MethylationTuples_makeAllPairs', PACKAGE = 'MethylationTuples', methpat_order, seqnames, strand, pos, in_feature, ipd, betas, id_dt)
 }
 
