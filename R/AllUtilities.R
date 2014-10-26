@@ -61,7 +61,7 @@
                     conf.level = 0.95) {
   method <- match.arg(method)
   z <- try(suppressWarnings(cor.test(x, y, method = method, 
-                                     conf.level = conf.level), silent = TRUE))
+                                     conf.level = conf.level)), silent = TRUE)
   if (is(z, "try-error")) {
     val <- list(cor = NA_real_, CI_lower = NA_real_, CI_upper = NA_real_)
   } else {
