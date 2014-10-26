@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // makeAdjacentPairs
-List makeAdjacentPairs(IntegerVector methpat_order, std::vector<std::string> seqnames, std::vector<std::string> strand, IntegerVector pos, LogicalVector in_feature, NumericMatrix betas, DataFrame id_dt);
-RcppExport SEXP MethylationTuples_makeAdjacentPairs(SEXP methpat_orderSEXP, SEXP seqnamesSEXP, SEXP strandSEXP, SEXP posSEXP, SEXP in_featureSEXP, SEXP betasSEXP, SEXP id_dtSEXP) {
+List makeAdjacentPairs(IntegerVector methpat_order, std::vector<std::string> seqnames, std::vector<std::string> strand, IntegerVector pos, LogicalVector in_feature, DataFrame id_dt);
+RcppExport SEXP MethylationTuples_makeAdjacentPairs(SEXP methpat_orderSEXP, SEXP seqnamesSEXP, SEXP strandSEXP, SEXP posSEXP, SEXP in_featureSEXP, SEXP id_dtSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -17,9 +17,8 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< std::vector<std::string> >::type strand(strandSEXP );
         Rcpp::traits::input_parameter< IntegerVector >::type pos(posSEXP );
         Rcpp::traits::input_parameter< LogicalVector >::type in_feature(in_featureSEXP );
-        Rcpp::traits::input_parameter< NumericMatrix >::type betas(betasSEXP );
         Rcpp::traits::input_parameter< DataFrame >::type id_dt(id_dtSEXP );
-        List __result = makeAdjacentPairs(methpat_order, seqnames, strand, pos, in_feature, betas, id_dt);
+        List __result = makeAdjacentPairs(methpat_order, seqnames, strand, pos, in_feature, id_dt);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -27,8 +26,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // makeAllPairs
-List makeAllPairs(IntegerVector methpat_order, std::vector<std::string> seqnames, std::vector<std::string> strand, IntegerVector pos, LogicalVector in_feature, IntegerVector ipd, NumericMatrix betas, DataFrame id_dt);
-RcppExport SEXP MethylationTuples_makeAllPairs(SEXP methpat_orderSEXP, SEXP seqnamesSEXP, SEXP strandSEXP, SEXP posSEXP, SEXP in_featureSEXP, SEXP ipdSEXP, SEXP betasSEXP, SEXP id_dtSEXP) {
+List makeAllPairs(IntegerVector methpat_order, std::vector<std::string> seqnames, std::vector<std::string> strand, IntegerVector pos, LogicalVector in_feature, IntegerVector ipd, DataFrame id_dt);
+RcppExport SEXP MethylationTuples_makeAllPairs(SEXP methpat_orderSEXP, SEXP seqnamesSEXP, SEXP strandSEXP, SEXP posSEXP, SEXP in_featureSEXP, SEXP ipdSEXP, SEXP id_dtSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -39,9 +38,8 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< IntegerVector >::type pos(posSEXP );
         Rcpp::traits::input_parameter< LogicalVector >::type in_feature(in_featureSEXP );
         Rcpp::traits::input_parameter< IntegerVector >::type ipd(ipdSEXP );
-        Rcpp::traits::input_parameter< NumericMatrix >::type betas(betasSEXP );
         Rcpp::traits::input_parameter< DataFrame >::type id_dt(id_dtSEXP );
-        List __result = makeAllPairs(methpat_order, seqnames, strand, pos, in_feature, ipd, betas, id_dt);
+        List __result = makeAllPairs(methpat_order, seqnames, strand, pos, in_feature, ipd, id_dt);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

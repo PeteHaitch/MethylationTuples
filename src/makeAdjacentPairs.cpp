@@ -1,6 +1,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// TODO: Fail gracefully if output is likely to exceed R's vector limits.
+
 // NOTE: Could require seqnames and strand to be IntegerVector rather than 
 // CharacterVector to possibly save memory but with added minor complication of 
 // back-converting integers to seqnames and strand.
@@ -8,7 +10,7 @@ using namespace Rcpp;
 // FALSE) or all loci don't have feature information available (in_feature is 
 // NA).
 
-//' Create adjacent pairs of beta-values.
+//' Get row numbers to create all pairs of adjacent methylation loci.
 //' 
 //' In the description below, \code{x} is a \code{\link{MethPat}} object 
 //' containing 1-tuples. The argument descriptions are chosen for clarity, not 
@@ -20,36 +22,34 @@ using namespace Rcpp;
 //' @param pos \code{start(sort(x))}.
 //' @param in_feature \code{overlapsAny(x, feature)} or \code{rep(NA, nrow(x))} 
 //' if no feature is supplied to \code{betaCor}.
-//' @param betas \code{betaVal(x)}
 //' @param id_dt A \code{\link[data.table]{data.table}} mapping the
 //' \code{seqnames-strand-IPD-in_feature} combination to an integer ID.
 //' 
 //' @keywords internal
 //' 
-//' @return A \code{list} with the \code{ID}, \code{sample}, \code{beta1} and 
-//' \code{beta2} of each pair.
+//' @return A \code{list} with the \code{ID}, \code{i} and \code{j}
+//' \code{j} of each pair, where \code{i} (resp. \code{j}) is the row number of 
+//' the first (resp. second) loci in the pair with respect to \code{x}.
 // [[Rcpp::export(".makeAdjacentPairsCpp")]]
 List makeAdjacentPairs(IntegerVector methpat_order,
                        std::vector<std::string> seqnames,
                        std::vector<std::string> strand, 
                        IntegerVector pos,
                        LogicalVector in_feature,
-                       NumericMatrix betas,
                        DataFrame id_dt) {
   
   // Initialise vectors to store results.
   std::vector<int> id_out;
-  std::vector<double> beta1_out;
-  std::vector<double> beta2_out;
+  std::vector<double> i_out;
+  std::vector<double> j_out;
   
   // Reserve memory for output vectors.
   // n is an upper bound on the number of pairs created.
   int nr = seqnames.size();
-  int nc = betas.ncol();
-  int n = nr * nc;
+  int n = nr;
   id_out.reserve(n);
-  beta1_out.reserve(n);
-  beta2_out.reserve(n);
+  i_out.reserve(n);
+  j_out.reserve(n);
   
   // Create id_map from id_dt
   int nid = id_dt.nrows();
@@ -77,24 +77,16 @@ List makeAdjacentPairs(IntegerVector methpat_order,
         pair_feature_status_string = "NA";
       } else {
         pair_feature_status_string = Rcpp::toString(in_feature[i] + 
-                                     in_feature[i + 1]);
+        in_feature[i + 1]);
       }
       std::string id_key = ipd_string + strand[i] + pair_feature_status_string;
       // Look-up id_key in id_map to get the value and store in id_out
       int id_val = id_map[id_key];
-      // Loop over samples and extract beta values for pair
-      for (int k = 0; k < nc; k++) {
-        id_out.push_back(id_val);
-        // -1 because C++ uses 0-based index.
-        beta1_out.push_back(betas(methpat_order[i] - 1, k));
-        beta2_out.push_back(betas(methpat_order[i + 1] - 1, k));
-      }
+      id_out.push_back(id_val);
+      i_out.push_back(methpat_order[i]);
+      j_out.push_back(methpat_order[i + 1]);
     }
   }
   
-  // Add sample names to output
-  IntegerVector sample_names = rep(seq_len(nc), id_out.size() / nc);
-  
-  return List::create(_["ID"] = id_out, _["sample"] = sample_names, 
-  _["beta1"] = beta1_out, _["beta2"] = beta2_out); 
+  return List::create(_["ID"] = id_out, _["i"] = i_out, _["j"] = j_out); 
 }

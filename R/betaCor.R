@@ -100,6 +100,13 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
                     conf.level = 0.95,
                     min_cov = 5L,
                     feature) {
+  
+  if (nrow(methpat) > .Machine$integer.max) {
+    stop(paste0("Sorry, 'betaCor' doesn't yet support 'methpat' objects with ", 
+                "more than ", .Machine$integer.max, " (.Machine$integer.max) ", 
+                "rows."))
+  }
+  
   if (!is(methpat, "MethPat") || size(methpat) != 1L) {
     stop("'methpat' must be a 'MethPat' object containing 1-tuples.")
   }
@@ -171,9 +178,7 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
     # Rcpp.
     in_feature <- overlapsAny(methpat_rd_sorted, feature)
   } else {
-    # TODO: in_feature NA if no feature is supplied.
     in_feature <- rep(NA, length(methpat_rd_sorted))
-    #in_feature <- rep(FALSE, length(methpat_rd_sorted))
   }
   # Create map between IPD-strand-in_feature and an integer ID.
   # Need to define possible IPDs in order to create map.
@@ -184,7 +189,7 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
   in_feature_levels <- unique(in_feature)
   pair_feature_status <- sort(unique(rowSums(expand.grid(in_feature_levels, 
                                                          in_feature_levels))),
-                                     na.last = FALSE)
+                              na.last = FALSE)
   id_dt <- setDT(expand.grid(IPD = ipd, 
                              strand = levels(strand(methpat)),
                              pair_feature_status = pair_feature_status))
@@ -195,22 +200,24 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
   
   # Create pairs of beta-values
   if (pair_type == 'all') {
+    # TODO: setDT will fail if the length of the vectors in the list returned 
+    # by .makeAllPairsCpp are longer than .Machine$integer.max because each 
+    # column of a data.frame/data.table must have length < .Machine$integer.max.
     # TODO: Benchmark and profile. 
-    # 2-3 hours for a MethPat object with 1 sample + 56M CpGs which makes 
-    # 1.6 billion pairs and is ~40GB in size.
-    pairs <- setkey(setDT(.Call(Cpp_MethylationTuples_makeAllPairs, 
-                                methpat_order,
-                                as.character(seqnames(methpat_rd_sorted)), 
-                                as.character(strand(methpat_rd_sorted)),
-                                start(methpat_rd_sorted),                                 
-                                in_feature,
-                                ipd,
-                                betas, 
-                                id_dt)), ID, sample)
+    pairs_idx <- .Call(Cpp_MethylationTuples_makeAllPairs, 
+                       methpat_order,
+                       as.character(seqnames(methpat_rd_sorted)), 
+                       as.character(strand(methpat_rd_sorted)),
+                       start(methpat_rd_sorted),                                 
+                       in_feature,
+                       ipd,
+                       betas, 
+                       id_dt)  
   } else if (pair_type == 'adjacent' || pair_type == 'ref_adjacent') {
-    # TODO: Benchmark and profile. 
-    # 4-5 minutes for a MethPat object with 3 samples and 54 million CpGs.
-    # Returns a data.table with 162 million rows and is ~4GB in size.
+    # TODO: setDT will fail if the length of the vectors in the list returned 
+    # by .makeAllPairsCpp are longer than .Machine$integer.max because each 
+    # column of a data.frame/data.table must have length < .Machine$integer.max.
+    # TODO: Benchmark and profile.
     pairs <- setkey(setDT(.Call(Cpp_MethylationTuples_makeAdjacentPairs, 
                                 methpat_order,
                                 as.character(seqnames(methpat_rd_sorted)), 
@@ -222,14 +229,20 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
   }
   
   # Compute correlations
-  cors <- pairs[, .my_cor(beta1, beta2, method = method, 
-                          conf.level = conf.level), by = list(ID, sample)]
+  # TODO: Try using bplapply. Don't know that it will be worth it.
+  cors_list <- lapply(colnames(methpat), function(sample_name, 
+                                                  pairs_idx, betas) {
+    beta_pairs <- data.table(ID = pairs_idx[["ID"]], 
+                             sample = sample_name,
+                             beta1 = betas[pairs_idx[["i"]], sample_name], 
+                             beta2 = betas[pairs_idx[["j"]], sample_name])
+    beta_pairs[, .my_cor(beta1, beta2, method = method, 
+                         conf.level = conf.level), by = list(ID, sample)]
+  }, pairs_idx = pairs_idx, betas = betas)
+  cors <- setkey(rbindlist(cors_list), ID, sample)
   
   # Join cors and id_dt. Add sample names back.
   val <- id_dt[cors]
-  val[, c("ID", "KEY") := list(NULL, NULL)][, sample := colnames(methpat)[val$sample]]
-#   if (missing(feature)) {
-#     val[, pair_feature_status := NULL]
-#   }
+  val[, c("ID", "KEY") := list(NULL, NULL)]
   return(val)
 }

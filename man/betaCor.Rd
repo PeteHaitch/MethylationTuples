@@ -4,8 +4,8 @@
 \title{Compute within-sample correlations of pairs of beta-values.}
 \usage{
 betaCor(methpat, pair_type = c("adjacent", "all", "ref_adjacent"),
-  ipd = seq_len(2000L), ref_loci, method = c("pearson", "spearman"),
-  min_cov = 5L, feature)
+  ipd = seq_len(2000L), ref_loci, method = c("pearson", "kendall",
+  "spearman"), conf.level = 0.95, min_cov = 5L, feature)
 }
 \arguments{
 \item{methpat}{A \code{\link{MethPat}} object containing 1-tuples.}
