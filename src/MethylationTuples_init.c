@@ -5,12 +5,12 @@
 
 #include <R_ext/Rdynload.h>
 
-SEXP MethylationTuples_makeAdjacentPairs(SEXP methpat_orderSEXP, SEXP seqnamesSEXP, SEXP strandSEXP, SEXP posSEXP, SEXP feature_statusSEXP, SEXP betasSEXP, SEXP id_dtSEXP);
-SEXP MethylationTuples_makeAllPairs(SEXP methpat_orderSEXP, SEXP seqnamesSEXP, SEXP strandSEXP, SEXP posSEXP, SEXP feature_statusSEXP, SEXP ipdSEXP, SEXP betasSEXP, SEXP id_dtSEXP);
+SEXP MethylationTuples_makeAdjacentPairs(SEXP methpat_orderSEXP, SEXP seqnamesSEXP, SEXP strandSEXP, SEXP posSEXP, SEXP in_featureSEXP, SEXP id_dtSEXP);
+SEXP MethylationTuples_makeAllPairs(SEXP methpat_orderSEXP, SEXP seqnamesSEXP, SEXP strandSEXP, SEXP posSEXP, SEXP in_featureSEXP, SEXP ipdSEXP, SEXP id_dtSEXP);
 
 R_CallMethodDef callMethods[]  = {
-  {"Cpp_MethylationTuples_makeAdjacentPairs", (DL_FUNC) &MethylationTuples_makeAdjacentPairs, 7},
-  {"Cpp_MethylationTuples_makeAllPairs", (DL_FUNC) &MethylationTuples_makeAllPairs, 8},
+  {"Cpp_MethylationTuples_makeAdjacentPairs", (DL_FUNC) &MethylationTuples_makeAdjacentPairs, 6},
+  {"Cpp_MethylationTuples_makeAllPairs", (DL_FUNC) &MethylationTuples_makeAllPairs, 7},
   {NULL, NULL, 0}
 };
 
