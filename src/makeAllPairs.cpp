@@ -44,8 +44,8 @@ List makeAllPairs(IntegerVector methpat_order,
   
   // Initialise vectors to store results.
   std::vector<int> id_out;
-  std::vector<double> i_out;
-  std::vector<double> j_out;
+  std::vector<int> i_out;
+  std::vector<int> j_out;
   
   // Reserve memory for output vectors.
   // Hard to estimate this given each loci can be part of multiple pairs and 
@@ -53,8 +53,8 @@ List makeAllPairs(IntegerVector methpat_order,
   // n is an initial guess that assumes each loci is involved in 50 pairs, 
   // which is simply based on my (limited) experience. 
   // TODO: There should be a better way to estimate "50".
-  int nr = seqnames.size();
-  int n = nr * 50;
+  double nr = seqnames.size();
+  double n = nr * 50;
   id_out.reserve(n);
   i_out.reserve(n);
   j_out.reserve(n);
@@ -76,7 +76,7 @@ List makeAllPairs(IntegerVector methpat_order,
   
   // Loop over loci and find pairs with IPD %in% ipd and on the same 
   // seqname and strand.
-  for (int i = 0; i < (nr - 1); i++) {
+  for (double i = 0; i < (nr - 1); i++) {
     j = i + 1;
     while (j <= (nr - 1)) {
       if (seqnames[i] == seqnames[j] and strand[i] == strand[j]) {

@@ -45,8 +45,8 @@ List makeAdjacentPairs(IntegerVector methpat_order,
   
   // Reserve memory for output vectors.
   // n is an upper bound on the number of pairs created.
-  int nr = seqnames.size();
-  int n = nr;
+  double nr = seqnames.size();
+  double n = nr;
   id_out.reserve(n);
   i_out.reserve(n);
   j_out.reserve(n);
@@ -65,7 +65,7 @@ List makeAdjacentPairs(IntegerVector methpat_order,
   std::string pair_feature_status_string = "";
   
   // Loop over loci and make adjacent pairs.
-  for (int i = 0; i < nr - 1; i++) {
+  for (double i = 0; i < nr - 1; i++) {
     if (seqnames[i] == seqnames[i + 1] and strand[i] == strand[i + 1]) {
       int ipd_ = pos[i + 1] - pos[i];
       // (i, i + 1) are a pair, so add to id_out, beta1_out and beta2_out
