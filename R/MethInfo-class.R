@@ -73,8 +73,8 @@ setClass("MethInfo",
 #' @export
 setMethod("methtype", 
           "MethInfo", 
-          function(x) {
-            x@methtype
+          function(object) {
+            object@methtype
           })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -121,9 +121,9 @@ MethInfo <- function(methtype = NA_character_) {
 #' @export
 setReplaceMethod("methtype", 
                  c("MethInfo", "character"),
-                 function(x, value) { 
-                   x@methtype <- value
-                   x
+                 function(object, value) { 
+                   object@methtype <- value
+                   object
                  }
 ) 
 

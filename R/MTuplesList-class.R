@@ -77,16 +77,16 @@ MTuplesList <- function(...) {
 #' @export
 setMethod("methinfo", 
           "MTuplesList", 
-          function(x) {
-            x@unlistData@methinfo
+          function(object) {
+            object@unlistData@methinfo
           }
 )
 
 #' @export
 setMethod("methtype", 
           "MTuplesList", 
-          function(x) {
-            methtype(x@unlistData@methinfo)
+          function(object) {
+            methtype(object@unlistData@methinfo)
           }
 )
 
@@ -97,18 +97,18 @@ setMethod("methtype",
 #' @export
 setReplaceMethod("methinfo", 
                  c("MTuplesList", "MethInfo"), 
-                 function(x, value) {
-                   x@unlistData@methinfo <- value
-                   x
+                 function(object, value) {
+                   object@unlistData@methinfo <- value
+                   object
                  }
 )
 
 #' @export
 setReplaceMethod("methtype", 
                  c("MTuplesList", "character"), 
-                 function(x, value) {
-                   methtype(x@unlistData@methinfo) <- value
-                   x
+                 function(object, value) {
+                   methtype(object@unlistData@methinfo) <- value
+                   object
                  }
 )
 

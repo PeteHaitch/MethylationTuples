@@ -178,16 +178,16 @@ setMethod("c",
 #' @export
 setMethod("methinfo", 
           "MTuples", 
-          function(x) {
-            x@methinfo
+          function(object) {
+            object@methinfo
           }
 )
 
 #' @export
 setMethod("methtype", 
           "MTuples", 
-          function(x) {
-            methtype(x@methinfo)
+          function(object) {
+            methtype(object@methinfo)
           }
 )
 
@@ -198,17 +198,17 @@ setMethod("methtype",
 #' @export
 setReplaceMethod("methinfo", 
                  c("MTuples", "MethInfo"), 
-                 function(x, value) {
-                   x@methinfo <- value
-                   x
+                 function(object, value) {
+                   object@methinfo <- value
+                   object
                  }
 )
 
 #' @export
 setReplaceMethod("methtype", 
                  c("MTuples", "character"), 
-                 function(x, value) {
-                   methtype(x@methinfo) <- value
-                   x
+                 function(object, value) {
+                   methtype(object@methinfo) <- value
+                   object
                  }
 )

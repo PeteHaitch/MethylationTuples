@@ -434,46 +434,64 @@ setMethod('granges',
 #' @export 
 setMethod("methinfo", 
           "MethPat", 
-          function(x) {
-            methinfo(rowData(x))
+          function(object) {
+            methinfo(rowData(object))
           }
 )
 
 #' @export
 setMethod("methtype", 
           "MethPat", 
-          function(x) {
-            methtype(rowData(x))
+          function(object) {
+            methtype(rowData(object))
           }
 )
 
 ## TODO: Document.
 ## TODO: Unit tests.
-#' Compute beta-values.
+#' Compute methylation levels.
 #' @param x A \code{\link{MethPat}} object containing 1-tuples.
+#' @param statistic A \code{character} string indicating which methylation 
+#' level statistic is to be computed. One of "\code{beta-values}" or 
+#' "\code{M-values}" (see below).
 #' @param min_cov An \code{integer} specifying the minimum coverage required 
 #' in order order to compute a beta-value. Samples/sites with coverage less 
-#' than \code{min_cov} will have the corresponding beta-value set to \code{NA}.
+#' than \code{min_cov} will have the corresponding methylation level set to 
+#' \code{NA}.
+#' @param offset A \code{numeric} vector with length 1 used when computing 
+#' M-values (default: 1).
+#' 
+#' @details
+#' TODO: Define beta-values and M-values. Note any differences with how others 
+#' define beta-values or M-values, e.g., minfi.
 #' 
 #' @return A \code{\link[base]{matrix}}, with the same dimensions and dimension 
-#' names as \code{x}, of beta-values at each methylation loci in each sample.
+#' names as \code{x}, of methylation levels at each methylation loci in each 
+#' sample.
 #' 
 #' @export 
-setMethod("betaVal", 
+setMethod("methLevel", 
           "MethPat", 
-          function(x, min_cov = 0L) {
-            if (size(x) != 1L) {
-              stop(paste0("It does not make sense to compute beta-values ",
-                          "unless 'size' = 1."))
+          function(object, statistic = c("beta-values", "M-values"), 
+                   min_cov = 1L, offset = 1L) {
+            if (size(object) != 1L) {
+              stop(paste0("Methylation levels are only defined for 1-tuples ", 
+                          "('size' = 1)."))
             }
-            if (min_cov == 0L) { 
-              assay(x, 'M') / getCoverage(x)
-            } else if (min_cov > 0L) {
-              cov <- getCoverage(x)
-              beta <- assay(x, 'M') / getCoverage(x)
-              beta[cov < min_cov] <- NA_real_
-              beta
+            statistic <- match.arg(statistic)
+            if (statistic == "beta-values") {
+              if (min_cov > 0L) { 
+                meth_level <- assay(object, "M") / getCoverage(object)
+              } else if (min_cov > 1L) {
+                cov <- getCoverage(object)
+                meth_level <- assay(object, "M") / cov
+                meth_level[cov < min_cov] <- NA_real_
+              }
+            } else if (statistic == "M-values") {
+              meth_level <- log2(assay(object, "M") / 
+                                   (assay(object, "U") + offset))
             }
+            return(meth_level)
           }
 )
 
@@ -481,18 +499,19 @@ setMethod("betaVal",
 ## TODO: Unit tests.
 ## TODO: Export
 #' Compute sequencing coverage of m-tuples.
-#' @param x A \code{\link{MethPat}} object.
+#' @param object A \code{\link{MethPat}} object.
 #' 
-#' @return A \code{\link[base]{matrix}}, with the same dimensions and dimension 
-#' names as \code{x}, of sequencing coverage of each tuple in each sample.
+#' @return A \code{\link[base]{matriobject}}, with the same dimensions and 
+#' dimension names as \code{object}, of sequencing coverage of each tuple in 
+#' each sample.
 #' @export
 setMethod("getCoverage", 
           "MethPat", 
-          function(x) {
-            Reduce(f = '+', 
-                   x = lapply(.make_methpat_names(size(x)), function(an, x) {
-                     assay(x, an)
-                   }, x = x)
+          function(object) {
+            Reduce(f = '+', x = lapply(.make_methpat_names(size(object)), 
+                                            function(an, object) {
+                                              assay(object, an)
+                                            }, object = object)
             )
           }
 )
@@ -520,17 +539,17 @@ setMethod("getCoverage",
 # methods
 setReplaceMethod("methinfo", 
                  "MethPat", 
-                 function(x, value) {
-                   methinfo(rowData(x)) <- value
-                   x
+                 function(object, value) {
+                   methinfo(rowData(object)) <- value
+                   object
                  }
 )
 
 setReplaceMethod("methtype", 
                  "MethPat", 
-                 function(x, value) {
-                   methtype(rowData(x)) <- value
-                   x
+                 function(object, value) {
+                   methtype(rowData(object)) <- value
+                   object
                  }
 )
 

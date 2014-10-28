@@ -18,5 +18,6 @@
 #' @import data.table
 #' @import R.utils
 #' @import BiocParallel
+#' @import Biostrings
 #' @importFrom Biobase validMsg
 NULL

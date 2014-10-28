@@ -4,14 +4,14 @@
 
 #' @export
 setGeneric("methinfo", 
-           function(x) {
+           function(object) {
              standardGeneric("methinfo")
            }
 )
 
 #' @export
 setGeneric("methinfo<-", 
-           function(x, value) {
+           function(object, value) {
              standardGeneric("methinfo<-")
            }
 )
@@ -22,37 +22,37 @@ setGeneric("methinfo<-",
 
 #' @export
 setGeneric("methtype", 
-           function(x) {
+           function(object) {
              standardGeneric("methtype")
            }
 )
 
 #' @export
 setGeneric("methtype<-", 
-           function(x, value) {
+           function(object, value) {
              standardGeneric("methtype<-")
            }
 )
 
 ### -------------------------------------------------------------------------
-### betaVal
+### methLevel
 ###
 
 #' @export
-setGeneric("betaVal", 
-           function(x, ...) {
-             standardGeneric("betaVal")
+setGeneric("methLevel", 
+           function(object, ...) {
+             standardGeneric("methLevel")
            }
 )
 
 ### -------------------------------------------------------------------------
-### getCov 
+### getCoverage
 ###
 
 ## TODO: Decide on a name and export
 #' @export
 setGeneric("getCoverage", 
-           function(x) {
+           function(object) {
              standardGeneric("getCoverage")
            }
 )
