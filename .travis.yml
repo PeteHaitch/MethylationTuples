@@ -6,8 +6,7 @@ before_install:
   - ./travis-tool.sh bootstrap
 
 install:
-  - ./travis-tool.sh devtools Rcpp testthat knitr BiocStyle GenomicRanges GenomeInfoDb BiocGenerics S4Vectors Biobase
-  - ./travis-tool.sh install_github PeteHaitch/GenomicTuples
+  - ./travis-tool.sh devtools Rcpp testthat knitr BiocStyle GenomicRanges GenomeInfoDb BiocGenerics S4Vectors Biobase Biostrings GenomicTuples
 
 script: 
   - ./travis-tool.sh run_tests
