@@ -12,7 +12,7 @@
 #' @param strand \code{as.character(sort(x))}.
 #' @param pos \code{start(sort(x))}.
 #' @param in_feature \code{overlapsAny(x, feature)} or \code{rep(NA, nrow(x))} 
-#' if no feature is supplied to \code{betaCor}.
+#' if no feature is supplied to \code{methLevelCor}.
 #' @param id_dt A \code{\link[data.table]{data.table}} mapping the
 #' \code{seqnames-strand-IPD-in_feature} combination to an integer ID.
 #' 
@@ -36,9 +36,9 @@
 #' @param strand \code{as.character(sort(x))}.
 #' @param pos \code{start(sort(x))}.
 #' @param in_feature \code{overlapsAny(x, feature)} or \code{rep(NA, nrow(x))} 
-#' if no feature is supplied to \code{betaCor}.
+#' if no feature is supplied to \code{methLevelCor}.
 #' \code{rep(NA_integer_, nrow(x))} if no feature is supplied to 
-#' \code{betaCor}.
+#' \code{methLevelCor}.
 #' @param ipd An integer vector of IPD, e.g., \code{ipd = 1:100}.
 #' @param id_dt A \code{\link[data.table]{data.table}} mapping the
 #' \code{seqnames-strand-IPD-in_feature} combination to an integer ID.

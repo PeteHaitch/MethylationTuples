@@ -4,14 +4,15 @@
 \alias{getCoverage,MethPat-method}
 \title{Compute sequencing coverage of m-tuples.}
 \usage{
-\S4method{getCoverage}{MethPat}(x)
+\S4method{getCoverage}{MethPat}(object)
 }
 \arguments{
-\item{x}{A \code{\link{MethPat}} object.}
+\item{object}{A \code{\link{MethPat}} object.}
 }
 \value{
-A \code{\link[base]{matrix}}, with the same dimensions and dimension
-names as \code{x}, of sequencing coverage of each tuple in each sample.
+A \code{\link[base]{matriobject}}, with the same dimensions and
+dimension names as \code{object}, of sequencing coverage of each tuple in
+each sample.
 }
 \description{
 Compute sequencing coverage of m-tuples.

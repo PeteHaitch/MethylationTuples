@@ -21,7 +21,7 @@ using namespace Rcpp;
 //' @param strand \code{as.character(sort(x))}.
 //' @param pos \code{start(sort(x))}.
 //' @param in_feature \code{overlapsAny(x, feature)} or \code{rep(NA, nrow(x))} 
-//' if no feature is supplied to \code{betaCor}.
+//' if no feature is supplied to \code{methLevelCor}.
 //' @param id_dt A \code{\link[data.table]{data.table}} mapping the
 //' \code{seqnames-strand-IPD-in_feature} combination to an integer ID.
 //' 
@@ -68,11 +68,11 @@ List makeAdjacentPairs(IntegerVector methpat_order,
   for (double i = 0; i < nr - 1; i++) {
     if (seqnames[i] == seqnames[i + 1] and strand[i] == strand[i + 1]) {
       int ipd_ = pos[i + 1] - pos[i];
-      // (i, i + 1) are a pair, so add to id_out, beta1_out and beta2_out
+      // (i, i + 1) are a pair, so add to id_out, i_out and j_out
       std::string ipd_string = Rcpp::toString(ipd_);
       // pair_feature_status_string: 
       // NA; out/out ("0"); in/out or out/in ("1"); in/in ("2")
-      // NA occurs when no feature was supplied to betaCor
+      // NA occurs when no feature was supplied to methLevelCor
       if (LogicalVector::is_na(in_feature[i])) {
         pair_feature_status_string = "NA";
       } else {

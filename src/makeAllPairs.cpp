@@ -21,9 +21,9 @@ using namespace Rcpp;
 //' @param strand \code{as.character(sort(x))}.
 //' @param pos \code{start(sort(x))}.
 //' @param in_feature \code{overlapsAny(x, feature)} or \code{rep(NA, nrow(x))} 
-//' if no feature is supplied to \code{betaCor}.
+//' if no feature is supplied to \code{methLevelCor}.
 //' \code{rep(NA_integer_, nrow(x))} if no feature is supplied to 
-//' \code{betaCor}.
+//' \code{methLevelCor}.
 //' @param ipd An integer vector of IPD, e.g., \code{ipd = 1:100}.
 //' @param id_dt A \code{\link[data.table]{data.table}} mapping the
 //' \code{seqnames-strand-IPD-in_feature} combination to an integer ID.
@@ -86,7 +86,7 @@ List makeAllPairs(IntegerVector methpat_order,
           std::string ipd_string = Rcpp::toString(ipd_);
           // pair_feature_status_string: 
           // NA; out/out ("0"); in/out or out/in ("1"); in/in ("2")
-          // NA occurs when no feature was supplied to betaCor
+          // NA occurs when no feature was supplied to methLevelCor
           if (LogicalVector::is_na(in_feature[i])) {
             pair_feature_status_string = "NA";
           } else {

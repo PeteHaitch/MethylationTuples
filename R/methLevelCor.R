@@ -1,37 +1,40 @@
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### bestCor: Compute within-sample correlations of beta-values.
+### methLevelCor: Compute within-sample correlations of methylation levels.
 ###
 
 # TODO: Get confidence interval for Spearman and Kendall correlation 
 # coefficients.
-# TODO: Should betaCor return unstratified estimates along with stratified 
+# TODO: Specify or recommend a value of min_cov?
+# TODO: Should methLevelCor return unstratified estimates along with stratified 
 # estimates? Not hard, just join id_dt[pairs] and then compute correlations 
 # ignoring pair_feature_status.
 # TODO: Update docs
 
-#' Compute within-sample correlations of pairs of beta-values.
+#' Compute within-sample correlations of pairs of methylation levels.
 #' 
-#' Given a \code{\link{MethPat}} object containing 1-tuples, \code{betaCor} 
-#' computes the within-sample correlations of pairs of beta-values. The manner 
-#' in which the pairs are constructed is determined by additional arguments - 
-#' see the section, "Construction of pairs of beta-values". Correlations are 
-#' stratified by the \code{strand}, the intra-pair distance and the 
-#' \code{feature} (if supplied) of the pairs.
+#' Given a \code{\link{MethPat}} object containing 1-tuples, 
+#' \code{methLevelCor} computes the within-sample correlations of pairs of 
+#' methylation levels. Methylation levels are computed by 
+#' \code{\link{methLevel}}. 
+#' 
+#' The manner in which the pairs are constructed is determined by additional 
+#' arguments - see the section, "Constructing pairs of methylation loci". 
+#' Correlations are stratified by the \code{strand}, the intra-pair distance 
+#' and the \code{feature} (if supplied) of the pairs.
 #' 
 #' @param methpat A \code{\link{MethPat}} object containing 1-tuples.
-#' @param min_cov An \code{integer} specifying the minimum sequencing coverage 
-#' required to use a beta-value.
 #' @param pair_type A character string giving the type of pairs to be 
-#' constructed when computing correlations. One of "\code{neighbours}" or "\code{all}", can be abbreviated. Please see the below section, "Construction 
-#' of pairs of beta-values", for details.
+#' constructed when computing correlations. One of "\code{neighbours}" or 
+#' "\code{all}", can be abbreviated. Please see the below section, "Construction 
+#' of pairs of methylation loci", for details.
 #' @param ref_loci An \code{\link{MTuples}} object with the locations of all 
 #' methylation loci 1-tuples in the sample/reference genome. Only required if 
 #' \code{pair_type = "neighbours"} and otherwise ignored. Please see the below 
-#' section, "Construction of pairs of beta-values", for details.
+#' section, "Construction of pairs of methylation loci", for details.
 #' @param max_ipd An \code{integer} specifying the maximal IPD of pairs 
 #' (default: 2000). Only required if \code{pair_type = "all"} and otherwise 
 #' ignored. Please see the below section, "Construction of pairs of 
-#' beta-values", for details.
+#' methylation loci", for details.
 #' @param method A character string indicating which correlation coefficient is 
 #' to be computed. One of "\code{pearson}" (default) or "\code{spearman}", can 
 #' be abbreviated.
@@ -40,26 +43,28 @@
 #' \code{\link[GenomicRanges]{GRanges}} object must be disjoint (see 
 #' \code{\link[GenomicRanges]{isDisjoint}}). The \code{feature}Please see the 
 #' below section, "Stratifying pairs by a genomic feature", for details.
+#' @param ... Additional arguments passed to \code{\link{methLevel}}, such as 
+#' \code{min_cov}, \code{statistic} and \code{offset}.
 #' 
-#' @section Constructing pairs of beta-values:
-#' There are two algorithms for constructing pairs of beta-values: 
+#' @section Constructing pairs of methylation loci:
+#' There are two algorithms for constructing pairs of methylation loci: 
 #' \code{neighbours}, which requires the specification of \code{mtuples}, and 
 #' \code{all}, which requires the specification of \code{max_ipd}.
 #' 
 #' \itemize{
-#'  \item{\code{pair_type = "neighbours"}:}{ Creates pairs of beta-values 
-#'  from neighbouring methylation loci. It checks that the constructed pairs 
-#'  are neighbours by comparing these to the set of all known methylation loci 
-#'  in the sample, hence this must be given by \code{mtuples}.}
+#'  \item{\code{pair_type = "neighbours"}:}{ Creates pairs of methylation 
+#'  levels from neighbouring methylation loci. It checks that the constructed 
+#'  pairs are neighbours by comparing these to the set of all known methylation 
+#'  loci in the sample, hence this must be given by \code{mtuples}.}
 #'  
-#'  \item{\code{pair_type = "all"}:}{ Creates pairs of beta-values using all 
-#'  methylation loci in the sample such that each pair has an intra-pair 
+#'  \item{\code{pair_type = "all"}:}{ Creates pairs of methylation levels using 
+#'  all methylation loci in the sample such that each pair has an intra-pair 
 #'  distance less than or equal to \code{max_ipd}.}
 #' 
 #' }
 #' 
 #' @section Stratifying pairs by a genomic feature:
-#' Pairs of beta-values may be stratified by whether they are inside 
+#' Pairs of methylation levels may be stratified by whether they are inside 
 #' or outside of a "genomic feature". For our example, we will use CpG islands 
 #' as our feature. In this case \code{feature} should be a 
 #' \code{\link[GenomicRanges]{GRanges}} object containing all CpG islands in 
@@ -71,7 +76,7 @@
 #'  
 #' Please think carefully about what defines a pair as being "inside" and 
 #' "outside" a feature for your particular needs. While I have attempted to 
-#' make \code{betaCor} fairly general, if you have more complex 
+#' make \code{methLevelCor} fairly general, if you have more complex 
 #' requirements then you may find the available options to be insufficient.
 #' 
 #' \itemize{
@@ -94,15 +99,16 @@
 #' }
 #'
 #' @export 
-betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'), 
-                    ipd = seq_len(2000L), ref_loci,
-                    method = c("pearson", "kendall", "spearman"), 
-                    conf.level = 0.95,
-                    min_cov = 5L,
-                    feature) {
+methLevelCor <- function(methpat, 
+                         pair_type = c('adjacent', 'all', 'ref_adjacent'), 
+                         ipd = seq_len(2000L), ref_loci,
+                         method = c("pearson", "kendall", "spearman"), 
+                         conf.level = 0.95,
+                         feature, 
+                         ...) {
   
   if (nrow(methpat) > .Machine$integer.max) {
-    stop(paste0("Sorry, 'betaCor' doesn't yet support 'methpat' objects with ", 
+    stop(paste0("Sorry, 'methLevelCor' doesn't yet support 'methpat' objects with ", 
                 "more than ", .Machine$integer.max, " (.Machine$integer.max) ", 
                 "rows."))
   }
@@ -170,7 +176,7 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
   #   }
   methpat_order <- order(methpat)
   methpat_rd_sorted <- rowData(methpat)[methpat_order]
-  betas <- betaVal(methpat, min_cov)
+  meth_level <- methLevel(methpat, ...)
   
   if (!missing(feature)) {
     # in_feature = 1 (TRUE) or 0 (FALSE).
@@ -198,9 +204,11 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
                                  seq_len(nrow(id_dt)))]
   setkey(id_dt, ID)
   
-  # Create pairs of beta-values
+  # Create pairs of methylation levels
   if (pair_type == 'all') {
-    # TODO: Benchmark and profile. 
+    # TODO: Benchmark and profile.
+    # ~2.7 hours for a MethPat object with 54,256,149 CpGs and 3 samples 
+    # stratified by CGI-status.
     pairs_idx <- .Call(Cpp_MethylationTuples_makeAllPairs, 
                        methpat_order,
                        as.character(seqnames(methpat_rd_sorted)), 
@@ -211,6 +219,8 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
                        id_dt)  
   } else if (pair_type == 'adjacent' || pair_type == 'ref_adjacent') {
     # TODO: Benchmark and profile.
+    # ~7 minutes for a MethPat object with 54,256,149 CpGs and 3 samples 
+    # stratified by CGI-status.
     pairs_idx <- .Call(Cpp_MethylationTuples_makeAdjacentPairs, 
                    methpat_order,
                    as.character(seqnames(methpat_rd_sorted)), 
@@ -223,14 +233,15 @@ betaCor <- function(methpat, pair_type = c('adjacent', 'all', 'ref_adjacent'),
   # Compute correlations
   # TODO: bplapply.
   cors_list <- lapply(colnames(methpat), function(sample_name, 
-                                                  pairs_idx, betas) {
-    beta_pairs <- data.table(ID = pairs_idx[["ID"]], 
-                             sample = sample_name,
-                             beta1 = betas[pairs_idx[["i"]], sample_name], 
-                             beta2 = betas[pairs_idx[["j"]], sample_name])
-    beta_pairs[, .my_cor(beta1, beta2, method = method, 
+                                                  pairs_idx, meth_level) {
+    meth_level_pairs <- data.table(
+      ID = pairs_idx[["ID"]], 
+      sample = sample_name,
+      meth_level_1 = meth_level[pairs_idx[["i"]], sample_name], 
+      meth_level_2 = meth_level[pairs_idx[["j"]], sample_name])
+    meth_level_pairs[, .my_cor(meth_level_1, meth_level_2, method = method, 
                          conf.level = conf.level), by = list(ID, sample)]
-  }, pairs_idx = pairs_idx, betas = betas)
+  }, pairs_idx = pairs_idx, meth_level = meth_level)
   cors <- setkey(rbindlist(cors_list), ID, sample)
   
   # Join cors and id_dt. Add sample names back.

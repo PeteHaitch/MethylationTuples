@@ -1,7 +1,7 @@
 #methpat <- mp1
 methpat_order <- order(methpat)
 methpat_rd_sorted <- rowData(methpat)[methpat_order]
-betas <- betaVal(methpat)
+meth_level <- methLevel(methpat, min_cov = 5L)
 # ipd <- 1:2000
 ipd <- sort(unique(diff(start(methpat_rd_sorted))))
 ipd <- ipd[ipd > 0]
