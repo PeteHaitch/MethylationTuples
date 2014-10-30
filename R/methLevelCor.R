@@ -108,9 +108,9 @@ methLevelCor <- function(methpat,
                          ...) {
   
   if (nrow(methpat) > .Machine$integer.max) {
-    stop(paste0("Sorry, 'methLevelCor' doesn't yet support 'methpat' objects with ", 
-                "more than ", .Machine$integer.max, " (.Machine$integer.max) ", 
-                "rows."))
+    stop(paste0("Sorry, 'methLevelCor' doesn't yet support 'methpat' objects ", 
+                "with more than ", .Machine$integer.max, 
+                " (.Machine$integer.max) rows."))
   }
   
   if (!is(methpat, "MethPat") || size(methpat) != 1L) {
