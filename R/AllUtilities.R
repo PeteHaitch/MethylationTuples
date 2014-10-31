@@ -71,3 +71,27 @@
   }
   return(val)
 }
+
+#' Is an object stranded.
+#' 
+#' @param x An object with a \code{strand}.
+#' 
+#' @return \code{TRUE} if object is stranded, \code{FALSE} if unstranded and 
+#' \code{NA} if ambiguous.
+#' @keywords internal
+.stranded <- function(x) {
+  s <- try(strand(x), silent = TRUE)
+  if (is(s, "try-error")) {
+    return(FALSE)
+  } else {
+    levels <- as.vector(unique(runValue(strand(x))))
+    if (identical(levels, '*')) {
+      return(FALSE)
+    } else if ("*" %in% levels && ("+" %in% levels || "-" %in% levels) ||
+                 length(levels) == 0) {
+      return(FALSE)
+    } else
+      return(TRUE)
+  }
+}
+  

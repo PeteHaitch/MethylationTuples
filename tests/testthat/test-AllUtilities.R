@@ -29,5 +29,18 @@ test_that(".valid_methtype works", {
   expect_true(.valid_methtype(c('CG', 'CHG', 'CHH', 'CNN')))  
   expect_false(.valid_methtype('CpG'))
   expect_false(.valid_methtype('CG/CHG'))
-  
+})
+
+test_that(".stranded works", {
+  expect_true(.stranded(GRanges('1', IRanges(1:3, 1:3), strand = "+")))
+  expect_true(.stranded(GRanges('1', IRanges(1:3, 1:3), strand = "-")))
+  expect_false(.stranded(GRanges('1', IRanges(1:3, 1:3), strand = "*")))
+  expect_true(.stranded(GRanges('1', IRanges(1:3, 1:3), 
+                                strand = c("+", "-", "+"))))
+  expect_false(.stranded(GRanges('1', IRanges(1:3, 1:3), 
+                                 strand = c("+", "*", "+"))))
+  expect_false(.stranded(GRanges('1', IRanges(1:3, 1:3), 
+                                 strand = c("-", "*", "-"))))
+  expect_false(.stranded(GRanges('1', IRanges(1:3, 1:3), 
+                                 strand = c("+", "*", "-"))))
 })
