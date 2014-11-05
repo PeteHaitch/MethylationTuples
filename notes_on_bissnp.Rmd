@@ -1,0 +1,40 @@
+---
+title: "Notes on Bis-SNP"
+author: "Peter Hickey"
+date: "31 October 2014"
+output: html_document
+---
+
+Some notes on `Bis-SNP` output files using EPISCOPE E13BUF data.
+
+```{r}
+library(VariantAnnotation)
+x <- readVcf(file = "/Volumes/hickey/Adipose/E13BUF/E13BUF.realign.recal.snp.filtered.sort.vcf.gz", genome = 'hg19')
+x
+```
+
+Look at the `rowData`:
+
+```{r}
+rowData(x)
+table(strand(x))
+table(rowData(x)$REF)
+table(rowData(x)$FILTER)
+```
+
+Look at the `info`:
+
+```{r}
+info(x)
+table(info(x)$CS)
+table(info(x)$Context@unlistData)
+table(info(x)$DB)
+table(info(x)$DB) / nrow(x) * 100
+plot(density(info(x)$DP))
+table(info(x)$HQ, useNA = "ifany")
+table(info(x)$MQ0, useNA = "ifany")
+table(info(x)$NS)
+table(info(x)$QD, useNA = "ifany")
+table(info(x)$REF@unlistData, useNA = "ifany")
+plot(density(info(x)$SB, na.rm = TRUE))
+```
