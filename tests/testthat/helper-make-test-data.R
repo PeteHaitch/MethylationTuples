@@ -104,3 +104,21 @@ mp3 <- MethPat(assays =
                             'UUU' = matrix(c(80:71, 71:80), ncol = 2,
                                            dimnames = list(NULL, c('A', 'B')))), 
                rowData = mt3)
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### Objects used in test of makeAdjacentPairsCpp and makeAllPairsCpp
+###
+
+gt <- GTuples(seqnames = Rle(c('chr1', 'chr3', 'chr2'), c(6, 6, 1)), 
+              tuples = matrix(as.integer(c(1, 20, 30, 6, 16, 26, 1, 6, 11, 7, 
+                                           17, 27, 10)), ncol = 1), 
+              strand = Rle(c('+', '-', '+', '-', '+'), c(3, 3, 3, 3, 1)), 
+              seqinfo = Seqinfo(seqnames = c('chr1', 'chr2', 'chr3')))
+mt <- rev(MTuples(gt, MethInfo('CG')))
+methpat <- MethPat(mt, assays = 
+                     list("M" = matrix(1:13, ncol = 1, 
+                                       dimnames = list(NULL, "A")), 
+                          "U" = matrix(1:13, ncol = 1, 
+                                       dimnames = list(NULL, "A"))))
+methpat_order <- order(methpat)
+methpat_rd_sorted <- sort(rowData(methpat))

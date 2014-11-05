@@ -216,7 +216,7 @@ methLevelCor <- function(methpat,
                        start(methpat_rd_sorted),                                 
                        in_feature,
                        ipd,
-                       id_dt)  
+                       id_dt)
   } else if (pair_type == 'adjacent' || pair_type == 'ref_adjacent') {
     # TODO: Benchmark and profile.
     # ~7 minutes for a MethPat object with 54,256,149 CpGs and 3 samples 
@@ -245,6 +245,8 @@ methLevelCor <- function(methpat,
   cors <- setkey(rbindlist(cors_list), ID, sample)
   
   # Join cors and id_dt. Add sample names back.
+  # TODO: Check that this is doing the correct sort of join, e.g., inner-join, 
+  # outer-join, etc.
   val <- id_dt[cors]
   val[, c("ID", "KEY") := list(NULL, NULL)]
   return(val)
