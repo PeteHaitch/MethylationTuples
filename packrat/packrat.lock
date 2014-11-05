@@ -20,15 +20,15 @@ Hash: 290e385e048cebab0e8d8d301b84ac75
 
 Package: BatchJobs
 Source: CRAN
-Version: 1.4
-Hash: e63dfc0b4e5682615cdf46a75d6dad1a
+Version: 1.5
+Hash: 9008830ac169960c1741699b7bfdf1b9
 Requires: BBmisc, brew, checkmate, DBI, digest, fail, RSQLite,
     sendmailR, stringr
 
 Package: BBmisc
 Source: CRAN
-Version: 1.7
-Hash: 88f8e8d164fc720cdec4349169cabe75
+Version: 1.8
+Hash: fbae7086649f391037e37150ab83df8a
 Requires: checkmate
 
 Package: Biobase
@@ -57,6 +57,12 @@ Package: BiocStyle
 Source: Bioconductor
 Version: 1.4.1
 Hash: 993d351eccf2a0f748339c632478e460
+
+Package: biomaRt
+Source: Bioconductor
+Version: 2.22.0
+Hash: 6956ce15ccb1593434270b1b6c236068
+Requires: AnnotationDbi, RCurl, XML
 
 Package: Biostrings
 Source: Bioconductor
@@ -167,6 +173,14 @@ Version: 1.2.0
 Hash: e9cd67824cf5fa5ff3ac00669ecbe1f9
 Requires: BiocGenerics, BiocParallel, Biostrings, GenomeInfoDb,
     GenomicRanges, IRanges, Rsamtools, S4Vectors
+
+Package: GenomicFeatures
+Source: Bioconductor
+Version: 1.18.2
+Hash: c9bfd496abcd3aee6b7d1b3e386246aa
+Requires: AnnotationDbi, Biobase, BiocGenerics, biomaRt, Biostrings,
+    DBI, GenomeInfoDb, GenomicRanges, IRanges, RCurl, RSQLite,
+    rtracklayer, S4Vectors
 
 Package: GenomicRanges
 Source: Bioconductor
@@ -362,6 +376,14 @@ Source: CRAN
 Version: 0.9.1
 Hash: 8b05e97c7401ae4f8b5dfbaa44cfcf20
 Requires: digest
+
+Package: VariantAnnotation
+Source: Bioconductor
+Version: 1.12.3
+Hash: 1e4f94070a0b35659f31ca391cdf3015
+Requires: AnnotationDbi, Biobase, BiocGenerics, Biostrings, BSgenome,
+    DBI, GenomeInfoDb, GenomicFeatures, GenomicRanges, IRanges,
+    Rsamtools, rtracklayer, S4Vectors, XVector, zlibbioc
 
 Package: whisker
 Source: CRAN

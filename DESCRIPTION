@@ -25,7 +25,8 @@ Imports:
     data.table,
     BiocParallel,
     R.utils,
-    Biostrings
+    Biostrings,
+    VariantAnnotation
 Suggests:
     testthat,
     knitr,
@@ -41,6 +42,8 @@ Collate:
     'MethPat-class.R'
     'MethylationTuples.R'
     'RcppExports.R'
+    'cometh.R'
+    'filter_variants.R'
     'findMTuples.R'
     'methLevelCor.R'
     'read.methtuple.R'

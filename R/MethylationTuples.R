@@ -20,4 +20,5 @@
 #' @import BiocParallel
 #' @import Biostrings
 #' @importFrom Biobase validMsg
+#' @importFrom VariantAnnotation readVcf
 NULL
