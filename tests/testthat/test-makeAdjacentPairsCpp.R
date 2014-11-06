@@ -2,13 +2,6 @@
 ### makeAdjacentPairsCpp
 ###
 
-# IntegerVector methpat_order,
-# std::vector<std::string> seqnames,
-# std::vector<std::string> strand, 
-# IntegerVector pos,
-# LogicalVector in_feature,
-# DataFrame id_dt
-
 context("makeAdjacentPairsCpp")
 
 test_that("Works with no feature", {
@@ -71,5 +64,4 @@ test_that("Works with feature", {
   expect_identical(pairs_idx$j, methpat_order[c(2, 3, 5, 6, 9, 10, 12, 13)])
 })
 
-# TODO: As above but with makeAllPairsCpp
 # TODO: Tests of methLevelCor functionality aside from "makePairs" functions.
