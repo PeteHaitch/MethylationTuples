@@ -43,7 +43,7 @@ Collate:
     'MethylationTuples.R'
     'RcppExports.R'
     'cometh.R'
-    'filter_variants.R'
+    'filter_out_variants.R'
     'findMTuples.R'
     'methLevelCor.R'
     'read.methtuple.R'
