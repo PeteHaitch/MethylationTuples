@@ -3,7 +3,7 @@
 \alias{methLevelCor}
 \title{Compute within-sample correlations of pairs of methylation levels.}
 \usage{
-methLevelCor(methpat, pair_type = c("adjacent", "all", "ref_adjacent"),
+methLevelCor(methpat, pair_type = c("adjacent", "all", "strict_adjacent"),
   ipd = seq_len(2000L), ref_loci, method = c("pearson", "kendall",
   "spearman"), conf.level = 0.95, feature, ...)
 }

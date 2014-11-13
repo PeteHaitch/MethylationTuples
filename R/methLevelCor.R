@@ -100,7 +100,7 @@
 #'
 #' @export 
 methLevelCor <- function(methpat, 
-                         pair_type = c('adjacent', 'all', 'ref_adjacent'), 
+                         pair_type = c('adjacent', 'all', 'strict_adjacent'), 
                          ipd = seq_len(2000L), ref_loci,
                          method = c("pearson", "kendall", "spearman"), 
                          conf.level = 0.95,
@@ -124,13 +124,13 @@ methLevelCor <- function(methpat,
     ipd <- as.integer(ipd)
   } else if (pair_type == 'adjacent') {
     # NOTHING TODO
-  } else if (pair_type == "ref_adjacent") {
-    stop("Sorry, 'pair_type = \"ref_adjacent\"' not yet implemented.")
+  } else if (pair_type == "strict_adjacent") {
+    stop("Sorry, 'pair_type = \"strict_adjacent\"' not yet implemented.")
     # TODO: Check how many samples in methpat. It's easiest to implement 
-    # ref_adjacent if there is only 1 sample in methpat. Otherwise have to have 
+    # strict_adjacent if there is only 1 sample in methpat. Otherwise have to have 
     # a different ref_loci for each sample and deal with that.
     if (missing(ref_loci) || !is(ref_loci, "MTuples") || size(ref_loci) != 1) {
-      stop("If 'pair_type' = 'ref_adjacent', then must supply 'ref_loci'.")
+      stop("If 'pair_type' = 'strict_adjacent', then must supply 'ref_loci'.")
       seqinfo <- try(merge(seqinfo(methpat), seqinfo(ref_loci)), silent = TRUE)
       if (is(seqinfo, "try-error")) {
         # TODO: Stricter check of seqinfo compatability, e.g., identical?
@@ -154,7 +154,7 @@ methLevelCor <- function(methpat,
   }
   
   # Order methpat and extract sorted rowData
-  if (pair_type == 'ref_adjacent') {
+  if (pair_type == 'strict_adjacent') {
     # TODO: Add "missing" loci to methpat, i.e., those loci that have 
     # insufficient sequencing coverage in the sample. 
     # E.g., methpat <- rbind(methpat, MethPat(loci_not_in_methpat))
@@ -188,7 +188,7 @@ methLevelCor <- function(methpat,
   }
   # Create map between IPD-strand-in_feature and an integer ID.
   # Need to define possible IPDs in order to create map.
-  if (pair_type == "adjacent" || pair_type == "ref_adjacent") {
+  if (pair_type == "adjacent" || pair_type == "strict_adjacent") {
     ipd <- sort(unique(diff(start(methpat_rd_sorted))))
     ipd <- ipd[ipd > 0]
   }
@@ -217,7 +217,7 @@ methLevelCor <- function(methpat,
                        in_feature,
                        ipd,
                        id_dt)
-  } else if (pair_type == 'adjacent' || pair_type == 'ref_adjacent') {
+  } else if (pair_type == 'adjacent' || pair_type == 'strict_adjacent') {
     # TODO: Benchmark and profile.
     # ~7 minutes for a MethPat object with 54,256,149 CpGs and 3 samples 
     # stratified by CGI-status.
