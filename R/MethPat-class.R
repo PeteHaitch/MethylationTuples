@@ -390,14 +390,16 @@ setMethod("combine",
             an <- lapply(args, function(x) {
               names(x@assays$field('data'))
             })
-            if (any(sapply(an, function(x, y) any(is.na(match(x, y))), y = an[[1]]))) {
+            if (any(sapply(an, function(x, y) any(is.na(match(x, y))), 
+                           y = an[[1]]))) {
               stop("'MethPat' objects must all contain the same assays.")
             }
             
             # TODO: I suspect that there are faster and more efficient ways to 
             # combine the assays.
             assays <- endoapply(assays(args[[1]]), function(i, nr, colnames) {
-              matrix(NA_integer_, nrow = nr, ncol = length(colnames))
+              matrix(NA_integer_, nrow = nr, ncol = length(colnames), 
+                     dimnames = list(NULL, c(colnames(x), colnames(y))))
             }, nr = nr, colnames = colnames)
             for (i in seq_along(assays)) {
               for (j in seq_along(args)) {
