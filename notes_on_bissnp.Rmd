@@ -19,21 +19,23 @@ Look at the `rowData`:
 rowData(x)
 table(strand(x))
 table(rowData(x)$REF)
-table(rowData(x)$FILTER)
+table(rowData(x)$FILTER, useNA = "ifany")
 ```
 
 Look at the `info`:
 
 ```{r}
 info(x)
-table(info(x)$CS)
-table(info(x)$Context@unlistData)
-table(info(x)$DB)
-table(info(x)$DB) / nrow(x) * 100
+table(info(x)$CS, useNA = "ifany")
+# What's the REF at positions where the strand is NA
+table(as.character(rowData(x)$REF[is.na(info(x)$CS)]))
+table(info(x)$Context@unlistData, useNA = "ifany")
+table(info(x)$DB, useNA = "ifany")
+table(info(x)$DB, useNA = "ifany") / nrow(x) * 100
 plot(density(info(x)$DP))
 table(info(x)$HQ, useNA = "ifany")
 table(info(x)$MQ0, useNA = "ifany")
-table(info(x)$NS)
+table(info(x)$NS, useNA = "ifany")
 table(info(x)$QD, useNA = "ifany")
 table(info(x)$REF@unlistData, useNA = "ifany")
 plot(density(info(x)$SB, na.rm = TRUE))
