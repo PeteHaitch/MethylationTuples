@@ -2,18 +2,41 @@
 ### cometh: Compute within-sample, within-fragment co-methylation.
 ###
 
-# TODO: Check method argument
-# TODO: Implement method = 'pearson', which computes the correlation Pearson 
-# correlation coefficient of each 2x2 table cf. Landan et al. NB: The Pearson 
-# correlation coefficient is equivalent to computing the phi coefficient of the 
-# 2x2 table.
+# TODO: Should pair_type even by an option? That is, should the user have already 
+# decided whether to remove pairs of loci with NIL > 0? If so, provide a function 
+# filter_nil().
+# TODO: All filter_* functions should identically either retain "filtered" or 
+# remove "filtered" objects. Use the same logic as dplyr.
+# TODO: Finish documenting.
 
+#' Estimate within-sample, within-fragment co-methylation using 2-tuples.
+#' 
+#' @param methpat A \code{\link{MethPat}} object containing 2-tuples.
+#' @param pair_type A character string giving the type of pairs to be 
+#' constructed when computing correlations. One of "\code{neighbours}" or 
+#' "\code{all}", can be abbreviated. Please see the below section, "Choice of 
+#' 'pair_type'", for details.
+#' @param ref_loci An \code{\link{MTuples}} object with the locations of all 
+#' methylation loci 1-tuples in the sample/reference genome. Only required if 
+#' \code{pair_type = "strict_adjacent"} and otherwise ignored. Please see the below 
+#' section, "Choice of 'pair_type'", for details.
+#' @param method A character string giving the method used to estimate 
+#' co-methylation. One of "\code{lor}" or "\code{pearson}", can be abbreviated. 
+#' Please see the below section, "Choice of statistic", for details.
+#' @param min_cov
+#' 
+#' 
+#' @section Choice of 'pair_type':
+#' 
+#' @section Choice of statistic:
+#' 
 #' @export
 cometh <- function(methpat, 
-                   pair_type = c('ref_adjacent', 'all'), 
+                   pair_type = c('all', 'strict_adjacent'), 
                    ref_loci,
                    method = c("lor", "pearson"),
                    min_cov = 5L,
+                   alternative = c("two.sided", "less", "greater"),
                    conf.level = 0.95,
                    feature, 
                    offset = 1) {
@@ -24,19 +47,18 @@ cometh <- function(methpat,
                 "with more than ", .Machine$integer.max, 
                 " (.Machine$integer.max) rows."))
   }
-  
   if (!is(methpat, "MethPat") || size(methpat) != 2L) {
     stop("'methpat' must be a 'MethPat' object containing 2-tuples.")
   }
   
   pair_type <- match.arg(pair_type)
-  if (pair_type == "ref_adjacent") {
-    stop("Sorry, 'pair_type = \"ref_adjacent\"' not yet implemented.")
+  if (pair_type == "strict_adjacent") {
+    stop("Sorry, 'pair_type = \"strict_adjacent\"' not yet implemented.")
     # TODO: Check how many samples in methpat. It's easiest to implement 
-    # ref_adjacent if there is only 1 sample in methpat. Otherwise have to have 
+    # strict_adjacent if there is only 1 sample in methpat. Otherwise have to have 
     # a different ref_loci for each sample and deal with that.
     if (missing(ref_loci)) {
-      stop("If 'pair_type' = 'ref_adjacent', then must supply 'ref_loci',") 
+      stop("If 'pair_type' = 'strict_adjacent', then must supply 'ref_loci',") 
     }
     if(!is(ref_loci, "MTuples") || size(ref_loci) != 1) {
       stop(paste0("'ref_loci' must be an 'MTuples' object containing ", 
@@ -53,21 +75,83 @@ cometh <- function(methpat,
     # TODO: Check that all loci in methpat are also in ref_loci.
   }
   
+  method <- match.arg(method)
+  
+  min_cov <- as.integer(min_cov)
+  
+  alternative <- match.arg(alternative)
+  
+  if (!missing(conf.level) && 
+        (length(conf.level) != 1 || !is.finite(conf.level) || conf.level < 0 || 
+           conf.level > 1)) {
+    stop("'conf.level' must be a single number between 0 and 1")
+  }
+  
   if (!missing(feature)) {
-    pair_feature_status <- overlapsAny(start(methpat), feature) + 
-      overlapsAny(end(methpat), feature)
+    pair_feature_status <- overlapsAny(methpat, feature, type = 'start') + 
+      overlapsAny(methpat, feature, type = 'end')
   } else {
     pair_feature_status <- rep(NA, nrow(methpat))
   }
-    
-  lor <- log2((assay(methpat, "MM") * assay(methpat, "UU") + offset) / 
-                (assay(methpat, "MU") * assay(methpat, "UM") + offset))
-  lor[getCoverage(methpat) < min_cov] <- NA
   
-  # TODO: Add CI_lower and CI_upper
-  data.table(IPD = as.vector(IPD(methpat)), 
+  cov <- getCoverage(methpat)
+  if (method == "lor") {
+    statistic <- log2((assay(methpat, "MM") * assay(methpat, "UU") + offset) / 
+                        (assay(methpat, "MU") * assay(methpat, "UM") + offset))
+    # TODO: Compute confidence interval
+    sigma <- sqrt(1 / (assay(methpat, "MM") + offset) + 
+                    1 / (assay(methpat, "MU") + offset) + 
+                    1 / (assay(methpat, "UM") + offset) +
+                    1 / (assay(methpat, "UU") + offset))
+    CI_lower <- switch(alternative, 
+                       less = -Inf, 
+                       greater = statistic - sigma * qnorm(conf.level), 
+                       two.sided = statistic - sigma * 
+                         qnorm((1 + conf.level) / 2))
+    CI_upper <- switch(alternative, 
+                       less = statistic + sigma * qnorm(conf.level), 
+                       greater = Inf,
+                       two.sided = statistic + sigma * 
+                         qnorm((1 + conf.level) / 2))
+  } else if (method == "pearson") {
+    # Compute Pearson correlation (equivalent to phi coefficient).
+    num <- assay(methpat, "MM") * assay(methpat, "UU") - 
+      assay(methpat, "UM") * assay(methpat, "MU")
+    denom <- sqrt((assay(methpat, "MM") + assay(methpat, "MU")) * 
+                    (assay(methpat, "UM") + assay(methpat, "UU")) * 
+                    (assay(methpat, "MM") + assay(methpat, "UM")) *
+                    (assay(methpat, "MU") + assay(methpat, "UU")))
+    statistic <- num / denom
+    # Compute confidence interval using the Fisher transformation
+    z <- atanh(statistic)
+    sigma <- suppressWarnings(1 / sqrt(cov - 3L))
+    sigma[is.nan(sigma)] <- NA
+    CI_lower <- switch(alternative, 
+                       less = -Inf, 
+                       greater = z - sigma * qnorm(conf.level), 
+                       two.sided = z - sigma * qnorm((1 + conf.level) / 2))
+    CI_lower <- tanh(CI_lower)
+    CI_upper <- switch(alternative, 
+                       less = z + sigma * qnorm(conf.level), 
+                       greater = Inf, 
+                       two.sided = z + sigma * qnorm((1 + conf.level) / 2))
+    CI_upper <- tanh(CI_upper)
+    
+  }
+  statistic[cov < min_cov] <- NA
+  CI_lower[cov < min_cov] <- NA
+  CI_upper[cov < min_cov] <- NA
+  
+  # TODO: Maybe it's better if the output has "chr, strand, pos1, pos2" rather 
+  # than "IPD, strand", since the latter can be inferred from the former but 
+  # not vice versa.
+  data.table(chr = as.character(seqnames(methpat)), 
+             pos1 = as.integer(start(methpat)), 
+             pos2 = as.integer(end(methpat)), 
              strand = as.character(strand(methpat)), 
              pair_feature_status = pair_feature_status, 
              sample = rep(colnames(methpat), each = nrow(methpat)), 
-             lor = as.vector(lor), CI_lower = NA, CI_upper = NA)  
+             statistic = as.vector(statistic), 
+             CI_lower = as.vector(CI_lower), 
+             CI_upper = as.vector(CI_upper))
 }
