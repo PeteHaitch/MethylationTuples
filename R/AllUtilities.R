@@ -14,7 +14,6 @@
 #' order for a given value of m
 #' @param m The size of the m-tuple. Must be an int.
 #' 
-#' @export
 #' 
 #' @keywords internal
 #' 
@@ -32,7 +31,6 @@
 #' Is the methylation type valid
 #' 
 #' @param methtype A character.
-#' @export
 #' @keywords internal
 #' @return Returns \code{TRUE} if a valid methylation type, \code{FALSE} 
 #' otherwise.

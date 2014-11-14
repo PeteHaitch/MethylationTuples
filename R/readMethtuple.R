@@ -1,5 +1,5 @@
 ### =========================================================================
-### read.methtuple: Read methtuple .tsv files and create a MethPat object
+### readMethtuple: Read methtuple .tsv files and create a MethPat object
 ### -------------------------------------------------------------------------
 ###
 
@@ -50,15 +50,15 @@
 #' the reading of the data (via \code{data.table::\link[data.table]{fread}}) 
 #' and about data coercion during construction of the \code{\link{MethPat}} 
 #' object should be printed. Regardless of whether \code{verbose} is 
-#' \code{TRUE} or \code{FALSE}, \code{read.methtuple} reports its progress via 
+#' \code{TRUE} or \code{FALSE}, \code{readMethtuple} reports its progress via 
 #' calls to \code{\link[base]{message}}; these can be suppressed by wrapped the 
-#' call to \code{read.methtuple} in \code{\link[base]{suppressMesssages}}.
+#' call to \code{readMethtuple} in \code{\link[base]{suppressMesssages}}.
 #' @param bpparam A \code{\link[BiocParallel]{bpparam}} object specifying the 
 #' parallelisation strategy, if any. See below for a discussion of 
-#' parallelisation options available with \code{read.methtuple}.
+#' parallelisation options available with \code{readMethtuple}.
 #' 
 #' @section Parallelisation:
-#' Parallelisation of \code{read.methtuple} is partially supported. Files 
+#' Parallelisation of \code{readMethtuple} is partially supported. Files 
 #' may be decompressed in parallel but not read-in in parallel. 
 #' Parallelisation uses the \pkg{BiocParallel} package. By default this uses a
 #' \code{\link[BiocParallel]{MulticoreParam()}} instance or the user’s 
@@ -76,26 +76,26 @@
 #' # (http://www.ncbi.nlm.nih.gov/sra/?term=SRR949193).
 #' 
 #' # 1-tuples
-#' x <- read.methtuple(system.file("extdata", "SRR949193_20k.rmdup.CG.1.tsv.gz", 
+#' x <- readMethtuple(system.file("extdata", "SRR949193_20k.rmdup.CG.1.tsv.gz", 
 #' package = "MethylationTuples"), sample_names = "SRR949193_20k", 
 #' methinfo = MethInfo('CG'), seqinfo = Seqinfo(seqnames = 'chr1', 
 #' seqlengths = 249250621, isCircular = FALSE, genome = 'hg19'))
 #' 
 #' # 3-tuples
-#' y <- read.methtuple(system.file("extdata", "SRR949193_20k.rmdup.CG.3.tsv.gz", 
+#' y <- readMethtuple(system.file("extdata", "SRR949193_20k.rmdup.CG.3.tsv.gz", 
 #' package = "MethylationTuples"), sample_names = "SRR949193_20k", 
 #' methinfo = MethInfo('CG'), seqinfo = Seqinfo(seqnames = 'chr1', 
 #' seqlengths = 249250621, isCircular = FALSE, genome = 'hg19'))
 #' 
 #' # Can't mix 1-tuples and 3-tuples
 #' \dontrun{
-#' read.methtuple(c(system.file("extdata", "SRR949193_20k.rmdup.CG.1.tsv.gz", 
+#' readMethtuple(c(system.file("extdata", "SRR949193_20k.rmdup.CG.1.tsv.gz", 
 #' package = "MethylationTuples"), system.file("extdata", 
 #' "SRR949193_20k.rmdup.CG.3.tsv.gz", package = "MethylationTuples")))
 #' }
 #' 
 #' @export
-read.methtuple <- function(files, 
+readMethtuple <- function(files, 
                            sample_names = paste0('sample_', seq_along(files)), 
                            methinfo = MethInfo(), seqinfo = NULL, 
                            verbose = getOption('verbose'), bpparam = bpparam()) {

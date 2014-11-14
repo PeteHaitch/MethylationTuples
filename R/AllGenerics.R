@@ -49,7 +49,7 @@ setGeneric("methLevel",
 ### getCoverage
 ###
 
-## TODO: Decide on a name and export
+## TODO: Decide on a name
 #' @export
 setGeneric("getCoverage", 
            function(object) {

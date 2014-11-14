@@ -1,5 +1,5 @@
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### filter_out_variants: Filter out variants from MethPat object
+### filterOutVariants: Filter out variants from MethPat object
 ###
 
 #' Filter out variants from \code{MethPat} object.
@@ -18,7 +18,7 @@
 #' should be reported via calls to \code{\link[base]{message}}.
 #' @param bpparam A \code{\link[BiocParallel]{bpparam}} object specifying the 
 #' parallelisation strategy, if any. See below for a discussion of 
-#' parallelisation options available with \code{read.methtuple}.
+#' parallelisation options available with \code{readMethtuple}.
 #' 
 #' @return An updated version of the \code{\link{MethPat}} object, where 
 #' variants have had their corresponding assays counts set to \code{NA}. Tuples 
@@ -26,7 +26,7 @@
 #' \code{TRUE}).
 #' 
 #' @section Parallelisation:
-#' Parallelisation of \code{filter_out_variants} is partially supported. 
+#' Parallelisation of \code{filterOutVariants} is partially supported. 
 #' \code{VCF}s are read-in and processed in parallel, where appropriate.
 #' Parallelisation uses the \pkg{BiocParallel} package. By default this uses a
 #' \code{\link[BiocParallel]{MulticoreParam()}} instance or the user’s 
@@ -40,7 +40,7 @@
 #' \dontrun{
 #' ## TODO
 #' }
-filter_out_variants <- function(methpat, variant_files, remove = FALSE, 
+filterOutVariants <- function(methpat, variant_files, remove = FALSE, 
                                 verbose = getOption("verbose"),
                                 bpparam = bpparam()) {
   # Check names variant_files match sample names
