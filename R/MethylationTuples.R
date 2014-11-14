@@ -19,6 +19,6 @@
 #' @import R.utils
 #' @import BiocParallel
 #' @import Biostrings
+#' @import methods
 #' @importFrom Biobase validMsg
-#' @importFrom VariantAnnotation readVcf
 NULL

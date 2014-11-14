@@ -2,6 +2,10 @@
 ### filterOutVariants: Filter out variants from MethPat object
 ###
 
+# TODO: Clarify NAMESPACE issue with VariantAnnotation, e.g., readVcf doesn't 
+# work but VariantAnnotation::readVcf does but I'm not sure this is the correct 
+# way of doing things (see http://r-pkgs.had.co.nz/namespace.html)
+
 #' Filter out variants from \code{MethPat} object.
 #' 
 #' @param methpat A \code{\link{MethPat}} object.
@@ -50,7 +54,8 @@ filterOutVariants <- function(methpat, variant_files, remove = FALSE,
   
   # TODO: Make param a function argument if the user should be allowed to vary 
   # it.
-  param = ScanVcfParam(fixed = c("FILTER"), info = c("CS"), geno = NA)
+  param <- VariantAnnotation::ScanVcfParam(fixed = c("FILTER"), info = c("CS"), 
+                                           geno = NA)
     
   # Read and process the VCFs
   if (verbose) {
@@ -58,17 +63,18 @@ filterOutVariants <- function(methpat, variant_files, remove = FALSE,
   }
   vcfs <- bplapply(variant_files, function(file, methpat) {
     # Create merged seqinfo
-    vcf_seqinfo <- seqinfo(scanVcfHeader(file))
+    vcf_seqinfo <- seqinfo(VariantAnnotation::scanVcfHeader(file))
     # Bis-SNP sets 'assembly' field to "null" (not always, depends on arguments)
     if (all(genome(vcf_seqinfo) == "null")) {
       genome(vcf_seqinfo) <- NA_character_
     }
     seqinfo <- intersect(seqinfo(methpat), vcf_seqinfo)
     # Read in VCF
-    vcf <- readVcf(file = file, genome = NA_character_, param = param)
+    vcf <- VariantAnnotation::readVcf(file = file, genome = NA_character_, 
+                                      param = param)
     seqinfo(vcf) <- seqinfo
     # Convert VCF to minimal GRanges object
-    strand <- info(vcf)$CS
+    strand <- VariantAnnotation::info(vcf)$CS
     strand[is.na(strand)] <- '*'
     GRanges(seqnames(vcf), 
             ranges = unname(ranges(vcf)),

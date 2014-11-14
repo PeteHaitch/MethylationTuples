@@ -120,9 +120,11 @@ readMethtuple <- function(files,
   my_unzip <- function(files, verbose) {
     bplapply(files, function(file, verbose) {
       if (isGzipped(file)) {
-        file <- gunzip(file, temporary = TRUE, remove = FALSE, skip = TRUE)
+        file <- gunzip(file, temporary = TRUE, remove = FALSE, skip = TRUE, 
+                       overwrite = TRUE)
       } else if (isBzipped(file)) {
-        file <- bunzip2(file, temporary = TRUE, remove = FALSE, skip = TRUE)
+        file <- bunzip2(file, temporary= TRUE, remove = FALSE, skip = TRUE, 
+                        overwrite = TRUE)
       }
       return(file)
     })
