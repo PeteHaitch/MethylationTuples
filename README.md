@@ -6,16 +6,15 @@ MethylationTuples
 methylation patterns at genomic tuples. These include analyses of 
 co-methylation and epipolymorphisms.
 
-__This package is in early development__, but it 
-can be installed as follows:
+`MethylationTuples` is in development and can only be installed using the 
+development version of Bioconductor. Please first read 
+[these instructions on installing the development version of Bioconductor](http://www.bioconductor.org/developers/how-to/useDevel/). 
 
 ```R
 # Install devtools if not already installed
 if (suppressWarnings(!require(devtools))) {
   install.packages('devtools')  
 }
-# Install development version of GenomicTuples
-devtools::install_github("PeteHaitch/GenomicTuples")
 # Install development version of MethylationTuples
 devtools::install_github("PeteHaitch/MethylationTuples")
 ```
