@@ -103,6 +103,10 @@ filterOutVariants <- function(methpat, variant_files, remove = FALSE,
   if (verbose) {
     message(paste0("Replacing counts at ", size(methpat), 
                    "-tuples containing variants with NAs ..."))
+    message("Number of loci filtered out per sample:")
+    n_remove <- colSums(to_remove)
+    names(n_remove) <- colnames(methpat)
+    print(n_remove)
   }
   assays <- SimpleList(lapply(assays(methpat), function(assay, to_remove) {
     assay[to_remove] <- NA
