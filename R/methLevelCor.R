@@ -239,7 +239,7 @@ methLevelCor <- function(methpat,
       sample = sample_name,
       meth_level_1 = meth_level[pairs_idx[["i"]], sample_name], 
       meth_level_2 = meth_level[pairs_idx[["j"]], sample_name])
-    meth_level_pairs[, .my_cor(meth_level_1, meth_level_2, method = method, 
+    meth_level_pairs[, .myCor(meth_level_1, meth_level_2, method = method, 
                          conf.level = conf.level), by = list(ID, sample)]
   }, pairs_idx = pairs_idx, meth_level = meth_level)
   cors <- setkey(rbindlist(cors_list), ID, sample)

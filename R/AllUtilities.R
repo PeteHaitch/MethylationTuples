@@ -18,11 +18,11 @@
 #' @keywords internal
 #' 
 #' @examples
-#' .make_methpat_names(1L)
-#' .make_methpat_names(2L)
-#' .make_methpat_names(3L)
+#' .makeMethPatNames(1L)
+#' .makeMethPatNames(2L)
+#' .makeMethPatNames(3L)
 #' @return A character vector
-.make_methpat_names <- function(m) {
+.makeMethPatNames <- function(m) {
   m <- as.integer(m)
   sort(do.call(paste0, 
                expand.grid(lapply(seq_len(m), function(x) {c('M', 'U')}))))
@@ -34,7 +34,7 @@
 #' @keywords internal
 #' @return Returns \code{TRUE} if a valid methylation type, \code{FALSE} 
 #' otherwise.
-.valid_methtype <- function(methtype) {
+.validMethtype <- function(methtype) {
   if (any(is.na(methtype))) {
     if (length(methtype) == 1L) {
       val <- TRUE
@@ -55,7 +55,7 @@
 #' Basically, a wrapper around \code{\link[stats]{cor.test}}.
 #' 
 #' @keywords internal
-.my_cor <- function(x, y, method = c("pearson", "kendall", "spearman"), 
+.myCor <- function(x, y, method = c("pearson", "kendall", "spearman"), 
                     conf.level = 0.95) {
   method <- match.arg(method)
   z <- try(suppressWarnings(cor.test(x, y, method = method, 

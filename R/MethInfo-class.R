@@ -96,7 +96,7 @@ setMethod("methtype",
 .valid.MethInfo.methtype <- function(object) {
   
   msg <- NULL
-  if (!.valid_methtype(object@methtype)) {
+  if (!.validMethtype(object@methtype)) {
     msg <- validMsg(msg, paste0("Invalid 'methtype'. Must be one or more of ", 
                                 "'CG', 'CHG', 'CHH' or 'CNN'"))
   }

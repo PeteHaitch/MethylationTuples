@@ -11,6 +11,7 @@
 ## will. This isn't ideal - I find it merely an annoyance but it may be a 
 ## bigger problem than I realise.
 ## TODO: Usage section (will differ from SummarizedExperiment usage section)
+## TODO: Define seqlevelsInUse,SummarizedExperiment-method
 #' MethPat instances
 #' 
 #' @description
@@ -40,7 +41,7 @@
 #' \eqn{= m}, there are \eqn{2^m} required assays. For example, for 2-tuples 
 #' there are 4 required assays that must be named \code{MM}, \code{MU}, 
 #' \code{UM} and \code{UU} (\code{M} = methylated, \code{U} = unmethylated).
-#' \strong{TODO:} Should the \code{.make_methpat_names} function be exported 
+#' \strong{TODO:} Should the \code{.makeMethPatNames} function be exported 
 #' and referenced here?
 #' @param rowData A \code{\link{MTuples}} instance describing 
 #' the genomic tuple of the methylation loci. Row names, if present, become the 
@@ -291,17 +292,17 @@ setClass('MethPat',
     an <- names(object@assays$field("data"))
     if (is.null(an)) {
       msg <- validMsg(msg, paste0("Assay names must include all of: ", 
-                                  paste0(.make_methpat_names(m), 
+                                  paste0(.makeMethPatNames(m), 
                                          collapse = ', ')))
     } else {
-      if (any(is.na(match(.make_methpat_names(m), an)))) {
+      if (any(is.na(match(.makeMethPatNames(m), an)))) {
         msg <- validMsg(msg, paste0("Assay names must include all of: ", 
-                                    paste0(.make_methpat_names(m), 
+                                    paste0(.makeMethPatNames(m), 
                                            collapse = ', ')))
       } else {
         # Note from bsseq: benchmarking shows that min(assay()) < 0 is faster 
         # than any(assay() < 0) if it is false
-        if (min(sapply(object@assays$field("data")[.make_methpat_names(m)], 
+        if (min(sapply(object@assays$field("data")[.makeMethPatNames(m)], 
                        min, na.rm = TRUE), na.rm = TRUE) < 0) {
           msg <- validMsg(msg, paste0("All counts of methylation patterns ", 
                                       "(stored in assays slot) must be ", 
@@ -420,13 +421,16 @@ setMethod("combine",
 ### Getters
 ###
 
+# TODO: Produce warning/error when granges applied to MethPat object, 
+# recommending that the gtuples method is instead used.
 # Almost all via inheritance to SummarizedExperiment or otherwise implemented 
 # in Tuples methods
 #' @export
 setMethod('granges', 
           'MethPat', 
           function(x, use.mcols = FALSE, ...) {
-            granges(rowData(x), use.mcols, ...)
+            stop("Not yet implemented")
+#             callNextMethod()
           }
 )
 
@@ -510,7 +514,7 @@ setMethod("methLevel",
 setMethod("getCoverage", 
           "MethPat", 
           function(object) {
-            Reduce(f = '+', x = lapply(.make_methpat_names(size(object)), 
+            Reduce(f = '+', x = lapply(.makeMethPatNames(size(object)), 
                                             function(an, object) {
                                               assay(object, an)
                                             }, object = object)

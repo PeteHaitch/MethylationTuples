@@ -35,7 +35,7 @@ cors_list <- lapply(colnames(methpat), function(sample_name,
                            sample = sample_name,
                            beta1 = betas[pairs_idx[["i"]], sample_name], 
                            beta2 = betas[pairs_idx[["j"]], sample_name])
-  beta_pairs[, .my_cor(beta1, beta2, method = method, 
+  beta_pairs[, .myCor(beta1, beta2, method = method, 
                        conf.level = conf.level), by = list(ID, sample)]
 }, pairs_idx = pairs_idx, betas = betas)
 cors <- setkey(rbindlist(cors_list), ID, sample)

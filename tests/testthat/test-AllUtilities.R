@@ -3,32 +3,32 @@
 ###
 context("Utility functions")
 
-test_that(".make_methpat_names works", {
-  expect_identical(.make_methpat_names(1), c('M', 'U'))
-  expect_identical(.make_methpat_names(2), c('MM', 'MU', 'UM', 'UU'))
-  expect_identical(.make_methpat_names(3), c('MMM', 'MMU', 'MUM', 'MUU', 
+test_that(".makeMethPatNames works", {
+  expect_identical(.makeMethPatNames(1), c('M', 'U'))
+  expect_identical(.makeMethPatNames(2), c('MM', 'MU', 'UM', 'UU'))
+  expect_identical(.makeMethPatNames(3), c('MMM', 'MMU', 'MUM', 'MUU', 
                                              'UMM', 'UMU', 'UUM', 'UUU'))
 })
 
-test_that(".valid_methtype works", {
+test_that(".validMethtype works", {
   
-  expect_true(.valid_methtype('CG'))
-  expect_true(.valid_methtype('CHG'))
-  expect_true(.valid_methtype('CHH'))
-  expect_true(.valid_methtype('CNN'))
-  expect_true(.valid_methtype(c('CG', 'CHG')))
-  expect_true(.valid_methtype(c('CG', 'CHH')))
-  expect_true(.valid_methtype(c('CG', 'CNN')))
-  expect_true(.valid_methtype(c('CHG', 'CHH')))
-  expect_true(.valid_methtype(c('CHG', 'CNN')))
-  expect_true(.valid_methtype(c('CHH', 'CNN')))
-  expect_true(.valid_methtype(c('CG', 'CHG', 'CHH')))
-  expect_true(.valid_methtype(c('CG', 'CHG', 'CNN')))
-  expect_true(.valid_methtype(c('CG', 'CHH', 'CNN')))
-  expect_true(.valid_methtype(c('CHG', 'CHH', 'CNN')))
-  expect_true(.valid_methtype(c('CG', 'CHG', 'CHH', 'CNN')))  
-  expect_false(.valid_methtype('CpG'))
-  expect_false(.valid_methtype('CG/CHG'))
+  expect_true(.validMethtype('CG'))
+  expect_true(.validMethtype('CHG'))
+  expect_true(.validMethtype('CHH'))
+  expect_true(.validMethtype('CNN'))
+  expect_true(.validMethtype(c('CG', 'CHG')))
+  expect_true(.validMethtype(c('CG', 'CHH')))
+  expect_true(.validMethtype(c('CG', 'CNN')))
+  expect_true(.validMethtype(c('CHG', 'CHH')))
+  expect_true(.validMethtype(c('CHG', 'CNN')))
+  expect_true(.validMethtype(c('CHH', 'CNN')))
+  expect_true(.validMethtype(c('CG', 'CHG', 'CHH')))
+  expect_true(.validMethtype(c('CG', 'CHG', 'CNN')))
+  expect_true(.validMethtype(c('CG', 'CHH', 'CNN')))
+  expect_true(.validMethtype(c('CHG', 'CHH', 'CNN')))
+  expect_true(.validMethtype(c('CG', 'CHG', 'CHH', 'CNN')))  
+  expect_false(.validMethtype('CpG'))
+  expect_false(.validMethtype('CG/CHG'))
 })
 
 test_that(".stranded works", {

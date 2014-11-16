@@ -13,7 +13,7 @@ methylation patterns at genomic tuples of \code{\link[GenomicTuples]{size}}
 \eqn{= m}, there are \eqn{2^m} required assays. For example, for 2-tuples
 there are 4 required assays that must be named \code{MM}, \code{MU},
 \code{UM} and \code{UU} (\code{M} = methylated, \code{U} = unmethylated).
-\strong{TODO:} Should the \code{.make_methpat_names} function be exported
+\strong{TODO:} Should the \code{.makeMethPatNames} function be exported
 and referenced here?}
 
 \item{rowData}{A \code{\link{MTuples}} instance describing
