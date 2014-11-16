@@ -51,29 +51,19 @@ filterOutVariants <- function(methpat, variant_files, remove = FALSE,
   if (!identical(colnames(methpat), names(variant_files))) {
     stop("Names of 'variant_files' must be identical to 'colnames(methpat)'.")
   }
-  
-  # TODO: Make param a function argument if the user should be allowed to vary 
-  # it.
-  param <- VariantAnnotation::ScanVcfParam(fixed = c("FILTER"), info = c("CS"), 
-                                           geno = NA)
     
   # Read and process the VCFs
   if (verbose) {
     message("Reading and processing VCFs ...")
   }
-  vcfs <- bplapply(variant_files, function(file, methpat) {
-    # Create merged seqinfo
-    vcf_seqinfo <- seqinfo(VariantAnnotation::scanVcfHeader(file))
-    # Bis-SNP sets 'assembly' field to "null" (not always, depends on arguments)
-    if (all(genome(vcf_seqinfo) == "null")) {
-      genome(vcf_seqinfo) <- NA_character_
-    }
-    seqinfo <- intersect(seqinfo(methpat), vcf_seqinfo)
+  vcfs <- bplapply(variant_files, function(vf, methpat) {
+    param <- VariantAnnotation::ScanVcfParam(fixed = c("FILTER"), 
+                                             info = c("CS"), geno = NA)
     # Read in VCF
-    vcf <- VariantAnnotation::readVcf(file = file, genome = NA_character_, 
+    vcf <- VariantAnnotation::readVcf(file = vf, genome = NA_character_, 
                                       param = param)
-    seqinfo(vcf) <- seqinfo
-    # Convert VCF to minimal GRanges object
+    
+        # Convert VCF to minimal GRanges object
     strand <- VariantAnnotation::info(vcf)$CS
     strand[is.na(strand)] <- '*'
     GRanges(seqnames(vcf), 
