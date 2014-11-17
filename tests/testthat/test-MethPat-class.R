@@ -316,7 +316,8 @@ test_that("SummarizedExperiment inherited getters work", {
   # TODO: Notifiy Bioc-Devel that granges,SummarizedExperiment-method should 
   # return granges(rowData(x)) rather than rowData(x) since rowData may not be 
   # a GRanges object (e.g. might be a GTuples object)
-  expect_identical(granges(mp3), granges(mp3@rowData))
+  # expect_identical(granges(mp3), granges(mp3@rowData))
+  expect_error(granges(mp3), "Not yet implemented")
 })
 
 test_that("methinfo getters work", {
