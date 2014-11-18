@@ -1,8 +1,8 @@
 Package: MethylationTuples
 Type: Package
 Title: Tools for analysing methylation patterns at genomic tuples
-Version: 0.2.4
-Date: 2014-11-14
+Version: 0.2.5
+Date: 2014-11-19
 Authors@R: c(person("Peter", "Hickey", role = c("aut", "cre"),
     email = "peter.hickey@gmail.com"))
 Author: Peter Hickey <peter.hickey@gmail.com>
@@ -16,7 +16,7 @@ biocViews: DNAMethylation, DataImport, Software, MethylSeq
 VignetteBuilder: knitr
 Depends:
     R (>= 2.10),
-    GenomicTuples (>= 1.1.6)
+    GenomicTuples (>= 1.1.9)
 Imports:
     BiocGenerics,
     Rcpp (>= 0.11.2),
