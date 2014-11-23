@@ -16,7 +16,7 @@ biocViews: DNAMethylation, DataImport, Software, MethylSeq
 VignetteBuilder: knitr
 Depends:
     R (>= 2.10),
-    GenomicTuples (>= 1.1.6)
+    GenomicTuples (>= 1.1.9)
 Imports:
     BiocGenerics,
     Rcpp (>= 0.11.2),
