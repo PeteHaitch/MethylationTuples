@@ -90,29 +90,35 @@ filterOutVariants <- function(methpat, variant_files, remove = FALSE,
     message(paste0("Identifying ", size(methpat), "-tuples overlapping ", 
                    "variants ..."))
   }
-  to_remove <- do.call("cbind", bplapply(vcfs, function(vcf, mp_grs) {
+  to_remove <- bplapply(vcfs, function(vcf, mp_grs) {
     # TODO: Investigate creating a GIntervalTree from vcf, which might speed 
     # up the repeated overlap queries against it.
     tr <- lapply(mp_grs, function(mp_gr, vcf) {
       overlapsAny(mp_gr, vcf)
     }, vcf = vcf)
-    Reduce("|", tr)
-  }, mp_grs = mp_grs))
-
-  # NA-ify overlap hits
+    which(Reduce("|", tr))
+  }, mp_grs = mp_grs)
   if (verbose) {
     message(paste0("Replacing counts at ", size(methpat), 
                    "-tuples containing variants with NAs ..."))
     message("Number of loci filtered out per sample:")
-    n_remove <- colSums(to_remove)
+    n_remove <- sapply(to_remove, length)
     names(n_remove) <- colnames(methpat)
     print(n_remove)
   }
-  assays <- SimpleList(lapply(assays(methpat), function(assay, to_remove) {
-    assay[to_remove] <- NA
-    assay
-  }, to_remove = to_remove))
-  assays(methpat) <- assays
+  # Convert list to vector
+  to_remove <- unlist(mapply(function(to_remove, col, nrow) {
+    # as.numeric to prevent integer overflow
+    to_remove + as.numeric(col) * nrow
+  }, to_remove, seq_along(to_remove) - 1L, nrow(methpat)), use.names = FALSE)
+  if (!identical(to_remove, numeric(0))) {
+    # Can't run in parallel due to usual long-vector problems
+    assays(methpat) <- SimpleList(lapply(assays(methpat), 
+                                         function(assay, to_remove) {
+                                           assay[to_remove] <- NA
+                                           assay
+                                         }, to_remove = to_remove))
+  }
   
   # Return modified MethPat object.
   # If remove = TRUE, then remove NA-rows (only need check one assay)
@@ -120,7 +126,7 @@ filterOutVariants <- function(methpat, variant_files, remove = FALSE,
     if (verbose) {
       message("Removing NA rows ...")
     }
-    return(methpat[rowSums(is.na(assays[[1]])) != ncol(methpat)])
+    return(methpat[rowSums(is.na(assay(methpat, 1))) != ncol(methpat)])
   } else {
     methpat 
   }
