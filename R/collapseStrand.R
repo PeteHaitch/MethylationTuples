@@ -43,37 +43,59 @@ collapseStrand <- function(methpat) {
   if (identical(methtype(methpat), "CG")) {
     OB_STRAND_OFFSET <- -1L
   }
-  
-  # Find overlaps between positive and negative strand loci and create indices.
-  # TODO: Use gtuples(methpat, use.mcols = FALSE), rather than rowData(methpat), 
-  # once implemented.
-  rd <- rowData(methpat)
 
-  ol <- suppressWarnings(findOverlaps(rd, shift(rd, OB_STRAND_OFFSET), 
-                                      type = "equal", ignore.strand = TRUE))
-  
-  both <- strand(rd)[queryHits(ol)] == "+" &
-    strand(rd)[subjectHits(ol)] == "-"
-  plus_both <- queryHits(ol)[as.logical(both)]
-  neg_both <- subjectHits(ol)[as.logical(both)]
-  plus_only <- setdiff(which(strand(rd) == "+"), plus_both)
-  neg_only <- setdiff(which(strand(rd) == "-"), neg_both)
+  # Find equal overlaps between positive and negative strand loci and create 
+  # indices. Not using 
+  # findOverlaps(rd, shift(rd, -1L), type = "equal", ignore.strand = TRUE) 
+  # because of the crazy memory usage required.
+  # This code assumes that there are no duplicate tuples
+  # TODO: Use data.table::foverlaps with type = 'equal' once it is implemented.
+  rd <- rowData(methpat)
+  rd_order <- order(rd)
+  # TODO: Shouldn't have to do as.vector(), Rle should just work, I think.
+  rd_plus_order <- rd_order[as.vector(strand(rd) == "+")]
+  rd_neg_order <- rd_order[as.vector(strand(rd) == "-")]
+  rd_plus <- rd[strand(rd) == "+"]
+  rd_neg <- rd[strand(rd) == "-"]
+  rd_plus_dt <- data.table(seqnames = as.vector(seqnames(rd_plus)), 
+                           tuples(rd_plus), plus = rd_plus_order)
+  setkeyv(rd_plus_dt, colnames(rd_plus_dt))
+  rd_neg_dt <- data.table(seqnames = as.vector(seqnames(rd_neg)), 
+                       tuples(rd_neg) + OB_STRAND_OFFSET, neg = rd_neg_order)
+  setkeyv(rd_neg_dt, colnames(rd_neg_dt))
+  ol <- merge(rd_plus_dt, rd_neg_dt, all = TRUE)
+  plus_both <- na.omit(ol[!is.na(neg), plus])
+  neg_both <- na.omit(ol[!is.na(plus), neg])
+  plus_only <- ol[is.na(neg), plus]
+  neg_only <- ol[is.na(plus), neg]
   row_idx <- c(plus_both, plus_only, neg_only)
   
   # Construct new GTuples
-  new_rd <- unstrand(rd[row_idx])
+  new_rd <- c(unstrand(rd[plus_both]), 
+              unstrand(rd[plus_only]),
+              shift(unstrand(rd[neg_only]), OB_STRAND_OFFSET))
   mcols(new_rd) <- NULL
+  # Construct new assays
   new_assays <- endoapply(assays(methpat), 
                           function(assay, plus_both, neg_both, plus_only, 
                                    neg_only) {
-                            rbind(assay[plus_both, , drop = FALSE] + 
-                                    assay[neg_both, , drop = FALSE], 
+                            # Need special handling of samples where there is 
+                            # NA for one strand but not the other. Otherwise 
+                            # end up with things like 0 + NA = NA and 
+                            # 10 + NA = NA, when I want 0 + NA = 0 and 
+                            # 10 + NA = 10.
+                            assay_plus <- assay[plus_both, , drop = FALSE]
+                            assay_neg <- assay[neg_both, , drop = FALSE]
+                            assay_plus[is.na(assay_plus) & 
+                                         !is.na(assay_neg)] <- 0
+                            assay_neg[is.na(assay_neg) & 
+                                        !is.na(assay_plus)] <- 0
+                            rbind(assay_plus + assay_neg, 
                                   assay[plus_only, , drop = FALSE],
                                   assay[neg_only, , drop = FALSE])
-                            
                           }, plus_both = plus_both, neg_both = neg_both, 
                           plus_only = plus_only, neg_only = neg_only)
-  
+  # Construct new MethPat object
   MethPat(assays = new_assays, rowData = new_rd, colData = colData(methpat), 
           exptData = exptData(methpat))
 }

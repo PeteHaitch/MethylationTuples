@@ -16,13 +16,10 @@ BiocStyle::markdown()
 
 # Functions to write
 
-- [ ] `strandCollapse`: To collapse a `MethPat` object by strand. Only 
-applicable when methylation type is `CG`.
 
 # Variable_naming.Scheme
 
 Get some bloody consistency! 
-
 
 # For submission to \Bioconductor{}
 
