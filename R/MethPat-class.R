@@ -398,6 +398,8 @@ setMethod("combine",
             
             # TODO: I suspect that there are faster and more efficient ways to 
             # combine the assays.
+            # TODO: Figure out whether I should be doing assays(args[[1]]) or 
+            # assays(args[[1]], withDimnames = FALSE)
             assays <- endoapply(assays(args[[1]]), function(i, nr, colnames) {
               matrix(NA_integer_, nrow = nr, ncol = length(colnames), 
                      dimnames = list(NULL, c(colnames(x), colnames(y))))

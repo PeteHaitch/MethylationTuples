@@ -113,6 +113,8 @@ filterOutVariants <- function(methpat, variant_files, remove = FALSE,
   }, to_remove, seq_along(to_remove) - 1L, nrow(methpat)), use.names = FALSE)
   if (!identical(to_remove, numeric(0))) {
     # Can't run in parallel due to usual long-vector problems
+    # TODO: Figure out whether I should be using assays(methpat) or 
+    # assays(methpat, withDimnames = FALSE)
     assays(methpat) <- SimpleList(lapply(assays(methpat), 
                                          function(assay, to_remove) {
                                            assay[to_remove] <- NA

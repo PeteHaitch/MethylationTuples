@@ -37,9 +37,7 @@ collapseStrand <- function(methpat) {
   if (isTRUE(any(duplicated(methpat)))) {
     stop("'methpat' must not contain any duplicate genomic tuples.")
   }
-  # TODO: names(methpat@assays$field("data")) is 1000x faster than 
-  # names(assays(methpat)).
-  if (!identical(names(methpat@assays$field("data")), 
+  if (!identical(names(assays(methpat, withDimnames = FALSE)), 
                  .makeMethPatNames(size(methpat)))) {
     stop("'methpat' cannot contain non-standard assays.")
   }
@@ -82,7 +80,7 @@ collapseStrand <- function(methpat) {
               shift(unstrand(rd[neg_only]), OB_STRAND_OFFSET))
   mcols(new_rd) <- NULL
   # Construct new assays
-  new_assays <- endoapply(assays(methpat), 
+  new_assays <- endoapply(assays(methpat, withDimnames = FALSE), 
                           function(assay, plus_both, neg_both, plus_only, 
                                    neg_only) {
                             # Need special handling of samples where there is 
