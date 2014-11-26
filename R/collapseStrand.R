@@ -37,6 +37,12 @@ collapseStrand <- function(methpat) {
   if (isTRUE(any(duplicated(methpat)))) {
     stop("'methpat' must not contain any duplicate genomic tuples.")
   }
+  # TODO: names(methpat@assays$field("data")) is 1000x faster than 
+  # names(assays(methpat)).
+  if (!identical(names(methpat@assays$field("data")), 
+                 .makeMethPatNames(size(methpat)))) {
+    stop("'methpat' cannot contain non-standard assays.")
+  }
   # OB_STRAND_OFFSET is the number of base pairs a locus on the '-' (OB) strand 
   # needs to be shifted in order to have the same position as its counterpart 
   # on the '+' (OT) strand. 
@@ -87,9 +93,9 @@ collapseStrand <- function(methpat) {
                             assay_plus <- assay[plus_both, , drop = FALSE]
                             assay_neg <- assay[neg_both, , drop = FALSE]
                             assay_plus[is.na(assay_plus) & 
-                                         !is.na(assay_neg)] <- 0
+                                         !is.na(assay_neg)] <- 0L
                             assay_neg[is.na(assay_neg) & 
-                                        !is.na(assay_plus)] <- 0
+                                        !is.na(assay_plus)] <- 0L
                             rbind(assay_plus + assay_neg, 
                                   assay[plus_only, , drop = FALSE],
                                   assay[neg_only, , drop = FALSE])
