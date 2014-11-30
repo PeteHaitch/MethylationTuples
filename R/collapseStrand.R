@@ -37,7 +37,7 @@ collapseStrand <- function(methpat) {
   if (isTRUE(any(duplicated(methpat)))) {
     stop("'methpat' must not contain any duplicate genomic tuples.")
   }
-  if (!identical(names(assays(methpat, withDimnames = FALSE)), 
+  if (!identical(GenomicRanges::assayNames(methpat), 
                  .makeMethPatNames(size(methpat)))) {
     stop("'methpat' cannot contain non-standard assays.")
   }
@@ -94,9 +94,23 @@ collapseStrand <- function(methpat) {
                                          !is.na(assay_neg)] <- 0L
                             assay_neg[is.na(assay_neg) & 
                                         !is.na(assay_plus)] <- 0L
-                            rbind(assay_plus + assay_neg, 
-                                  assay[plus_only, , drop = FALSE],
-                                  assay[neg_only, , drop = FALSE])
+                            # rbind doesn't support long vectors :( so instead 
+                            # have to use this clunky monstrosity.
+                            #rbind(assay_plus + assay_neg, 
+                            #      assay[plus_only, , drop = FALSE],
+                            #      assay[neg_only, , drop = FALSE])
+                            x <- sapply(seq_len(ncol(assay)), 
+                                        function(i, ap, an, apo, ano) {
+                                          c(ap[, i] + an[, i], apo[, i], 
+                                            ano[, i])
+                                        }, 
+                                        ap = assay_plus, 
+                                        an = assay_neg, 
+                                        apo = assay[plus_only, , drop = FALSE],
+                                        ano = assay[neg_only, , drop = FALSE])
+                            colnames(x) <- colnames(assay)
+                            x
+                            
                           }, plus_both = plus_both, neg_both = neg_both, 
                           plus_only = plus_only, neg_only = neg_only)
   # Construct new MethPat object
