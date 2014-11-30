@@ -488,16 +488,14 @@ setMethod("methLevel",
             }
             statistic <- match.arg(statistic)
             if (statistic == "beta-values") {
-              if (min_cov > 0L) { 
-                meth_level <- assay(object, "M") / getCoverage(object)
-              } else if (min_cov > 1L) {
-                cov <- getCoverage(object)
-                meth_level <- assay(object, "M") / cov
-                meth_level[cov < min_cov] <- NA_real_
-              }
+              cov <- getCoverage(object)
+              meth_level <- assay(object, "M") / cov
             } else if (statistic == "M-values") {
               meth_level <- log2(assay(object, "M") / 
                                    (assay(object, "U") + offset))
+            }
+            if (min_cov > 1L) {
+              meth_level[cov < min_cov] <- NA_real_
             }
             return(meth_level)
           }
