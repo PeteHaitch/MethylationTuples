@@ -39,7 +39,7 @@ cometh <- function(methpat,
                    alternative = c("two.sided", "less", "greater"),
                    conf.level = 0.95,
                    feature, 
-                   offset = 1) {
+                   offset = 1L) {
   
   # TODO: Check if this likely to occur in practice
   if (nrow(methpat) > .Machine$integer.max) {
@@ -98,7 +98,7 @@ cometh <- function(methpat,
   if (method == "lor") {
     statistic <- log2((assay(methpat, "MM") * assay(methpat, "UU") + offset) / 
                         (assay(methpat, "MU") * assay(methpat, "UM") + offset))
-    # TODO: Compute confidence interval
+    # Compute confidence interval
     sigma <- sqrt(1 / (assay(methpat, "MM") + offset) + 
                     1 / (assay(methpat, "MU") + offset) + 
                     1 / (assay(methpat, "UM") + offset) +
@@ -117,10 +117,10 @@ cometh <- function(methpat,
     # Compute Pearson correlation (equivalent to phi coefficient).
     num <- assay(methpat, "MM") * assay(methpat, "UU") - 
       assay(methpat, "UM") * assay(methpat, "MU")
-    denom <- sqrt((assay(methpat, "MM") + assay(methpat, "MU")) * 
-                    (assay(methpat, "UM") + assay(methpat, "UU")) * 
-                    (assay(methpat, "MM") + assay(methpat, "UM")) *
-                    (assay(methpat, "MU") + assay(methpat, "UU")))
+    denom <- sqrt(assay(methpat, "MM") + assay(methpat, "MU")) *
+      sqrt((assay(methpat, "UM") + assay(methpat, "UU"))) *
+      sqrt((assay(methpat, "MM") + assay(methpat, "UM"))) * 
+      sqrt((assay(methpat, "MU") + assay(methpat, "UU")))
     statistic <- num / denom
     # Compute confidence interval using the Fisher transformation
     z <- atanh(statistic)
@@ -136,15 +136,11 @@ cometh <- function(methpat,
                        greater = Inf, 
                        two.sided = z + sigma * qnorm((1 + conf.level) / 2))
     CI_upper <- tanh(CI_upper)
-    
   }
   statistic[cov < min_cov] <- NA
   CI_lower[cov < min_cov] <- NA
   CI_upper[cov < min_cov] <- NA
   
-  # TODO: Maybe it's better if the output has "chr, strand, pos1, pos2" rather 
-  # than "IPD, strand", since the latter can be inferred from the former but 
-  # not vice versa.
   data.table(chr = as.character(seqnames(methpat)), 
              pos1 = as.integer(start(methpat)), 
              pos2 = as.integer(end(methpat)), 
