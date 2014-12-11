@@ -57,8 +57,8 @@ findMTuples <- function(bsgenome, methinfo, size, exclude = NULL) {
     for (mt in methtype) {
       mt <- DNAString(mt)
       rcmt <- reverseComplement(mt)
-      tmp_fwd_loci <- start(matchPattern(mt, subject, fixed = FALSE))
-      tmp_rev_loci <- end(matchPattern(rcmt, subject, fixed = FALSE))
+      tmp_fwd_loci <- start(matchPattern(mt, subject, fixed = TRUE))
+      tmp_rev_loci <- end(matchPattern(rcmt, subject, fixed = TRUE))
       fwd_loci <- c(fwd_loci, tmp_fwd_loci)
       rev_loci <- c(rev_loci, tmp_rev_loci)
     }
