@@ -123,6 +123,9 @@ cometh <- function(methpat,
       sqrt((assay(methpat, "MU") + assay(methpat, "UU")))
     statistic <- num / denom
     # Compute confidence interval using the Fisher transformation
+    # TODO: Can produce "In atanh(statistic) : NaNs produced". 
+    # Suspect this is due to NA in statistic but haven't been able to 
+    # reproduce.
     z <- atanh(statistic)
     sigma <- suppressWarnings(1 / sqrt(cov - 3L))
     sigma[is.nan(sigma)] <- NA
