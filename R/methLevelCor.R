@@ -125,27 +125,29 @@ methLevelCor <- function(methpat,
   } else if (pair_type == 'adjacent') {
     # NOTHING TODO
   } else if (pair_type == "strict_adjacent") {
-    stop("Sorry, 'pair_type = \"strict_adjacent\"' not yet implemented.")
+    # TODO: Implement using sample-specific loci.
     # TODO: Check how many samples in methpat. It's easiest to implement 
     # strict_adjacent if there is only 1 sample in methpat. Otherwise have to have 
     # a different ref_loci for each sample and deal with that.
-    if (missing(ref_loci) || !is(ref_loci, "MTuples") || size(ref_loci) != 1) {
+    warning(paste0("'pair_type = \"strict_adjacent\"' is currently based on ",
+                   "reference loci, not sample-specific loci."))
+    if (missing(ref_loci) || !is(ref_loci, "MTuples") || size(ref_loci) != 1L) {
       stop("If 'pair_type' = 'strict_adjacent', then must supply 'ref_loci'.")
-      seqinfo <- try(merge(seqinfo(methpat), seqinfo(ref_loci)), silent = TRUE)
-      if (is(seqinfo, "try-error")) {
-        # TODO: Stricter check of seqinfo compatability, e.g., identical?
-        stop("'methpat' and 'ref_loci' have incompatible 'seqinfo'.")
-      }
-      if (!all(methtype(methpat) %in% methtype(ref_loci))) {
-        stop("'methpat' and 'mtuples' have incompatible 'seqinfo'.")
-      }
-      # TODO: This is very slow. Should it return an error or report the loci 
-      # that have no match (or their count) 
-      if (isTRUE(any(!overlapsAny(methpat, ref_loci)))) {
-        stop("All loci in 'methpat' must also be present in 'ref_loci'.")
-      }
     }
-  } 
+    seqinfo <- try(merge(seqinfo(methpat), seqinfo(ref_loci)), silent = TRUE)
+    if (is(seqinfo, "try-error")) {
+      # TODO: Stricter check of seqinfo compatability, e.g., identical?
+      stop("'methpat' and 'ref_loci' have incompatible 'seqinfo'.")
+    }
+    if (!all(methtype(methpat) %in% methtype(ref_loci))) {
+      stop("'methpat' and 'mtuples' have incompatible 'methinfo'.")
+    }
+    # TODO: This is very slow. Should it return an error or report the loci 
+    # that have no match (or their count) 
+    if (isTRUE(any(!overlapsAny(methpat, ref_loci)))) {
+      stop("All loci in 'methpat' must also be present in 'ref_loci'.")
+    }
+  }
   method <- match.arg(method)
   if (!missing(feature)) {
     if (!is(feature, "GRanges") || !isDisjoint(feature)) {
@@ -155,15 +157,24 @@ methLevelCor <- function(methpat,
   
   # Order methpat and extract sorted rowData
   if (pair_type == 'strict_adjacent') {
-    # TODO: Add "missing" loci to methpat, i.e., those loci that have 
-    # insufficient sequencing coverage in the sample. 
-    # E.g., methpat <- rbind(methpat, MethPat(loci_not_in_methpat))
-    # TODO: Find out if is.unsorted works on GTuples Could save an expensive 
-    # sort if data are already sorted.
-    #     if (is.unsorted(ref_loci)) {
-    #       ref_loci <- sort(ref_loci)
-    #     }
-    ref_loci <- sort(ref_loci)
+    # Add "missing" loci to methpat, i.e., those loci that have 
+    # insufficient sequencing coverage in the sample.
+    missing_loci <- ref_loci[!overlapsAny(ref_loci, methpat, type = "equal")]
+    missing_loci <- suppressWarnings(
+      MethPat(assays = SimpleList(M = matrix(NA_integer_, 
+                                             nrow = length(missing_loci),
+                                             ncol = ncol(methpat), 
+                                             dimnames = 
+                                               list(NULL, colnames(methpat))),
+                                  U = matrix(NA_integer_, 
+                                             nrow = length(missing_loci),
+                                             ncol = ncol(methpat), 
+                                             dimnames = 
+                                               list(NULL, colnames(methpat)))),
+              rowData = missing_loci, 
+              colData = colData(methpat))
+    )
+    methpat <- rbind(methpat, missing_loci)
   }
   # TODO: Check whether is.unsorted works on GTuples. Could save an expensive 
   # sort if data are already sorted.
