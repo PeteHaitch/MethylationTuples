@@ -208,7 +208,7 @@ methLevelCor <- function(methpat,
                                                          in_feature_levels))),
                               na.last = FALSE)
   id_dt <- setDT(expand.grid(IPD = ipd, 
-                             strand = levels(strand(methpat)),
+                             strand = levels(droplevels(strand(methpat))),
                              pair_feature_status = pair_feature_status))
   id_dt[, c("KEY", "ID") := list(paste(IPD, strand, pair_feature_status, 
                                        sep = ''),
