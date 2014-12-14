@@ -88,21 +88,28 @@ cometh <- function(methpat,
   }
   
   if (!missing(feature)) {
-    pair_feature_status <- overlapsAny(methpat, feature, type = 'start') + 
-      overlapsAny(methpat, feature, type = 'end')
+    pair_feature_status <- Rle(overlapsAny(methpat, feature, type = 'start') + 
+                                 overlapsAny(methpat, feature, type = 'end'))
   } else {
-    pair_feature_status <- rep(NA, nrow(methpat))
+    pair_feature_status <- Rle(NA, nrow(methpat))
   }
   
   cov <- getCoverage(methpat)
+  # mc = those loci with the minimum coverage. Only compute statistic for these
+  # loci.
+  mc <- cov >= min_cov & !is.na(cov)
+  # TODO: Does a forced rm() actually help or will it be gc-ed anyway?
+  rm(cov)
   if (method == "lor") {
-    statistic <- log2((assay(methpat, "MM") * assay(methpat, "UU") + offset) / 
-                        (assay(methpat, "MU") * assay(methpat, "UM") + offset))
+    statistic <- log2((assay(methpat, "MM")[mc] * 
+                         assay(methpat, "UU")[mc] + offset) / 
+                        (assay(methpat, "MU")[mc] * 
+                           assay(methpat, "UM")[mc] + offset))
     # Compute confidence interval
-    sigma <- sqrt(1 / (assay(methpat, "MM") + offset) + 
-                    1 / (assay(methpat, "MU") + offset) + 
-                    1 / (assay(methpat, "UM") + offset) +
-                    1 / (assay(methpat, "UU") + offset))
+    sigma <- sqrt(1 / (assay(methpat, "MM")[mc] + offset) + 
+                    1 / (assay(methpat, "MU")[mc] + offset) + 
+                    1 / (assay(methpat, "UM")[mc] + offset) +
+                    1 / (assay(methpat, "UU")[mc] + offset))
     CI_lower <- switch(alternative, 
                        less = -Inf, 
                        greater = statistic - sigma * qnorm(conf.level), 
@@ -113,21 +120,26 @@ cometh <- function(methpat,
                        greater = Inf,
                        two.sided = statistic + sigma * 
                          qnorm((1 + conf.level) / 2))
+    # TODO: Does a forced rm() actually help or will it be gc-ed anyway?
+    rm(sigma)    
   } else if (method == "pearson") {
     # Compute Pearson correlation (equivalent to phi coefficient).
-    num <- assay(methpat, "MM") * assay(methpat, "UU") - 
-      assay(methpat, "UM") * assay(methpat, "MU")
-    denom <- sqrt(assay(methpat, "MM") + assay(methpat, "MU")) *
-      sqrt((assay(methpat, "UM") + assay(methpat, "UU"))) *
-      sqrt((assay(methpat, "MM") + assay(methpat, "UM"))) * 
-      sqrt((assay(methpat, "MU") + assay(methpat, "UU")))
+    num <- assay(methpat, "MM")[mc] * assay(methpat, "UU")[mc] - 
+      assay(methpat, "UM")[mc] * assay(methpat, "MU")[mc]
+    denom <- sqrt(assay(methpat, "MM")[mc] + assay(methpat, "MU")[mc]) *
+      sqrt((assay(methpat, "UM")[mc] + assay(methpat, "UU")[mc])) *
+      sqrt((assay(methpat, "MM")[mc] + assay(methpat, "UM")[mc])) * 
+      sqrt((assay(methpat, "MU")[mc] + assay(methpat, "UU")[mc]))
     statistic <- num / denom
     # Compute confidence interval using the Fisher transformation
     # TODO: Can produce "In atanh(statistic) : NaNs produced". 
     # Suspect this is due to NA in statistic but haven't been able to 
     # reproduce.
     z <- atanh(statistic)
-    sigma <- suppressWarnings(1 / sqrt(cov - 3L))
+    sigma <- suppressWarnings(1 / sqrt(assay(methpat, "MM")[mc] + 
+                                         assay(methpat, "MU")[mc] + 
+                                         assay(methpat, "UM")[mc] + 
+                                         assay(methpat, "UU")[mc] - 3L))
     sigma[is.nan(sigma)] <- NA
     CI_lower <- switch(alternative, 
                        less = -Inf, 
@@ -139,18 +151,26 @@ cometh <- function(methpat,
                        greater = Inf, 
                        two.sided = z + sigma * qnorm((1 + conf.level) / 2))
     CI_upper <- tanh(CI_upper)
+    # TODO: Does a forced rm() actually help or will it be gc-ed anyway?
+    rm(sigma)  
   }
-  statistic[cov < min_cov] <- NA
-  CI_lower[cov < min_cov] <- NA
-  CI_upper[cov < min_cov] <- NA
-  
-  data.table(chr = as.character(seqnames(methpat)), 
-             pos1 = as.integer(start(methpat)), 
-             pos2 = as.integer(end(methpat)), 
-             strand = as.character(strand(methpat)), 
-             pair_feature_status = pair_feature_status, 
-             sample = rep(colnames(methpat), each = nrow(methpat)), 
-             statistic = as.vector(statistic), 
-             CI_lower = as.vector(CI_lower), 
-             CI_upper = as.vector(CI_upper))
+  data.table(chr = as.character(rep(seqnames(methpat), 
+                                    ncol(methpat))[as.vector(mc)]), 
+             pos1 = unlist(lapply(seq_len(ncol(mc)), function(j, mc, s) {
+               s[mc[, j]]
+             }, mc = mc, s = start(methpat)), use.names = FALSE), 
+             pos2 = unlist(lapply(seq_len(ncol(mc)), function(j, mc, e) {
+               e[mc[, j]]
+             }, mc = mc, e = end(methpat)), use.names = FALSE), 
+             strand = as.character(rep(strand(methpat), 
+                                       ncol(methpat))[as.vector(mc)]), 
+             pair_feature_status = as.vector(rep(pair_feature_status, 
+                                                 ncol(methpat))[as.vector(mc)]), 
+             sample = unlist(mapply(function(j, sn, mc) {
+               rep(sn, sum(mc[, j]))
+             }, j = seq_len(ncol(mc)), sn = colnames(methpat), 
+             MoreArgs = list(mc = mc)), use.names = FALSE), 
+             statistic = statistic, 
+             CI_lower = CI_lower, 
+             CI_upper = CI_upper)
 }
