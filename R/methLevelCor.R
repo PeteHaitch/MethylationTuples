@@ -145,7 +145,7 @@ methLevelCor <- function(methpat,
     # TODO: This is very slow. Should it return an error or report the loci 
     # that have no match (or their count) 
     if (isTRUE(any(!overlapsAny(methpat, ref_loci)))) {
-      stop("All loci in 'methpat' must also be present in 'ref_loci'.")
+      warning("Some loci in 'methpat' not present in 'ref_loci'.")
     }
   }
   method <- match.arg(method)
