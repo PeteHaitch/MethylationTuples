@@ -154,23 +154,32 @@ cometh <- function(methpat,
     # TODO: Does a forced rm() actually help or will it be gc-ed anyway?
     rm(sigma)  
   }
-  data.table(chr = as.character(rep(seqnames(methpat), 
-                                    ncol(methpat))[as.vector(mc)]), 
-             pos1 = unlist(lapply(seq_len(ncol(mc)), function(j, mc, s) {
-               s[mc[, j]]
-             }, mc = mc, s = start(methpat)), use.names = FALSE), 
-             pos2 = unlist(lapply(seq_len(ncol(mc)), function(j, mc, e) {
-               e[mc[, j]]
-             }, mc = mc, e = end(methpat)), use.names = FALSE), 
-             strand = as.character(rep(strand(methpat), 
-                                       ncol(methpat))[as.vector(mc)]), 
-             pair_feature_status = as.vector(rep(pair_feature_status, 
-                                                 ncol(methpat))[as.vector(mc)]), 
-             sample = unlist(mapply(function(j, sn, mc) {
-               rep(sn, sum(mc[, j]))
-             }, j = seq_len(ncol(mc)), sn = colnames(methpat), 
-             MoreArgs = list(mc = mc)), use.names = FALSE), 
-             statistic = statistic, 
-             CI_lower = CI_lower, 
-             CI_upper = CI_upper)
+  
+  # This clunky construction of a data.table is necessary because working with 
+  # Rle objects leads to integer overflow for large methpat objects.
+  data.table(
+    chr = unlist(lapply(seq_len(ncol(mc)), function(j, mc, sn) {
+      as.character(sn[mc[, j]])
+    }, mc = mc, sn = seqnames(methpat)), use.names = FALSE), 
+    pos1 = unlist(lapply(seq_len(ncol(mc)), function(j, mc, s) {
+      s[mc[, j]]
+    }, mc = mc, s = start(methpat)), use.names = FALSE), 
+    pos2 = unlist(lapply(seq_len(ncol(mc)), function(j, mc, e) {
+      e[mc[, j]]
+    }, mc = mc, e = end(methpat)), use.names = FALSE), 
+    strand = unlist(lapply(seq_len(ncol(mc)), function(j, mc, strand) {
+      as.character(strand[mc[, j]])
+    }, mc = mc, strand = strand(methpat)), use.names = FALSE),
+    pair_feature_status = unlist(lapply(seq_len(ncol(mc)), 
+                                        function(j, mc, pfs) {
+                                          as.vector(pfs[mc[, j]])
+                                        }, mc = mc, pfs = pair_feature_status), 
+                                 use.names = FALSE), 
+    sample = unlist(mapply(function(j, sn, mc) {
+      rep(sn, sum(mc[, j]))
+    }, j = seq_len(ncol(mc)), sn = colnames(methpat), 
+    MoreArgs = list(mc = mc)), use.names = FALSE), 
+    statistic = statistic, 
+    CI_lower = CI_lower, 
+    CI_upper = CI_upper)
 }
