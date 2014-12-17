@@ -190,9 +190,6 @@ methLevelCor <- function(methpat,
   meth_level <- methLevel(methpat, ...)
   
   if (!missing(feature)) {
-    # in_feature = 1 (TRUE) or 0 (FALSE).
-    # Use integers rather than logicals because they're easier to work with in 
-    # Rcpp.
     in_feature <- overlapsAny(methpat_rd_sorted, feature)
   } else {
     in_feature <- rep(NA, length(methpat_rd_sorted))
