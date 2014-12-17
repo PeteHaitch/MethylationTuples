@@ -88,8 +88,13 @@ cometh <- function(methpat,
   }
   
   if (!missing(feature)) {
-    pair_feature_status <- Rle(overlapsAny(methpat, feature, type = 'start') + 
-                                 overlapsAny(methpat, feature, type = 'end'))
+    rd_start <- GRanges(seqnames(methpat), IRanges(start(methpat), width = 1L), 
+                        strand(methpat), seqinfo = seqinfo(methpat))
+    rd_end <- GRanges(seqnames(methpat), IRanges(end(methpat), width = 1L), 
+                      strand(methpat), seqinfo = seqinfo(methpat))
+    pair_feature_status <- Rle(overlapsAny(rd_start, feature) + 
+                                 overlapsAny(rd_end, feature))
+    rm(rd_start, rd_end)
   } else {
     pair_feature_status <- Rle(NA, nrow(methpat))
   }
