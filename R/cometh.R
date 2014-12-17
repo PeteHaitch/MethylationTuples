@@ -106,10 +106,10 @@ cometh <- function(methpat,
   # TODO: Does a forced rm() actually help or will it be gc-ed anyway?
   rm(cov)
   if (method == "lor") {
-    statistic <- log2((assay(methpat, "MM")[mc] * 
-                         assay(methpat, "UU")[mc] + offset) / 
-                        (assay(methpat, "MU")[mc] * 
-                           assay(methpat, "UM")[mc] + offset))
+    statistic <- log2(assay(methpat, "MM")[mc] + offset) + 
+      log2(assay(methpat, "UU")[mc] + offset) -
+      log2(assay(methpat, "MU")[mc] + offset) - 
+      log2(assay(methpat, "UM")[mc] + offset)
     # Compute confidence interval
     sigma <- sqrt(1 / (assay(methpat, "MM")[mc] + offset) + 
                     1 / (assay(methpat, "MU")[mc] + offset) + 
