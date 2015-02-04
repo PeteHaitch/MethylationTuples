@@ -3,18 +3,18 @@
 \alias{filterOutVariants}
 \title{Filter out variants from \code{MethPat} object.}
 \usage{
-filterOutVariants(methpat, variant_files, remove = FALSE,
+filterOutVariants(methpat, vcfs, remove = FALSE,
   verbose = getOption("verbose"), bpparam = bpparam())
 }
 \arguments{
 \item{methpat}{A \code{\link{MethPat}} object.}
 
-\item{variant_files}{A named \code{character} vector with the paths of the
+\item{vcfs}{A named \code{character} vector with the paths of the
 \code{VCF}s containing the variant calls. Currently only VCFs created by
 \code{Bis-SNP} are supported and it is required that there is one \code{VCF}
-per sample and that the order of \code{variant_files} corresponds to the
+per sample and that the order of \code{vcfs} corresponds to the
 samples in \code{methpat} (i.e.,
-\code{identical(names(variant_files), colnames(methpat)} is \code{TRUE}).}
+\code{identical(names(vcfs), colnames(methpat)} is \code{TRUE}).}
 
 \item{remove}{A \code{logical(0)}. If \code{TRUE} rows of the \code{MethPat} object
 where all samples have a variant are removed from the object entirely,

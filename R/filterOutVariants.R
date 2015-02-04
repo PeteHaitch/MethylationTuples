@@ -9,12 +9,12 @@
 #' Filter out variants from \code{MethPat} object.
 #' 
 #' @param methpat A \code{\link{MethPat}} object.
-#' @param variant_files A named \code{character} vector with the paths of the 
+#' @param vcfs A named \code{character} vector with the paths of the 
 #' \code{VCF}s containing the variant calls. Currently only VCFs created by 
 #' \code{Bis-SNP} are supported and it is required that there is one \code{VCF} 
-#' per sample and that the order of \code{variant_files} corresponds to the 
+#' per sample and that the order of \code{vcfs} corresponds to the 
 #' samples in \code{methpat} (i.e., 
-#' \code{identical(names(variant_files), colnames(methpat)} is \code{TRUE}).
+#' \code{identical(names(vcfs), colnames(methpat)} is \code{TRUE}).
 #' @param remove A \code{logical(0)}. If \code{TRUE} rows of the \code{MethPat} object 
 #' where all samples have a variant are removed from the object entirely, 
 #' otherwise these are retained, albeit with the assay counts set to \code{NA}.
@@ -44,19 +44,19 @@
 #' \dontrun{
 #' ## TODO
 #' }
-filterOutVariants <- function(methpat, variant_files, remove = FALSE, 
+filterOutVariants <- function(methpat, vcfs, remove = FALSE, 
                                 verbose = getOption("verbose"),
                                 bpparam = bpparam()) {
-  # Check names variant_files match sample names
-  if (!identical(colnames(methpat), names(variant_files))) {
-    stop("Names of 'variant_files' must be identical to 'colnames(methpat)'.")
+  # Check names of vcfs match sample names
+  if (!identical(colnames(methpat), names(vcfs))) {
+    stop("Names of 'vcfs' must be identical to 'colnames(methpat)'.")
   }
     
   # Read and process the VCFs
   if (verbose) {
     message("Reading and processing VCFs ...")
   }
-  vcfs <- bplapply(variant_files, function(vf, methpat) {
+  vcfs <- bplapply(vcfs, function(vf, methpat) {
     param <- VariantAnnotation::ScanVcfParam(fixed = c("FILTER"), 
                                              info = c("CS"), geno = NA)
     # Read in VCF
