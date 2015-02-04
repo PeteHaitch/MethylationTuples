@@ -1,16 +1,16 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.1.1
 RVersion: 3.2.0
-Repos: CRAN=http://cran.rstudio.com,
-    BioCsoft=http://bioconductor.org/packages/3.1/bioc,
+Repos: BioCsoft=http://bioconductor.org/packages/3.1/bioc,
     BioCann=http://bioconductor.org/packages/3.1/data/annotation,
     BioCexp=http://bioconductor.org/packages/3.1/data/experiment,
-    BioCextra=http://bioconductor.org/packages/3.1/extra
+    BioCextra=http://bioconductor.org/packages/3.1/extra,
+    CRAN=http://cran.rstudio.com
 
 Package: AnnotationDbi
 Source: Bioconductor
-Version: 1.29.1
-Hash: 15db401b51b0765549e8f453910075fc
+Version: 1.29.17
+Hash: a96cede74f9d99cbf503d578f751ee62
 Requires: Biobase, BiocGenerics, DBI, GenomeInfoDb, RSQLite, S4Vectors
 
 Package: base64enc
@@ -33,24 +33,24 @@ Requires: checkmate
 
 Package: Biobase
 Source: Bioconductor
-Version: 2.27.0
-Hash: 405d50c6207e4f97ac10b5518ffa08d4
+Version: 2.27.1
+Hash: c9d3d3fb35e6b1b72130fa3cbda13439
 Requires: BiocGenerics
 
 Package: BiocGenerics
 Source: Bioconductor
-Version: 0.13.1
-Hash: 2ab028162bb24cfdf78bfc3e3624f549
+Version: 0.13.2
+Hash: 6a506f8197b05c00ae3ae17fb5ac7e28
 
 Package: BiocInstaller
 Source: Bioconductor
-Version: 1.17.1
-Hash: 630ee849c8f788ee61f5ba97516d2cdf
+Version: 1.17.5
+Hash: 2f7cc1978608247ee5e7fec8c620b8d0
 
 Package: BiocParallel
 Source: Bioconductor
-Version: 1.1.5
-Hash: 1958dc72de6342be79e8706b13056161
+Version: 1.1.6
+Hash: 667ce4241839febd4e7c1828506ad28f
 Requires: BatchJobs, BBmisc, BiocGenerics, foreach
 
 Package: BiocStyle
@@ -67,7 +67,7 @@ Requires: AnnotationDbi, RCurl, XML
 Package: Biostrings
 Source: Bioconductor
 Version: 2.35.4
-Hash: a006d52d18a69fd5701d36d8ca408b40
+Hash: 5dd70278f3636eab642d31f2d6a1fc42
 Requires: BiocGenerics, IRanges, S4Vectors, XVector, zlibbioc
 
 Package: bitops
@@ -163,7 +163,7 @@ Requires: BiocGenerics, IRanges, S4Vectors
 Package: GenomicAlignments
 Source: Bioconductor
 Version: 1.3.8
-Hash: 2e0a03345901cb3d376acc68d23d7df6
+Hash: bdcb7d4d127555b2cba7b389dbb40d73
 Requires: BiocGenerics, BiocParallel, Biostrings, GenomeInfoDb,
     GenomicRanges, IRanges, Rsamtools, S4Vectors
 
@@ -178,7 +178,7 @@ Requires: AnnotationDbi, Biobase, BiocGenerics, biomaRt, Biostrings,
 Package: GenomicRanges
 Source: Bioconductor
 Version: 1.19.10
-Hash: df3765fb54f83481e4f9ba9227929cf1
+Hash: aff1b7446a15dd760a3ebfa5c0c8f278
 Requires: BiocGenerics, GenomeInfoDb, IRanges, S4Vectors, XVector
 
 Package: GenomicTuples
@@ -211,8 +211,8 @@ Requires: digest, jsonlite, RCurl, stringr
 
 Package: IRanges
 Source: Bioconductor
-Version: 2.1.13
-Hash: fd941ecd85a4324ec272f047f630f986
+Version: 2.1.14
+Hash: b53a2e6440515d095f5c6b7a5097982f
 Requires: BiocGenerics, S4Vectors
 
 Package: iterators
@@ -324,7 +324,7 @@ Requires: brew, digest, Rcpp, stringr
 Package: Rsamtools
 Source: Bioconductor
 Version: 1.19.9
-Hash: 6c63f15d607e0b603ed3e1a0cf8664d2
+Hash: 2d61b5bff9f0d62f44997d497b6e11b5
 Requires: BiocGenerics, Biostrings, bitops, GenomeInfoDb,
     GenomicRanges, IRanges, S4Vectors, XVector, zlibbioc
 
@@ -342,15 +342,15 @@ Hash: 5bd4449a873ec652a05c932312dcf04b
 Package: rtracklayer
 Source: Bioconductor
 Version: 1.27.5
-Hash: 82cc3ada2f09c6af8f7cf2f5e7e6d289
+Hash: cd64397e368574ea7278f7cb8bb0a3f4
 Requires: BiocGenerics, Biostrings, GenomeInfoDb, GenomicAlignments,
     GenomicRanges, IRanges, RCurl, Rsamtools, S4Vectors, XML, XVector,
     zlibbioc
 
 Package: S4Vectors
 Source: Bioconductor
-Version: 0.5.6
-Hash: 3ed5ad1782758ed3bfccaab342188c2a
+Version: 0.5.7
+Hash: d60f74a56c6e189f43dc14e70e79a697
 Requires: BiocGenerics
 
 Package: sendmailR
@@ -373,7 +373,7 @@ Requires: digest
 Package: VariantAnnotation
 Source: Bioconductor
 Version: 1.13.11
-Hash: 2166f8755a7bacfaae03b737f0acc50f
+Hash: 51ba1eb45d67c3f125c890d2f74645f6
 Requires: AnnotationDbi, Biobase, BiocGenerics, Biostrings, BSgenome,
     DBI, GenomeInfoDb, GenomicFeatures, GenomicRanges, IRanges,
     Rsamtools, rtracklayer, S4Vectors, XVector, zlibbioc
@@ -391,7 +391,7 @@ Hash: 13746d37588e7083349177d6e8234864
 Package: XVector
 Source: Bioconductor
 Version: 0.7.2
-Hash: 14db03deb9c45df48c593ec034f051d9
+Hash: f5f1b6acf0910ca5d0efdb124b3bc9cf
 Requires: BiocGenerics, IRanges, S4Vectors
 
 Package: yaml
