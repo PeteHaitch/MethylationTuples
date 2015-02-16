@@ -7,3 +7,4 @@ TODO.pdf
 .Rprofile
 ^\.travis\.yml$
 ^tmp/
+notes_on_bissnp.Rmd
