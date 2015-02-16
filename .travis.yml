@@ -2,7 +2,7 @@ language: c
 
 before_install:
   - curl -OL https://raw.githubusercontent.com/metacran/r-builder/master/pkg-build.sh
-  - chmod 755 ./pkg-build.sh
+  - chmod 755 pkg-build.sh
   - ./pkg-build.sh bootstrap
  
 install:
@@ -21,12 +21,7 @@ script:
   - ./pkg-build.sh run_tests
 
 after_failure:
-#  - ./travis-tool.sh dump_logs
   - ./pkg-build.sh dump_logs
-
-after_script:
-  - ./pkg-build.sh dump_logs_by_extension "timings"
-  - ./pkg-build.sh dump_sysinfo
 
 notifications:
   email:
@@ -36,8 +31,3 @@ notifications:
 env:
   global:
     - RVERSION=devel
-    - R_BUILD_ARGS="--no-manual --no-resave-data"
-    - R_CHECK_ARGS="--no-build-vignettes --no-manual --timings"
-#    - R_CHECK_TIME="TRUE"
-    - R_CHECK_TESTS="TRUE"
-    - _R_CHECK_TIMINGS_="0"
