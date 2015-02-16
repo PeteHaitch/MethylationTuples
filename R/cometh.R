@@ -39,7 +39,7 @@ cometh <- function(methpat,
                    alternative = c("two.sided", "less", "greater"),
                    conf.level = 0.95,
                    feature, 
-                   offset = 1L) {
+                   offset = 0.5) {
   
   # TODO: Check if this likely to occur in practice
   if (nrow(methpat) > .Machine$integer.max) {
