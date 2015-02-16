@@ -41,7 +41,7 @@
 #' @param feature An optional \code{\link[GenomicRanges]{GRanges}} object with 
 #' the locations of a "genomic feature". This 
 #' \code{\link[GenomicRanges]{GRanges}} object must be disjoint (see 
-#' \code{\link[GenomicRanges]{isDisjoint}}). The \code{feature}Please see the 
+#' \code{\link[GenomicRanges]{isDisjoint}}). Please see the 
 #' below section, "Stratifying pairs by a genomic feature", for details.
 #' @param ... Additional arguments passed to \code{\link{methLevel}}, such as 
 #' \code{min_cov}, \code{statistic} and \code{offset}.

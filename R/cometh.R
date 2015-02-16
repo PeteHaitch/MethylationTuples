@@ -16,19 +16,30 @@
 #' constructed when computing correlations. One of "\code{neighbours}" or 
 #' "\code{all}", can be abbreviated. Please see the below section, "Choice of 
 #' 'pair_type'", for details.
-#' @param ref_loci An \code{\link{MTuples}} object with the locations of all 
-#' methylation loci 1-tuples in the sample/reference genome. Only required if 
-#' \code{pair_type = "strict_adjacent"} and otherwise ignored. Please see the below 
-#' section, "Choice of 'pair_type'", for details.
-#' @param method A character string giving the method used to estimate 
-#' co-methylation. One of "\code{lor}" or "\code{pearson}", can be abbreviated. 
-#' Please see the below section, "Choice of statistic", for details.
-#' @param min_cov
-#' 
+#' @param method A character string indicating which statistic to use to 
+#' estimate co-methylation. This must be (an abbreviation of) one of the 
+#' strings "\code{lor}" (\eqn{log_{2}(odds-ratio)}) or 
+#' "\code{pearson}" (Pearson product-moment correlation coefficient). Please 
+#' see the below section, "Choice of statistic", for details.
+#' @param min_cov An \code{integer} specifying the minimum coverage required 
+#' in order to use a 2-tuple when estimating co-methylation.
+#' @param alternative Indicates the alternative hypothesis and must be one of 
+#' "two.sided", "greater" or "less". You can specify just the initial letter. 
+#' "greater" corresponds to positive association, "less" to negative 
+#' association.
+#' @param feature An optional \code{\link[GenomicRanges]{GRanges}} object with 
+#' the locations of a "genomic feature". This 
+#' \code{\link[GenomicRanges]{GRanges}} object must be disjoint (see 
+#' \code{\link[GenomicRanges]{isDisjoint}}). Please see the 
+#' below section, "Stratifying pairs by a genomic feature", for details.
+#' @param offset A \code{numeric} vector with length 1 used when computing 
+#' M-values (default: 0.5).
 #' 
 #' @section Choice of 'pair_type':
 #' 
 #' @section Choice of statistic:
+#' 
+#' @section Stratifying pairs by a genomic feature:
 #' 
 #' @export
 cometh <- function(methpat, 

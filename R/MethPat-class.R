@@ -463,7 +463,7 @@ setMethod("methtype",
 #' level statistic is to be computed. One of "\code{beta-values}" or 
 #' "\code{M-values}" (see below).
 #' @param min_cov An \code{integer} specifying the minimum coverage required 
-#' in order order to compute a beta-value. Samples/sites with coverage less 
+#' in order to compute a beta-value. Samples/sites with coverage less 
 #' than \code{min_cov} will have the corresponding methylation level set to 
 #' \code{NA}.
 #' @param offset A \code{numeric} vector with length 1 used when computing 
