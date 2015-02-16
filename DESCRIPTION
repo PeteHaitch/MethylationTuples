@@ -16,13 +16,13 @@ biocViews: DNAMethylation, DataImport, Software, MethylSeq
 VignetteBuilder: knitr
 Depends:
     R (>= 2.10),
-    GenomicTuples (>= 1.1.9)
+    GenomicTuples (>= 1.1.9),
+    data.table
 Imports:
     BiocGenerics,
     Rcpp (>= 0.11.2),
     Biobase,
     IRanges,
-    data.table,
     BiocParallel,
     R.utils,
     Biostrings,
