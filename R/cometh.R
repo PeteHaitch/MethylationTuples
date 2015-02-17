@@ -136,8 +136,6 @@ cometh <- function(methpat,
                        greater = Inf,
                        two.sided = statistic + sigma * 
                          qnorm((1 + conf.level) / 2))
-    # TODO: Does a forced rm() actually help or will it be gc-ed anyway?
-    rm(sigma)    
   } else if (method == "pearson") {
     # Compute Pearson correlation (equivalent to phi coefficient).
     num <- assay(methpat, "MM")[mc] * assay(methpat, "UU")[mc] - 
@@ -167,8 +165,6 @@ cometh <- function(methpat,
                        greater = Inf, 
                        two.sided = z + sigma * qnorm((1 + conf.level) / 2))
     CI_upper <- tanh(CI_upper)
-    # TODO: Does a forced rm() actually help or will it be gc-ed anyway?
-    rm(sigma)  
   }
   
   # This clunky construction of a data.table is necessary because working with 
@@ -196,6 +192,7 @@ cometh <- function(methpat,
     }, j = seq_len(ncol(mc)), sn = colnames(methpat), 
     MoreArgs = list(mc = mc)), use.names = FALSE), 
     statistic = statistic, 
+    sigma = sigma,
     CI_lower = CI_lower, 
     CI_upper = CI_upper)
 }
