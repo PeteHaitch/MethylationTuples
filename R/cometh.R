@@ -190,7 +190,7 @@ cometh <- function(methpat,
     sample = unlist(mapply(function(j, sn, mc) {
       rep(sn, sum(mc[, j]))
     }, j = seq_len(ncol(mc)), sn = colnames(methpat), 
-    MoreArgs = list(mc = mc)), use.names = FALSE), 
+    MoreArgs = list(mc = mc), SIMPLIFY = FALSE), use.names = FALSE), 
     statistic = statistic, 
     sigma = sigma,
     CI_lower = CI_lower, 
