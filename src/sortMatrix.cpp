@@ -21,8 +21,8 @@ using namespace Rcpp;
 //' (dim = 0), or each row (dim = 1).
 //' 
 //' @keywords internal
-// [[Rcpp::export(".sortMatrix")]]
-arma::mat sortMatrixCpp(const arma::mat& x, 
+// [[Rcpp::export(".sortMatrixCpp")]]
+arma::mat sortMatrix(const arma::mat& x, 
                         const char* sort_direction = "ascend", 
                         const int dim = 0L) {
   return arma::sort(x, sort_direction, dim);

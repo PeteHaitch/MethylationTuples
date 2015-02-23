@@ -47,9 +47,9 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
-// sortMatrixCpp
-arma::mat sortMatrixCpp(const arma::mat& x, const char* sort_direction = "ascend", const int dim = 0L);
-RcppExport SEXP MethylationTuples_sortMatrixCpp(SEXP xSEXP, SEXP sort_directionSEXP, SEXP dimSEXP) {
+// sortMatrix
+arma::mat sortMatrix(const arma::mat& x, const char* sort_direction = "ascend", const int dim = 0L);
+RcppExport SEXP MethylationTuples_sortMatrix(SEXP xSEXP, SEXP sort_directionSEXP, SEXP dimSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
@@ -57,7 +57,7 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP );
         Rcpp::traits::input_parameter< const char* >::type sort_direction(sort_directionSEXP );
         Rcpp::traits::input_parameter< const int >::type dim(dimSEXP );
-        arma::mat __result = sortMatrixCpp(x, sort_direction, dim);
+        arma::mat __result = sortMatrix(x, sort_direction, dim);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

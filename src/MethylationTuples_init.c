@@ -7,12 +7,12 @@
 
 SEXP MethylationTuples_makeAdjacentPairs(SEXP methpat_orderSEXP, SEXP seqnamesSEXP, SEXP strandSEXP, SEXP posSEXP, SEXP in_featureSEXP, SEXP id_dtSEXP);
 SEXP MethylationTuples_makeAllPairs(SEXP methpat_orderSEXP, SEXP seqnamesSEXP, SEXP strandSEXP, SEXP posSEXP, SEXP in_featureSEXP, SEXP ipdSEXP, SEXP id_dtSEXP);
-SEXP MethylationTuples_sortMatrixCpp(SEXP xSEXP, SEXP sort_directionSEXP, SEXP dimSEXP);
+SEXP MethylationTuples_sortMatrix(SEXP xSEXP, SEXP sort_directionSEXP, SEXP dimSEXP);
 
 R_CallMethodDef callMethods[]  = {
   {"Cpp_MethylationTuples_makeAdjacentPairs", (DL_FUNC) &MethylationTuples_makeAdjacentPairs, 6},
   {"Cpp_MethylationTuples_makeAllPairs", (DL_FUNC) &MethylationTuples_makeAllPairs, 7},
-  {"Cpp_MethylationTuples_sortMatrixCpp", (DL_FUNC) &MethylationTuples_sortMatrixCpp, 3},
+  {"Cpp_MethylationTuples_sortMatrix", (DL_FUNC) &MethylationTuples_sortMatrix, 3},
   {NULL, NULL, 0}
 };
 

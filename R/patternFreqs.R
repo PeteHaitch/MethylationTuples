@@ -35,7 +35,7 @@ patternFreqs <- function(methpat, min_cov = 5L) {
   freq <- matrix(unlist(freq, use.names = FALSE), nrow = length(freq), 
                  byrow = TRUE)
   # Must transpose the resulting column-sorted matrix
-  freq <- t(.Call("MethylationTuples_sortMatrixCpp", 
+  freq <- t(.Call(Cpp_MethylationTuples_sortMatrix, 
                   PACKAGE = "MethylationTuples", 
                   x = freq, sort_direction = "descend", dim = 0L))
   chr <- data.table(chr = as.vector(seqnames(methpat)))

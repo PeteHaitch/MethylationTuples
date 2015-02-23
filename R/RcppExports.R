@@ -66,7 +66,7 @@
 #' (dim = 0), or each row (dim = 1).
 #' 
 #' @keywords internal
-.sortMatrix <- function(x, sort_direction = "ascend", dim = 0L) {
-    .Call('MethylationTuples_sortMatrixCpp', PACKAGE = 'MethylationTuples', x, sort_direction, dim)
+.sortMatrixCpp <- function(x, sort_direction = "ascend", dim = 0L) {
+    .Call('MethylationTuples_sortMatrix', PACKAGE = 'MethylationTuples', x, sort_direction, dim)
 }
 
