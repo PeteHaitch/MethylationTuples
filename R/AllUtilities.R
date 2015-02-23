@@ -72,6 +72,7 @@
   return(val)
 }
 
+# TODO: Rename to .isStranded() and deprecate .stranded()
 #' Is an object stranded.
 #' 
 #' @param x An object with a \code{strand}.
