@@ -21,6 +21,7 @@ Depends:
 Imports:
     BiocGenerics,
     Rcpp (>= 0.11.2),
+    RcppArmadillo,
     Biobase,
     IRanges,
     BiocParallel,
@@ -33,7 +34,7 @@ Suggests:
     testthat,
     knitr,
     BiocStyle
-LinkingTo: Rcpp
+LinkingTo: Rcpp, RcppArmadillo
 License: Artistic-2.0
 Collate:
     'AllGenerics.R'
@@ -49,5 +50,6 @@ Collate:
     'filterOutVariants.R'
     'findMTuples.R'
     'methLevelCor.R'
+    'patternFreqs.R'
     'readMethtuple.R'
     'tmpFixes.R'

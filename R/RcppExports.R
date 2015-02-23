@@ -52,3 +52,21 @@
     .Call('MethylationTuples_makeAllPairs', PACKAGE = 'MethylationTuples', methpat_order, seqnames, strand, pos, in_feature, ipd, id_dt)
 }
 
+#' Sort rows or columns of a numeric matrix.
+#' 
+#' This simply uses the \code{sort} routine in \code{Armadillo} via 
+#' \code{RcppArmadillo}.
+#' 
+#' @param x A numeric matrix.
+#' @param sort_direction The sort_direction argument is optional; 
+#' sort_direction is either "ascend" or "descend"; by default "ascend" is used.
+#' @param dim The dim argument is optional; by default dim = 0 is used.
+#' 
+#' @return A matrix with the elements of the input matrix sorted in each column 
+#' (dim = 0), or each row (dim = 1).
+#' 
+#' @keywords internal
+.sortMatrix <- function(x, sort_direction = "ascend", dim = 0L) {
+    .Call('MethylationTuples_sortMatrixCpp', PACKAGE = 'MethylationTuples', x, sort_direction, dim)
+}
+
