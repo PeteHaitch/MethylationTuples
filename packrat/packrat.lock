@@ -1,11 +1,11 @@
 PackratFormat: 1.4
-PackratVersion: 0.4.1.1
+PackratVersion: 0.4.3
 RVersion: 3.2.0
-Repos: BioCsoft=http://bioconductor.org/packages/3.1/bioc,
+Repos: CRAN=http://cran.rstudio.com,
+    BioCsoft=http://bioconductor.org/packages/3.1/bioc,
     BioCann=http://bioconductor.org/packages/3.1/data/annotation,
     BioCexp=http://bioconductor.org/packages/3.1/data/experiment,
-    BioCextra=http://bioconductor.org/packages/3.1/extra,
-    CRAN=http://cran.rstudio.com
+    BioCextra=http://bioconductor.org/packages/3.1/extra
 
 Package: AnnotationDbi
 Source: Bioconductor
@@ -13,23 +13,25 @@ Version: 1.29.17
 Hash: a96cede74f9d99cbf503d578f751ee62
 Requires: Biobase, BiocGenerics, DBI, GenomeInfoDb, RSQLite, S4Vectors
 
-Package: base64enc
+Package: BBmisc
 Source: CRAN
-Version: 0.1-2
-Hash: 290e385e048cebab0e8d8d301b84ac75
+Version: 1.9
+Hash: 0a03b49785d622142a895121fa408122
+Requires: checkmate
+
+Package: BSgenome
+Source: Bioconductor
+Version: 1.35.17
+Hash: dc11112baf085509f44fdd3dfd76c7e3
+Requires: BiocGenerics, Biostrings, GenomeInfoDb, GenomicRanges,
+    IRanges, Rsamtools, S4Vectors, XVector, rtracklayer
 
 Package: BatchJobs
 Source: CRAN
 Version: 1.5
 Hash: 9008830ac169960c1741699b7bfdf1b9
-Requires: BBmisc, brew, checkmate, DBI, digest, fail, RSQLite,
+Requires: BBmisc, DBI, RSQLite, brew, checkmate, digest, fail,
     sendmailR, stringr
-
-Package: BBmisc
-Source: CRAN
-Version: 1.8
-Hash: fbae7086649f391037e37150ab83df8a
-Requires: checkmate
 
 Package: Biobase
 Source: Bioconductor
@@ -39,8 +41,8 @@ Requires: BiocGenerics
 
 Package: BiocGenerics
 Source: Bioconductor
-Version: 0.13.2
-Hash: 6a506f8197b05c00ae3ae17fb5ac7e28
+Version: 0.13.4
+Hash: 6ee15a72fc3752a1d45b0a5df98776c1
 
 Package: BiocInstaller
 Source: Bioconductor
@@ -49,26 +51,168 @@ Hash: 2f7cc1978608247ee5e7fec8c620b8d0
 
 Package: BiocParallel
 Source: Bioconductor
-Version: 1.1.6
-Hash: 667ce4241839febd4e7c1828506ad28f
-Requires: BatchJobs, BBmisc, BiocGenerics, foreach
+Version: 1.1.13
+Hash: 5bfa4afb833241fceaa41b36d9d17e6e
+Requires: BBmisc, BatchJobs, BiocGenerics, foreach
 
 Package: BiocStyle
 Source: Bioconductor
 Version: 1.5.3
 Hash: 17e24e2c829809acf0c9aaa794e600aa
 
-Package: biomaRt
-Source: Bioconductor
-Version: 2.23.1
-Hash: d4a3d585b34e032c3e0c8c4ac40f7709
-Requires: AnnotationDbi, RCurl, XML
-
 Package: Biostrings
 Source: Bioconductor
-Version: 2.35.4
-Hash: 5dd70278f3636eab642d31f2d6a1fc42
+Version: 2.35.11
+Hash: b2cf958ae2f6dbf63307827677194c37
 Requires: BiocGenerics, IRanges, S4Vectors, XVector, zlibbioc
+
+Package: DBI
+Source: CRAN
+Version: 0.3.1
+Hash: 3a9e85b26ec3ab570266bccb3f9de055
+
+Package: GenomeInfoDb
+Source: Bioconductor
+Version: 1.3.13
+Hash: 60e7a916d6c05331ae715b6939cf42a2
+Requires: BiocGenerics, IRanges, S4Vectors
+
+Package: GenomicAlignments
+Source: Bioconductor
+Version: 1.3.28
+Hash: 1420e40ee616345e10314d64b844c339
+Requires: BiocGenerics, BiocParallel, Biostrings, GenomeInfoDb,
+    GenomicRanges, IRanges, Rsamtools, S4Vectors
+
+Package: GenomicFeatures
+Source: Bioconductor
+Version: 1.19.18
+Hash: 06adc4ff2611e9b39dc09441d8151019
+Requires: AnnotationDbi, Biobase, BiocGenerics, Biostrings, DBI,
+    GenomeInfoDb, GenomicRanges, IRanges, RCurl, RSQLite, S4Vectors,
+    biomaRt, rtracklayer
+
+Package: GenomicRanges
+Source: Bioconductor
+Version: 1.19.40
+Hash: 2197aa753ad2c66791e82dce9518fef9
+Requires: BiocGenerics, GenomeInfoDb, IRanges, S4Vectors, XVector
+
+Package: GenomicTuples
+Source: Bioconductor
+Version: 1.1.15
+Hash: 9c14478ba7dc08616a1189395798ce89
+Requires: Biobase, BiocGenerics, GenomeInfoDb, GenomicRanges, Rcpp,
+    S4Vectors
+
+Package: IRanges
+Source: Bioconductor
+Version: 2.1.40
+Hash: b3aaa98b789e4bb78f04414e4900b26e
+Requires: BiocGenerics, S4Vectors
+
+Package: Kmisc
+Source: github
+Version: 0.5.1
+Hash: b9a340ecef5bdd61fb09f462c179ccb86aff4e31
+Requires: Rcpp, data.table, fastmatch, knitr, markdown
+GithubRepo: Kmisc
+GithubUsername: kevinushey
+GithubRef: master
+GithubSha1: b9a340ecef5bdd61fb09f462c179ccb86aff4e31
+
+Package: R.methodsS3
+Source: CRAN
+Version: 1.7.0
+Hash: f9066c451a6ed76b1011dee9cead8777
+
+Package: R.oo
+Source: CRAN
+Version: 1.18.0
+Hash: 151940a7861e78ae66c157a06a81eecc
+Requires: R.methodsS3
+
+Package: R.utils
+Source: CRAN
+Version: 1.34.0
+Hash: a4b999df68204841d24c391f0e0f76dc
+Requires: R.methodsS3, R.oo
+
+Package: R6
+Source: CRAN
+Version: 2.0.1
+Hash: 9a3ac4e5fd8059af0fc5156bcb019bbc
+
+Package: RColorBrewer
+Source: CRAN
+Version: 1.1-2
+Hash: 5203278413b09be06483c5ac1920bb05
+
+Package: RCurl
+Source: CRAN
+Version: 1.95-4.5
+Hash: 1187c1ea73013abf25f362a7e6da1046
+Requires: bitops
+
+Package: RSQLite
+Source: CRAN
+Version: 1.0.0
+Hash: 6ec4dc154e68485971a5baf3817e61a8
+Requires: DBI
+
+Package: Rcpp
+Source: CRAN
+Version: 0.11.4
+Hash: 1f684f6afd28079e4e609b49f353e49f
+
+Package: RcppArmadillo
+Source: CRAN
+Version: 0.4.600.4.0
+Hash: 6d7bae5478db5054d7b1d702beb7738b
+Requires: Rcpp
+
+Package: Rsamtools
+Source: Bioconductor
+Version: 1.19.29
+Hash: e02dba5c49c21f0d8724646cb02378a9
+Requires: BiocGenerics, Biostrings, GenomeInfoDb, GenomicRanges,
+    IRanges, S4Vectors, XVector, bitops, zlibbioc
+
+Package: S4Vectors
+Source: Bioconductor
+Version: 0.5.21
+Hash: 74f163e217c5cfb32d4ec7f094e4c700
+Requires: BiocGenerics
+
+Package: VariantAnnotation
+Source: Bioconductor
+Version: 1.13.32
+Hash: b221a2c2c12d36df0a426aaa51a18274
+Requires: AnnotationDbi, BSgenome, Biobase, BiocGenerics, Biostrings,
+    DBI, GenomeInfoDb, GenomicFeatures, GenomicRanges, IRanges,
+    Rsamtools, S4Vectors, XVector, rtracklayer, zlibbioc
+
+Package: XML
+Source: CRAN
+Version: 3.98-1.1
+Hash: 13746d37588e7083349177d6e8234864
+
+Package: XVector
+Source: Bioconductor
+Version: 0.7.4
+Hash: a4ac4921a23a6f1c1f3543f04f7d8295
+Requires: BiocGenerics, IRanges, S4Vectors
+
+Package: base64enc
+Source: CRAN
+Version: 0.1-2
+Hash: 290e385e048cebab0e8d8d301b84ac75
+
+Package: biomaRt
+Source: Bioconductor
+Version: 2.23.5
+Hash: b5686e04dfb8e7c86cd3bda21d129966
+Requires: AnnotationDbi, RCurl, XML
 
 Package: bitops
 Source: CRAN
@@ -80,13 +224,6 @@ Source: CRAN
 Version: 1.0-6
 Hash: 9d92cc5ac60123fdb7b0daa3ae83bf99
 
-Package: BSgenome
-Source: Bioconductor
-Version: 1.35.6
-Hash: 3bfa47b04ff3c1ecdfbd9c76494a5b7c
-Requires: BiocGenerics, Biostrings, GenomeInfoDb, GenomicRanges,
-    IRanges, Rsamtools, rtracklayer, S4Vectors, XVector
-
 Package: caTools
 Source: CRAN
 Version: 1.17.1
@@ -95,13 +232,34 @@ Requires: bitops
 
 Package: checkmate
 Source: CRAN
-Version: 1.5.0
-Hash: d4cde297bce181d318d2393ed83c5495
+Version: 1.5.1
+Hash: 689bd4825149d4f791ce0fe5d259e62d
 
 Package: chron
 Source: CRAN
 Version: 2.3-45
 Hash: 65cf73bf43c26a4578bb251499de38cd
+
+Package: colorspace
+Source: CRAN
+Version: 1.2-4
+Hash: b775bd08a10f968fef582304b7c3ab9c
+
+Package: covr
+Source: github
+Version: 0.2.0.9000
+Hash: eff2d0e4a41d46854c2eb3c3a0eea995961b4dd3
+Requires: crayon, devtools, httr, jsonlite, rex, testthat
+GithubRepo: covr
+GithubUsername: jimhester
+GithubRef: master
+GithubSha1: eff2d0e4a41d46854c2eb3c3a0eea995961b4dd3
+
+Package: crayon
+Source: CRAN
+Version: 1.1.0
+Hash: 191e66d7e9cac7be6c779ca44bf8e194
+Requires: memoise
 
 Package: data.table
 Source: CRAN
@@ -109,22 +267,22 @@ Version: 1.9.4
 Hash: 905b6356d387a3a7e13ef62c4cf6f7e3
 Requires: chron, reshape2
 
-Package: DBI
-Source: CRAN
-Version: 0.3.1
-Hash: 3a9e85b26ec3ab570266bccb3f9de055
-
 Package: devtools
 Source: CRAN
-Version: 1.6.1
-Hash: e3096b832604a7a36ff0a6455e5cdddc
-Requires: digest, evaluate, httr, jsonlite, memoise, RCurl, rstudioapi,
-    whisker
+Version: 1.7.0
+Hash: 56919e22e0d3f7131e93bda1a869730e
+Requires: RCurl, digest, evaluate, httr, jsonlite, memoise, roxygen2,
+    rstudioapi, whisker
+
+Package: dichromat
+Source: CRAN
+Version: 2.0-0
+Hash: 42be2136555fa4b6167605df56d8cd7c
 
 Package: digest
 Source: CRAN
-Version: 0.6.4
-Hash: e4bf0e79b15a352510aff0de905d31e2
+Version: 0.6.8
+Hash: 89dc4c8734dad5322bb3c5c2af09056f
 
 Package: evaluate
 Source: CRAN
@@ -154,43 +312,16 @@ Source: CRAN
 Version: 1.0
 Hash: a90c211d7df7e61a72b8ab6c99c2e848
 
-Package: GenomeInfoDb
-Source: Bioconductor
-Version: 1.3.7
-Hash: 91f1a35ab2c28d402795cc465d28d189
-Requires: BiocGenerics, IRanges, S4Vectors
+Package: ggplot2
+Source: CRAN
+Version: 1.0.0
+Hash: c8bff66238347472f08b6a35608539ff
+Requires: digest, gtable, plyr, proto, reshape2, scales
 
-Package: GenomicAlignments
-Source: Bioconductor
-Version: 1.3.8
-Hash: bdcb7d4d127555b2cba7b389dbb40d73
-Requires: BiocGenerics, BiocParallel, Biostrings, GenomeInfoDb,
-    GenomicRanges, IRanges, Rsamtools, S4Vectors
-
-Package: GenomicFeatures
-Source: Bioconductor
-Version: 1.19.6
-Hash: 08c4508bf7bb52dcdf14d09c5c32f59a
-Requires: AnnotationDbi, Biobase, BiocGenerics, biomaRt, Biostrings,
-    DBI, GenomeInfoDb, GenomicRanges, IRanges, RCurl, RSQLite,
-    rtracklayer, S4Vectors
-
-Package: GenomicRanges
-Source: Bioconductor
-Version: 1.19.10
-Hash: aff1b7446a15dd760a3ebfa5c0c8f278
-Requires: BiocGenerics, GenomeInfoDb, IRanges, S4Vectors, XVector
-
-Package: GenomicTuples
-Source: github
-Version: 1.1.9
-Hash: d12ed375ae8e6234e68b062fd20522ef4c9b5a5a
-Requires: Biobase, BiocGenerics, GenomeInfoDb, GenomicRanges, Rcpp,
-    S4Vectors
-GithubRepo: GenomicTuples
-GithubUsername: PeteHaitch
-GithubRef: master
-GithubSha1: d12ed375ae8e6234e68b062fd20522ef4c9b5a5a
+Package: gtable
+Source: CRAN
+Version: 0.1.2
+Hash: 0cf4a2b54c02b35dec7e74a8ebed12a0
 
 Package: highr
 Source: CRAN
@@ -205,15 +336,9 @@ Requires: digest
 
 Package: httr
 Source: CRAN
-Version: 0.5
-Hash: 68a70bdd16fb949a12e4fda7f31def00
-Requires: digest, jsonlite, RCurl, stringr
-
-Package: IRanges
-Source: Bioconductor
-Version: 2.1.14
-Hash: b53a2e6440515d095f5c6b7a5097982f
-Requires: BiocGenerics, S4Vectors
+Version: 0.6.1
+Hash: 3b082465d75a7a0c3d09ad06a0905aff
+Requires: R6, RCurl, digest, jsonlite, mime, stringr
 
 Package: iterators
 Source: CRAN
@@ -222,24 +347,29 @@ Hash: b5320a58712688d5b18c207cf256ef3f
 
 Package: jsonlite
 Source: CRAN
-Version: 0.9.13
-Hash: dd2cfbfb6cce930fef0be435a7093e8a
-
-Package: Kmisc
-Source: github
-Version: 0.5.1
-Hash: b9a340ecef5bdd61fb09f462c179ccb86aff4e31
-Requires: data.table, fastmatch, knitr, markdown, Rcpp
-GithubRepo: Kmisc
-GithubUsername: kevinushey
-GithubRef: master
-GithubSha1: b9a340ecef5bdd61fb09f462c179ccb86aff4e31
+Version: 0.9.14
+Hash: 1e949c7f0f926734e2ff498eddb2309a
 
 Package: knitr
 Source: CRAN
-Version: 1.8
-Hash: d00d7b314ca4c34f8a56ceacefb31b4f
+Version: 1.9
+Hash: 41c29594ced4d02b3b90b4c375680cd3
 Requires: digest, evaluate, formatR, highr, markdown, stringr
+
+Package: labeling
+Source: CRAN
+Version: 0.3
+Hash: 568a992912caf7eeddfb121924154047
+
+Package: lazyeval
+Source: CRAN
+Version: 0.1.10
+Hash: 7f88a453d0b52e36ea46d9d33c6dcf90
+
+Package: magrittr
+Source: CRAN
+Version: 1.5
+Hash: 38d492cf072bc9f3c73bda2aee3d0e23
 
 Package: markdown
 Source: CRAN
@@ -253,105 +383,87 @@ Version: 0.2.1
 Hash: fc52fa39dfd216c44d64812ff31b1c67
 Requires: digest
 
+Package: microbenchmark
+Source: CRAN
+Version: 1.4-2
+Hash: 658f0ab7fa41ec9c3187ffef516d6c4e
+Requires: ggplot2
+
 Package: mime
 Source: CRAN
 Version: 0.2
 Hash: 9179db921fcb2e5be44e217042ed06bc
 
+Package: munsell
+Source: CRAN
+Version: 0.4.2
+Hash: fa8af6d040041439b249351e9d16ae9a
+Requires: colorspace
+
 Package: packrat
 Source: CRAN
-Version: 0.4.1-1
-Hash: 5716097644904b9c1b4be2692de16005
+Version: 0.4.3
+Hash: 16c72d5c802629fae5a4abca901e0199
 
 Package: plyr
 Source: CRAN
 Version: 1.8.1
-Hash: 6a287219196e18bc6261dc11b41b1ca0
+Hash: 7dd935ee4050eaf2973108be2faf245e
 Requires: Rcpp
+
+Package: proto
+Source: CRAN
+Version: 0.3-10
+Hash: 668a9e87cedbdc5f56c396edf1bd2648
 
 Package: pryr
 Source: CRAN
 Version: 0.1
-Hash: 1faf8af6427dcf087e22b555a399005c
+Hash: 7335c3257d7aa4a5468c381ecf7106c2
 Requires: Rcpp, stringr
-
-Package: R.methodsS3
-Source: CRAN
-Version: 1.6.1
-Hash: 88717a386d97ad2687b28a411392f570
-
-Package: R.oo
-Source: CRAN
-Version: 1.18.0
-Hash: 151940a7861e78ae66c157a06a81eecc
-Requires: R.methodsS3
-
-Package: R.utils
-Source: CRAN
-Version: 1.34.0
-Hash: a4b999df68204841d24c391f0e0f76dc
-Requires: R.methodsS3, R.oo
-
-Package: Rcpp
-Source: CRAN
-Version: 0.11.3
-Hash: d9cc0a13885961b2d004cf73b0fb68dd
-
-Package: RCurl
-Source: CRAN
-Version: 1.95-4.3
-Hash: 158377109f939084a72f240125f821d3
-Requires: bitops
 
 Package: reshape2
 Source: CRAN
-Version: 1.4
-Hash: e50809918ebb73dff47de17d36d12975
-Requires: plyr, Rcpp, stringr
+Version: 1.4.1
+Hash: c401ef665db07687e1e54fbc60c683bb
+Requires: Rcpp, plyr, stringr
+
+Package: rex
+Source: CRAN
+Version: 0.2.0
+Hash: f7de79775cb0cbc6a4f8174704c7401e
+Requires: lazyeval, magrittr
 
 Package: rmarkdown
 Source: CRAN
-Version: 0.3.3
-Hash: fe7b370d7022b58c2b71469681c0431f
+Version: 0.5.1
+Hash: 2d87f70c12c5558c50c4b3587fc6f499
 Requires: caTools, htmltools, knitr, yaml
 
 Package: roxygen2
 Source: CRAN
-Version: 4.0.2
-Hash: 44172ff2d8beac88abb92535d89c6aaa
-Requires: brew, digest, Rcpp, stringr
-
-Package: Rsamtools
-Source: Bioconductor
-Version: 1.19.9
-Hash: 2d61b5bff9f0d62f44997d497b6e11b5
-Requires: BiocGenerics, Biostrings, bitops, GenomeInfoDb,
-    GenomicRanges, IRanges, S4Vectors, XVector, zlibbioc
-
-Package: RSQLite
-Source: CRAN
-Version: 1.0.0
-Hash: 6ec4dc154e68485971a5baf3817e61a8
-Requires: DBI
+Version: 4.1.0
+Hash: a11d0f31f8daf359c67e3e0c19d1e468
+Requires: Rcpp, brew, digest, stringr
 
 Package: rstudioapi
 Source: CRAN
-Version: 0.1
-Hash: 5bd4449a873ec652a05c932312dcf04b
+Version: 0.2
+Hash: aa27b6b62b335717db16cb1de6336860
 
 Package: rtracklayer
 Source: Bioconductor
-Version: 1.27.5
-Hash: cd64397e368574ea7278f7cb8bb0a3f4
+Version: 1.27.7
+Hash: 8dca8132fdbeb0ff61f1e5d6ec15c866
 Requires: BiocGenerics, Biostrings, GenomeInfoDb, GenomicAlignments,
     GenomicRanges, IRanges, RCurl, Rsamtools, S4Vectors, XML, XVector,
     zlibbioc
 
-Package: S4Vectors
-Source: Bioconductor
-Version: 0.5.7
-Hash: d60f74a56c6e189f43dc14e70e79a697
-Requires: BiocGenerics
+Package: scales
+Source: CRAN
+Version: 0.2.4
+Hash: b8b1af97bd07818605223060386b00dd
+Requires: RColorBrewer, dichromat, labeling, munsell, plyr
 
 Package: sendmailR
 Source: CRAN
@@ -370,29 +482,10 @@ Version: 0.9.1
 Hash: 8b05e97c7401ae4f8b5dfbaa44cfcf20
 Requires: digest
 
-Package: VariantAnnotation
-Source: Bioconductor
-Version: 1.13.11
-Hash: 51ba1eb45d67c3f125c890d2f74645f6
-Requires: AnnotationDbi, Biobase, BiocGenerics, Biostrings, BSgenome,
-    DBI, GenomeInfoDb, GenomicFeatures, GenomicRanges, IRanges,
-    Rsamtools, rtracklayer, S4Vectors, XVector, zlibbioc
-
 Package: whisker
 Source: CRAN
 Version: 0.3-2
 Hash: 186ab2937fec1694c8a63009a2389c4e
-
-Package: XML
-Source: CRAN
-Version: 3.98-1.1
-Hash: 13746d37588e7083349177d6e8234864
-
-Package: XVector
-Source: Bioconductor
-Version: 0.7.2
-Hash: f5f1b6acf0910ca5d0efdb124b3bc9cf
-Requires: BiocGenerics, IRanges, S4Vectors
 
 Package: yaml
 Source: CRAN
@@ -401,5 +494,5 @@ Hash: e5d041c001f6d641fd009c1f6ef7d831
 
 Package: zlibbioc
 Source: Bioconductor
-Version: 1.13.0
-Hash: a99456b27af48c7cea00ad9014ba5c30
+Version: 1.13.1
+Hash: 9f3ea9ca888671ada25f1f0b91877531
