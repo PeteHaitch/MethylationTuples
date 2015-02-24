@@ -9,3 +9,4 @@ TODO.pdf
 ^tmp/
 notes_on_bissnp.Rmd
 ^\.Rprofile$
+.coveralls.R
