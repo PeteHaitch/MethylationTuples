@@ -1,6 +1,4 @@
-MethylationTuples
-================================================================================
-[![Build Status](https://travis-ci.org/PeteHaitch/MethylationTuples.png?branch=master)](https://travis-ci.org/PeteHaitch/MethylationTuples)
+# R package: MethylationTuples
 
 `MethylationTuples` provides tools for analysing, managing and visualising 
 methylation patterns at genomic tuples. These include analyses of 
@@ -18,3 +16,10 @@ if (suppressWarnings(!require(devtools))) {
 # Install development version of MethylationTuples
 devtools::install_github("PeteHaitch/MethylationTuples")
 ```
+
+## R CMD check status
+Travis CI: <a href="https://travis-ci.org/PeteHaitch/MethylationTuples"><img src="https://travis-ci.org/PeteHaitch/MethylationTuples.svg?branch=master" alt="Build status"></a>
+
+## Test coverage status
+coveralls.io: [![Coverage Status](https://coveralls.io/repos/PeteHaitch/MethylationTuples/badge.svg)](https://coveralls.io/r/PeteHaitch/MethylationTuples)
+

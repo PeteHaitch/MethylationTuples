@@ -48,3 +48,7 @@ Possible alternatives:  `r Rpackage("MethTuples")`, other? Can't use
 The package will require `BSgenome`, but at this stage I'm not sure whether it 
 should be in DEPENDS or IMPORTS. Various `BSgenome`-organism packages should be 
 listed in SUGGESTS.
+
+# Questions
+
+- [ ] How to document S4 methods/generics, in particular re `@aliases`?
