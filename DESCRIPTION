@@ -21,7 +21,6 @@ Depends:
 Imports:
     BiocGenerics,
     Rcpp (>= 0.11.2),
-    RcppArmadillo,
     Biobase,
     IRanges,
     BiocParallel,

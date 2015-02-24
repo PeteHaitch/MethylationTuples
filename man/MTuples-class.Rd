@@ -2,6 +2,7 @@
 % Please edit documentation in R/MTuples-class.R
 \docType{class}
 \name{MTuples-class}
+\alias{MTuples}
 \alias{MTuples-class}
 \title{MTuples objects}
 \usage{

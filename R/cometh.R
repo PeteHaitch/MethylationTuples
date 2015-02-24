@@ -35,11 +35,11 @@
 #' @param offset A \code{numeric} vector with length 1 used when computing 
 #' M-values (default: 0.5).
 #' 
-#' @section Choice of 'pair_type':
+#' @section Choice of 'pair_type': \strong{TODO}
 #' 
-#' @section Choice of statistic:
+#' @section Choice of statistic: \strong{TODO}
 #' 
-#' @section Stratifying pairs by a genomic feature:
+#' @section Stratifying pairs by a genomic feature: \strong{TODO}
 #' 
 #' @export
 cometh <- function(methpat, 

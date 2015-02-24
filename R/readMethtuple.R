@@ -46,7 +46,7 @@
 #' (\code{NULL}) then a bare-bones \code{\link[GenomeInfoDb]{Seqinfo}} object 
 #' will be created containing only the \code{seqnames} inferred from the 
 #' \code{files}.
-#' @param verbose A \code{\link{logical(1)}} indicating whether messages about 
+#' @param verbose A \code{logical(1)} indicating whether messages about 
 #' the reading of the data (via \code{data.table::\link[data.table]{fread}}) 
 #' and about data coercion during construction of the \code{\link{MethPat}} 
 #' object should be printed. Regardless of whether \code{verbose} is 
@@ -61,7 +61,7 @@
 #' Parallelisation of \code{readMethtuple} is partially supported. Files 
 #' may be decompressed in parallel but not read-in in parallel. 
 #' Parallelisation uses the \pkg{BiocParallel} package. By default this uses a
-#' \code{\link[BiocParallel]{MulticoreParam()}} instance or the user’s 
+#' \code{\link[BiocParallel]{MulticoreParam}()} instance or the user's 
 #' preferred back-end if they have used \code{\link[BiocParallel]{register}}. 
 #' Please consult the \pkg{BiocParallel} documentation for details on 
 #' registering a parallel backend and parallelisation support available on 

@@ -2,6 +2,7 @@
 % Please edit documentation in R/MTuplesList-class.R
 \docType{class}
 \name{MTuplesList-class}
+\alias{MTuplesList}
 \alias{MTuplesList-class}
 \title{MTuplesList objects}
 \usage{
@@ -20,7 +21,7 @@ based.
 \details{
 Please see
 \code{\link[GenomicTuples]{GTuplesList}} for a description of available
-methods. The only additional methods are \code{\link{methinfo}} and
+methods. The only additional methods are \code{methinfo} and
 \code{\link{methtype}}, which are identical to their \code{\link{MTuples}}
 counterparts.
 }

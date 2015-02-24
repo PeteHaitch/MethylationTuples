@@ -2,6 +2,7 @@
 % Please edit documentation in R/MethPat-class.R
 \docType{methods}
 \name{getCoverage,MethPat-method}
+\alias{getCoverage}
 \alias{getCoverage,MethPat-method}
 \title{Compute sequencing coverage of m-tuples.}
 \usage{
@@ -11,7 +12,7 @@
 \item{object}{A \code{\link{MethPat}} object.}
 }
 \value{
-A \code{\link[base]{matriobject}}, with the same dimensions and
+A \code{\link[base]{matrix}} object, with the same dimensions and
 dimension names as \code{object}, of sequencing coverage of each tuple in
 each sample.
 }

@@ -43,14 +43,14 @@ M-values (default: 0.5).}
 Estimate within-sample, within-fragment co-methylation using 2-tuples.
 }
 \section{Choice of 'pair_type'}{
-
+ \strong{TODO}
 }
 
 \section{Choice of statistic}{
-
+ \strong{TODO}
 }
 
 \section{Stratifying pairs by a genomic feature}{
-
+ \strong{TODO}
 }
 

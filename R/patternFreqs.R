@@ -5,7 +5,7 @@
 
 # TODO: Document
 # 
-#'
+#' A naive estimate of the frequency of methylation patterns.
 #' @aliases patternFreqs
 #'
 #' @export
@@ -20,7 +20,7 @@ patternFreqs <- function(methpat, min_cov = 5L, ...) {
   }
   # TODO: If stranded MethPat objects are allowed then need to include strand in 
   # returned value.
-  if (MethylationTuples:::.stranded(methpat)) {
+  if (.stranded(methpat)) {
     stop(paste0("Only 'MethPat' objects that have been processed with ", 
                 "'MethylationTuples::collapseStrand' are currently supported"))
   }

@@ -49,15 +49,18 @@
 #'      (\code{NA_character_}) then the merged \code{methtype} is also missing 
 #'      (\code{NA_character}).
 #'    }
-#'  }
+#' }
 #'  
-#'  @author Peter Hickey
-#'  @examples
-#'  x <- MethInfo("CG")
-#'  y <- MethInfo(c("CHG", "CG"))
-#'  y # NB: Pretty-prints methylation type as "CG/CHG"
-#'  methtype(y) # NB: Returns the methylation type as a character vector
-#'  merge(x, y)
+#' @author Peter Hickey
+#' @examples
+#' x <- MethInfo("CG")
+#' y <- MethInfo(c("CHG", "CG"))
+#' y # NB: Pretty-prints methylation type as "CG/CHG"
+#' methtype(y) # NB: Returns the methylation type as a character vector
+#' merge(x, y)
+#'  
+#' @aliases MethInfo
+#'  
 #' @export
 setClass("MethInfo", 
          representation(
@@ -70,6 +73,7 @@ setClass("MethInfo",
 ### Getters.
 ###
 
+#' @aliases methtype
 #' @export
 setMethod("methtype", 
           "MethInfo", 

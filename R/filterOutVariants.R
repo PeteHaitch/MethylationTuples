@@ -18,7 +18,7 @@
 #' @param remove A \code{logical(0)}. If \code{TRUE} rows of the \code{MethPat} object 
 #' where all samples have a variant are removed from the object entirely, 
 #' otherwise these are retained, albeit with the assay counts set to \code{NA}.
-#' @param verbose A \code{\link{logical(1)}} indicating whether progress 
+#' @param verbose A \code{logical(1)} indicating whether progress 
 #' should be reported via calls to \code{\link[base]{message}}.
 #' @param bpparam A \code{\link[BiocParallel]{bpparam}} object specifying the 
 #' parallelisation strategy, if any. See below for a discussion of 
@@ -33,7 +33,7 @@
 #' Parallelisation of \code{filterOutVariants} is partially supported. 
 #' \code{VCF}s are read-in and processed in parallel, where appropriate.
 #' Parallelisation uses the \pkg{BiocParallel} package. By default this uses a
-#' \code{\link[BiocParallel]{MulticoreParam()}} instance or the user’s 
+#' \code{\link[BiocParallel]{MulticoreParam}()} instance or the user's 
 #' preferred back-end if they have used \code{\link[BiocParallel]{register}}. 
 #' Please consult the \pkg{BiocParallel} documentation for details on 
 #' registering a parallel backend and parallelisation support available on 

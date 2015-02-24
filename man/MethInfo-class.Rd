@@ -2,6 +2,7 @@
 % Please edit documentation in R/MethInfo-class.R
 \docType{class}
 \name{MethInfo-class}
+\alias{MethInfo}
 \alias{MethInfo-class}
 \title{MethInfo objects}
 \description{
@@ -54,14 +55,14 @@ In the code snippet below, \code{x} and \code{y} are \code{MethInfo} objects.
      (\code{NA_character_}) then the merged \code{methtype} is also missing
      (\code{NA_character}).
    }
- }
+}
 }
 \examples{
 x <- MethInfo("CG")
- y <- MethInfo(c("CHG", "CG"))
- y # NB: Pretty-prints methylation type as "CG/CHG"
- methtype(y) # NB: Returns the methylation type as a character vector
- merge(x, y)
+y <- MethInfo(c("CHG", "CG"))
+y # NB: Pretty-prints methylation type as "CG/CHG"
+methtype(y) # NB: Returns the methylation type as a character vector
+merge(x, y)
 }
 \author{
 Peter Hickey

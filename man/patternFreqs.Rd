@@ -2,11 +2,11 @@
 % Please edit documentation in R/patternFreqs.R
 \name{patternFreqs}
 \alias{patternFreqs}
-\title{}
+\title{A naive estimate of the frequency of methylation patterns.}
 \usage{
 patternFreqs(methpat, min_cov = 5L, ...)
 }
 \description{
-
+A naive estimate of the frequency of methylation patterns.
 }
 

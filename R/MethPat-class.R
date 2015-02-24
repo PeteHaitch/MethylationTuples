@@ -511,9 +511,12 @@ setMethod("methLevel",
 #' Compute sequencing coverage of m-tuples.
 #' @param object A \code{\link{MethPat}} object.
 #' 
-#' @return A \code{\link[base]{matriobject}}, with the same dimensions and 
+#' @return A \code{\link[base]{matrix}} object, with the same dimensions and 
 #' dimension names as \code{object}, of sequencing coverage of each tuple in 
 #' each sample.
+#' 
+#' @aliases getCoverage
+#' 
 #' @export
 setMethod("getCoverage", 
           "MethPat", 

@@ -19,7 +19,7 @@
 #' @details
 #'  Please see 
 #' \code{\link[GenomicTuples]{GTuplesList}} for a description of available 
-#' methods. The only additional methods are \code{\link{methinfo}} and 
+#' methods. The only additional methods are \code{methinfo} and 
 #' \code{\link{methtype}}, which are identical to their \code{\link{MTuples}} 
 #' counterparts.
 #' 
@@ -27,6 +27,8 @@
 #' \code{size} tuples.
 #' 
 #' @seealso \code{\link{MTuples}}, \code{\link[GenomicTuples]{GTuplesList}}.
+#' 
+#' @aliases MTuplesList
 #'
 #' @export
 #' @include MethInfo-class.R

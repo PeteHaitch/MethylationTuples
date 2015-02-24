@@ -29,6 +29,8 @@
 #' loci in a \code{\link[BSgenome]{BSgenome}} object, and
 #' \code{\link[GenomicTuples]{GTuples}} for the class from which \code{MTuples} 
 #' inherits.
+#' 
+#' @aliases MTuples
 #'
 #' @export
 #' @include MethInfo-class.R
