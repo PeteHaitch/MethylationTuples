@@ -4,8 +4,12 @@
 ###
 
 # TODO: Document
+# 
+#'
+#' @aliases patternFreqs
+#'
 #' @export
-patternFreqs <- function(methpat, min_cov = 5L) {
+patternFreqs <- function(methpat, min_cov = 5L, ...) {
   
   # TODO: The requirement of 1 sample allows me to greatly reduce the size of 
   # the intermediate methpat object on which the computations are performed by 

@@ -261,6 +261,8 @@
 #' 
 #' @export
 #' 
+#' @aliases MethPat
+#' 
 #' @examples
 #' ## TODO
 #' 
@@ -476,6 +478,8 @@ setMethod("methtype",
 #' @return A \code{\link[base]{matrix}}, with the same dimensions and dimension 
 #' names as \code{x}, of methylation levels at each methylation loci in each 
 #' sample.
+#' 
+#' @aliases methLevel
 #' 
 #' @export 
 setMethod("methLevel", 

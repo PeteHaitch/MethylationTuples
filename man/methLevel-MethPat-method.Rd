@@ -2,6 +2,7 @@
 % Please edit documentation in R/MethPat-class.R
 \docType{methods}
 \name{methLevel,MethPat-method}
+\alias{methLevel}
 \alias{methLevel,MethPat-method}
 \title{Compute methylation levels.}
 \usage{

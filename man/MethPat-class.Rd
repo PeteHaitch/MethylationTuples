@@ -2,6 +2,7 @@
 % Please edit documentation in R/MethPat-class.R
 \docType{class}
 \name{MethPat-class}
+\alias{MethPat}
 \alias{MethPat-class}
 \title{MethPat instances}
 \arguments{
