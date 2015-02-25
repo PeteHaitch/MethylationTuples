@@ -21,4 +21,5 @@
 #' @import Biostrings
 #' @import methods
 #' @importFrom Biobase validMsg
+#' @importFrom VariantAnnotation readVcf ScanVcfParam
 NULL

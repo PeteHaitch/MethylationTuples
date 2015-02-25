@@ -2,10 +2,6 @@
 ### filterOutVariants: Filter out variants from MethPat object
 ###
 
-# TODO: Clarify NAMESPACE issue with VariantAnnotation, e.g., readVcf doesn't 
-# work but VariantAnnotation::readVcf does but I'm not sure this is the correct 
-# way of doing things (see http://r-pkgs.had.co.nz/namespace.html)
-
 #' Filter out variants from \code{MethPat} object.
 #' 
 #' @param methpat A \code{\link{MethPat}} object.

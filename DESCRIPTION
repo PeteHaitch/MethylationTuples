@@ -1,8 +1,8 @@
 Package: MethylationTuples
 Type: Package
 Title: Tools for analysing methylation patterns at genomic tuples
-Version: 0.2.26
-Date: 2015-02-24
+Version: 0.2.27
+Date: 2015-02-25
 Authors@R: c(person("Peter", "Hickey", role = c("aut", "cre"),
     email = "peter.hickey@gmail.com"))
 Author: Peter Hickey <peter.hickey@gmail.com>
