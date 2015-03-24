@@ -317,7 +317,7 @@ setClass('MethPat',
 .valid.MethPat <- function(object) {
   
   # First need to check that rowData is an MTuples object.
-  # Otherwise some of the .valid.CoMeth.* functions won't work
+  # Otherwise some of the .valid.MethPat.* functions won't work
   msg <- .valid.MethPat.rowData(object)
   if (is.null(msg)){
     
@@ -460,7 +460,7 @@ setMethod("methtype",
 ## TODO: Document.
 ## TODO: Unit tests.
 #' Compute methylation levels.
-#' @param x A \code{\link{MethPat}} object containing 1-tuples.
+#' @param object A \code{\link{MethPat}} object containing 1-tuples.
 #' @param statistic A \code{character} string indicating which methylation 
 #' level statistic is to be computed. One of "\code{beta-values}" or 
 #' "\code{M-values}" (see below).
@@ -476,8 +476,8 @@ setMethod("methtype",
 #' define beta-values or M-values, e.g., minfi.
 #' 
 #' @return A \code{\link[base]{matrix}}, with the same dimensions and dimension 
-#' names as \code{x}, of methylation levels at each methylation loci in each 
-#' sample.
+#' names as \code{object}, of methylation levels at each methylation loci in 
+#' each sample.
 #' 
 #' @aliases methLevel
 #' 

@@ -116,6 +116,7 @@ readMethtuple <- function(files,
     stop("'sample_names' must not contain '", DELIMETER, "'.")
   }
 
+  # TODO: Use R.utils::compressedFile() and associated methods.
   # Decompress files (if required).
   my_unzip <- function(files, verbose) {
     bplapply(files, function(file, verbose) {

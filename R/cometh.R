@@ -8,6 +8,7 @@
 # TODO: All filter_* functions should identically either retain "filtered" or 
 # remove "filtered" objects. Use the same logic as dplyr.
 # TODO: Finish documenting.
+# TODO: Consistency of arguments, e.g., pair_type vs. pair.type
 
 #' Estimate within-sample, within-fragment co-methylation using 2-tuples.
 #' 

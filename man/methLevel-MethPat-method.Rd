@@ -10,6 +10,8 @@
   "M-values"), min_cov = 1L, offset = 1L)
 }
 \arguments{
+\item{object}{A \code{\link{MethPat}} object containing 1-tuples.}
+
 \item{statistic}{A \code{character} string indicating which methylation
 level statistic is to be computed. One of "\code{beta-values}" or
 "\code{M-values}" (see below).}
@@ -21,13 +23,11 @@ than \code{min_cov} will have the corresponding methylation level set to
 
 \item{offset}{A \code{numeric} vector with length 1 used when computing
 M-values (default: 1).}
-
-\item{x}{A \code{\link{MethPat}} object containing 1-tuples.}
 }
 \value{
 A \code{\link[base]{matrix}}, with the same dimensions and dimension
-names as \code{x}, of methylation levels at each methylation loci in each
-sample.
+names as \code{object}, of methylation levels at each methylation loci in
+each sample.
 }
 \description{
 Compute methylation levels.

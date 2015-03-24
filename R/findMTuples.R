@@ -1,6 +1,7 @@
 # TODO: Should the example use library or require?
 # TODO: Unit tests. This could be difficult since the function requires a 
 # large input file (bsgenome) and takes a while to run; what's best practice?
+# TODO: Should the seqinfo of the returned object include exclude-d seqlevels?
 
 #' Find tuples of methylation loci of a given size in a reference genome.
 #' 
