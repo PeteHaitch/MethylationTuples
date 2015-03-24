@@ -10,57 +10,45 @@ using namespace Rcpp;
 List makeAdjacentPairs(IntegerVector methpat_order, std::vector<std::string> seqnames, std::vector<std::string> strand, IntegerVector pos, LogicalVector in_feature, DataFrame id_dt);
 RcppExport SEXP MethylationTuples_makeAdjacentPairs(SEXP methpat_orderSEXP, SEXP seqnamesSEXP, SEXP strandSEXP, SEXP posSEXP, SEXP in_featureSEXP, SEXP id_dtSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< IntegerVector >::type methpat_order(methpat_orderSEXP );
-        Rcpp::traits::input_parameter< std::vector<std::string> >::type seqnames(seqnamesSEXP );
-        Rcpp::traits::input_parameter< std::vector<std::string> >::type strand(strandSEXP );
-        Rcpp::traits::input_parameter< IntegerVector >::type pos(posSEXP );
-        Rcpp::traits::input_parameter< LogicalVector >::type in_feature(in_featureSEXP );
-        Rcpp::traits::input_parameter< DataFrame >::type id_dt(id_dtSEXP );
-        List __result = makeAdjacentPairs(methpat_order, seqnames, strand, pos, in_feature, id_dt);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerVector >::type methpat_order(methpat_orderSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type seqnames(seqnamesSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type strand(strandSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type pos(posSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type in_feature(in_featureSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type id_dt(id_dtSEXP);
+    __result = Rcpp::wrap(makeAdjacentPairs(methpat_order, seqnames, strand, pos, in_feature, id_dt));
+    return __result;
 END_RCPP
 }
 // makeAllPairs
 List makeAllPairs(IntegerVector methpat_order, std::vector<std::string> seqnames, std::vector<std::string> strand, IntegerVector pos, LogicalVector in_feature, IntegerVector ipd, DataFrame id_dt);
 RcppExport SEXP MethylationTuples_makeAllPairs(SEXP methpat_orderSEXP, SEXP seqnamesSEXP, SEXP strandSEXP, SEXP posSEXP, SEXP in_featureSEXP, SEXP ipdSEXP, SEXP id_dtSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< IntegerVector >::type methpat_order(methpat_orderSEXP );
-        Rcpp::traits::input_parameter< std::vector<std::string> >::type seqnames(seqnamesSEXP );
-        Rcpp::traits::input_parameter< std::vector<std::string> >::type strand(strandSEXP );
-        Rcpp::traits::input_parameter< IntegerVector >::type pos(posSEXP );
-        Rcpp::traits::input_parameter< LogicalVector >::type in_feature(in_featureSEXP );
-        Rcpp::traits::input_parameter< IntegerVector >::type ipd(ipdSEXP );
-        Rcpp::traits::input_parameter< DataFrame >::type id_dt(id_dtSEXP );
-        List __result = makeAllPairs(methpat_order, seqnames, strand, pos, in_feature, ipd, id_dt);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< IntegerVector >::type methpat_order(methpat_orderSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type seqnames(seqnamesSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string> >::type strand(strandSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type pos(posSEXP);
+    Rcpp::traits::input_parameter< LogicalVector >::type in_feature(in_featureSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type ipd(ipdSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type id_dt(id_dtSEXP);
+    __result = Rcpp::wrap(makeAllPairs(methpat_order, seqnames, strand, pos, in_feature, ipd, id_dt));
+    return __result;
 END_RCPP
 }
 // sortMatrix
-arma::mat sortMatrix(const arma::mat& x, const char* sort_direction = "ascend", const int dim = 0L);
+arma::mat sortMatrix(const arma::mat& x, const char* sort_direction, const int dim);
 RcppExport SEXP MethylationTuples_sortMatrix(SEXP xSEXP, SEXP sort_directionSEXP, SEXP dimSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP );
-        Rcpp::traits::input_parameter< const char* >::type sort_direction(sort_directionSEXP );
-        Rcpp::traits::input_parameter< const int >::type dim(dimSEXP );
-        arma::mat __result = sortMatrix(x, sort_direction, dim);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const char* >::type sort_direction(sort_directionSEXP);
+    Rcpp::traits::input_parameter< const int >::type dim(dimSEXP);
+    __result = Rcpp::wrap(sortMatrix(x, sort_direction, dim));
+    return __result;
 END_RCPP
 }
