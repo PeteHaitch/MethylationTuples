@@ -47,7 +47,7 @@ patternFreqs <- function(methpat, min_cov = 5L, ...) {
   ipd <- setnames(as.data.table(IPD(methpat)), 
                   paste0("IPD", seq_len(size(methpat) - 1L)))
   freq <- as.data.table(freq)
-  setnames(freq, paste0("W", seq_len(ncol(freq))))
+  setnames(freq, paste0("w", seq_len(ncol(freq))))
   sample <- data.table(sample = colnames(methpat))
   cbind(chr, ipd, sample, freq)
 }
