@@ -20,6 +20,8 @@
 #' @import BiocParallel
 #' @import Biostrings
 #' @import methods
+#' @import ggplot2
 #' @importFrom Biobase validMsg
 #' @importFrom VariantAnnotation readVcf ScanVcfParam
+#' @importFrom stats4 plot
 NULL
