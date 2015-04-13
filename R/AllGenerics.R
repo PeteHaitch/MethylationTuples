@@ -56,3 +56,17 @@ setGeneric("getCoverage",
              standardGeneric("getCoverage")
            }
 )
+
+### -------------------------------------------------------------------------
+### filter
+###
+###
+
+## TODO: Decide on a better name. Will clash with dplyr's filter()
+#' @export
+setGeneric("filter", 
+           function(object, ...) {
+             standardGeneric("filter")
+           }
+)
+

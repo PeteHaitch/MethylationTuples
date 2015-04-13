@@ -233,3 +233,43 @@ setMethod("plot",
             }
 )
 
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### : Identify positions with an M-bias greater than a threshold
+###
+
+# TODO: This is clunky as hell; needs a re-think and a re-design.
+#' Filter MBias
+#' 
+#' For each sample, this identifies all read-positions with a normalise M-bias 
+#' greater than the threshold. 
+#' @param object An \code{\link{MBiase}} object.
+#' @param threshold The threshold at which to filter.
+#' @param methylationType The type of methylation to filter.
+#' 
+#' @return A \code{data.table} with the sample name (\code{sampleName}), read 
+#' (\code{R1} for read-1 and \code{R2} for read-2), methylation type 
+#' (\code{methylationType}) and positions to filter out (\code{irp} = ignore 
+#' read positions). The value in the \code{irp} column is designed so that it 
+#' can be copy-pasted as an argument to \code{methtuple}.
+#' 
+#' @export
+setMethod("filter", 
+          "MBias",
+          function(object, threshold = 3,
+                   methylationType = c("CG", "CHG", "CHG")) {
+            mt <- match.arg(methylationType)
+            mbias <- as.data.table(object@.Data)
+            setnames(mbias, object@names)
+            # TODO: Should allow filtering of multiple methylation types
+            mbias <- mbias[methylationType == mt, ]
+            setkey(mbias, sampleName, methylationType, read)
+            mbias[, ml := median(percM), by = key(mbias)]
+            mbias[, r := percM  - ml, by = key(mbias)]
+            mbias[, biased := (abs(r) > threshold), by = key(mbias)]
+            setkey(mbias, sampleName, read, methylationType)
+            mbias[, list(irp = paste0('--ir', as.integer(read), 
+                                      'p ', paste0(readPos[biased], 
+                                                   collapse = ','))), 
+                         by = key(mbias)]
+          }
+)
