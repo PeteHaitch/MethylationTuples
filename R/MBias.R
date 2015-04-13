@@ -123,7 +123,7 @@ S4Vectors::setValidity2("MBias", .valid.MBias)
 # 
 #' Read Bismark's M-bias file.
 #' 
-#' @param file A Bismark M-bias file (with \texttt{.M-bias.txt} extension).
+#' @param file A Bismark M-bias file (with \code{.M-bias.txt} extension).
 #' @param sampleName The name of the sample. Will guess based on \code{file} 
 #' if argument is missing.
 #' 

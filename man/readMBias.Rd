@@ -7,7 +7,7 @@
 readMBias(file, sampleName)
 }
 \arguments{
-\item{file}{A Bismark M-bias file (with \texttt{.M-bias.txt} extension).}
+\item{file}{A Bismark M-bias file (with \code{.M-bias.txt} extension).}
 
 \item{sampleName}{The name of the sample. Will guess based on \code{file}
 if argument is missing.}
