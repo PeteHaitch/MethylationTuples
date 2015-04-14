@@ -155,7 +155,7 @@ methLevelCor <- function(methpat,
     }
   }
   
-  # Order methpat and extract sorted rowData
+  # Order methpat and extract sorted rowRanges
   if (pair_type == 'strict_adjacent') {
     # Add "missing" loci to methpat, i.e., those loci that have 
     # insufficient sequencing coverage in the sample.
@@ -171,22 +171,22 @@ methLevelCor <- function(methpat,
                                              ncol = ncol(methpat), 
                                              dimnames = 
                                                list(NULL, colnames(methpat)))),
-              rowData = missing_loci, 
+              rowRanges = missing_loci, 
               colData = colData(methpat))
     )
     methpat <- rbind(methpat, missing_loci)
   }
   # TODO: Check whether is.unsorted works on GTuples. Could save an expensive 
   # sort if data are already sorted.
-  #   if (is.unsorted(rowData(methpat))) {
+  #   if (is.unsorted(rowRanges(methpat))) {
   #     methpat_order <- order(methpat)
-  #     methpat_rd_sorted <- rowData(methpat)[methpat_order]
+  #     methpat_rd_sorted <- rowRanges(methpat)[methpat_order]
   #   } else {
   #     methpat_order <- seq_len(nrow(methpat))
-  #     methpat_rd_sorted <- rowData(methpat)
+  #     methpat_rd_sorted <- rowRanges(methpat)
   #   }
   methpat_order <- order(methpat)
-  methpat_rd_sorted <- rowData(methpat)[methpat_order]
+  methpat_rd_sorted <- rowRanges(methpat)[methpat_order]
   meth_level <- methLevel(methpat, ...)
   
   if (!missing(feature)) {

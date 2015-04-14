@@ -73,7 +73,7 @@ mp1 <- MethPat(assays =
                                          dimnames = list(NULL, c('A', 'B'))), 
                             'U' = matrix(c(11:20, 20:11), ncol = 2,
                                          dimnames = list(NULL, c('A', 'B')))), 
-               rowData = mt1)
+               rowRanges = mt1)
 # 2-tuples
 mp2 <- MethPat(assays = 
                  SimpleList('MM' = matrix(c(10:1, 1:10), ncol = 2,
@@ -84,7 +84,7 @@ mp2 <- MethPat(assays =
                                           dimnames = list(NULL, c('A', 'B'))), 
                             'UU' = matrix(c(40:31, 31:40), ncol = 2,
                                           dimnames = list(NULL, c('A', 'B')))), 
-               rowData = mt2)
+               rowRanges = mt2)
 # 3-tuples
 mp3 <- MethPat(assays = 
                  SimpleList('MMM' = matrix(c(10:1, 1:10), ncol = 2,
@@ -103,7 +103,7 @@ mp3 <- MethPat(assays =
                                            dimnames = list(NULL, c('A', 'B'))), 
                             'UUU' = matrix(c(80:71, 71:80), ncol = 2,
                                            dimnames = list(NULL, c('A', 'B')))), 
-               rowData = mt3)
+               rowRanges = mt3)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Objects used in test of makeAdjacentPairsCpp and makeAllPairsCpp
@@ -121,4 +121,4 @@ methpat <- MethPat(mt, assays =
                           "U" = matrix(1:13, ncol = 1, 
                                        dimnames = list(NULL, "A"))))
 methpat_order <- order(methpat)
-methpat_rd_sorted <- sort(rowData(methpat))
+methpat_rd_sorted <- sort(rowRanges(methpat))

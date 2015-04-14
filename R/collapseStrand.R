@@ -54,7 +54,7 @@ collapseStrand <- function(methpat) {
   # because of the crazy memory usage required.
   # This code assumes that there are no duplicate tuples
   # TODO: Use data.table::foverlaps with type = 'equal' once it is implemented.
-  rd <- rowData(methpat)
+  rd <- rowRanges(methpat)
   rd_order <- order(rd)
   # TODO: Shouldn't have to do as.vector(), Rle should just work, I think.
   rd_plus_order <- rd_order[as.vector(strand(rd) == "+")]
@@ -114,6 +114,6 @@ collapseStrand <- function(methpat) {
                           }, plus_both = plus_both, neg_both = neg_both, 
                           plus_only = plus_only, neg_only = neg_only)
   # Construct new MethPat object
-  MethPat(assays = new_assays, rowData = new_rd, colData = colData(methpat), 
+  MethPat(assays = new_assays, rowRanges = new_rd, colData = colData(methpat), 
           exptData = exptData(methpat))
 }

@@ -216,7 +216,7 @@ readMethtuple <- function(files,
                                sn[which(is.na(sn_match))]))
   }
   
-  rowData <- MTuples(
+  rowRanges <- MTuples(
     gtuples = GTuples(seqnames = mtsv[, chr], 
                       strand = mtsv[, strand], 
                       tuples = as.matrix(mtsv[, grep(pattern = '^pos', 
@@ -225,6 +225,6 @@ readMethtuple <- function(files,
                       seqinfo = seqinfo), 
     methinfo = methinfo)
   
-  new("MethPat", SummarizedExperiment(assays = assays, rowData = rowData,  
+  new("MethPat", SummarizedExperiment(assays = assays, rowRanges = rowRanges,  
                                       verbose = verbose))
 }

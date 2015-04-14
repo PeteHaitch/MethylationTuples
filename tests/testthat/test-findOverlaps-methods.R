@@ -5,7 +5,7 @@
 ### findOverlaps
 ###
 context("findOverlaps,MethPat,MethPat-method")
-mpmq3 <- MethPat(assays = assays(mp3[1:9]), rowData = mq3)
+mpmq3 <- MethPat(assays = assays(mp3[1:9]), rowRanges = mq3)
 expect_identical(findOverlaps(mpmq3, mpmq3, type = 'any'), 
                  findOverlaps(mq3, mq3, type = 'any'))
 expect_identical(findOverlaps(mpmq3, mpmq3, type = 'any', ignore.strand = TRUE), 

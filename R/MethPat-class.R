@@ -27,7 +27,7 @@
 #' \code{\link[GenomicRanges]{SummarizedExperiment}} class. The key 
 #' differences are:
 #' \itemize{
-#'  \item The \code{rowData} must be a \code{\link{MTuples}} 
+#'  \item The \code{rowRanges} must be a \code{\link{MTuples}} 
 #'  object rather than a \code{\link[GenomicRanges]{GRanges}} object.
 #'  \item Certain \code{assays} are required. See \code{assays} argument below.
 #' }
@@ -35,7 +35,7 @@
 #' @param assays A \code{\link[base]{list}} or 
 #' \code{\link[S4Vectors]{SimpleList}} of matrix elements. All elements of the 
 #' list must have the same dimensions, and dimension names (if present) must be 
-#' consistent across elements and with row names of \code{rowData} and 
+#' consistent across elements and with row names of \code{rowRanges} and 
 #' \code{colData}. Specifically, for a \code{MethPat} object containing the 
 #' methylation patterns at genomic tuples of \code{\link[GenomicTuples]{size}} 
 #' \eqn{= m}, there are \eqn{2^m} required assays. For example, for 2-tuples 
@@ -43,7 +43,7 @@
 #' \code{UM} and \code{UU} (\code{M} = methylated, \code{U} = unmethylated).
 #' \strong{TODO:} Should the \code{.makeMethPatNames} function be exported 
 #' and referenced here?
-#' @param rowData A \code{\link{MTuples}} instance describing 
+#' @param rowRanges A \code{\link{MTuples}} instance describing 
 #' the genomic tuple of the methylation loci. Row names, if present, become the 
 #' row names of the \code{MethPat}. The length of the \code{\link{MTuples}} 
 #' must equal the number of rows of the matrices in \code{assays}.
@@ -70,14 +70,14 @@
 #' numeric scalar; see 'Details' for additional constraints.
 #' 
 #' For \code{[,MethPat}, \code{[,MethPat<-}, \code{i}, \code{j} are instances 
-#' that can act to subset the underlying \code{rowData}, \code{colData}, and 
+#' that can act to subset the underlying \code{rowRanges}, \code{colData}, and 
 #' \code{\link[base]{matrix}} elements of \code{assays}.
 #' 
 #' For \code{[[,MethPat}, \code{[[<-MethPat}, \code{i} is a scalar index (e.g. 
 #' \code{character(1)}, or \code{integer(1)}) into a column of \code{colData}.
 #' @param subset An expression which, when evaluated in the context of 
-#' \code{rowData(x)}, is a logical vector indiciating elements or rows to keep: 
-#' missing values are taken as false.
+#' \code{rowRanges(x)}, is a logical vector indiciating elements or rows to 
+#' keep:  missing values are taken as false.
 #' @param select An expression which, when evaluated in the context of 
 #' \code{colData(x)}, is a logical vector indicating elements or rows to keep: 
 #' missing values are taken as false. 
@@ -108,10 +108,10 @@
 #'  get or set the \code{i}th (default first) assay element. \code{value} must 
 #'  be a \code{\link[base]{matrix}} of the same dimensions as \code{x}, and 
 #'  with dimension names \code{NULL} or consistent with those of \code{x}.}
-#'  \item{\code{rowData(x)}, \code{rowData(x) <- value}:}{Get or set the row 
-#'  data. \code{value} is a \code{\link{MTuples}} instance. Row 
-#'  names of \code{value} must be \code{NULL} or consistent with the existing 
-#'  row names of \code{x}.}
+#'  \item{\code{rowRanges(x)}, \code{rowRanges(x) <- value}:}{Get or set the 
+#'  row data. \code{value} is a \code{\link{MTuples}} instance. Row names of 
+#'  \code{value} must be \code{NULL} or consistent with the existing row names 
+#'  of \code{x}.}
 #'  \item{\code{colData(x)}, \code{colData(x) <- value}:}{Get or set the column 
 #'  data. \code{value} is a \code{\link[S4Vectors]{DataFrame}} instance. Row 
 #'  names of \code{value} must be \code{NULL} or consistent with the existing 
@@ -130,10 +130,10 @@
 #'  available.}
 #' }
 #' 
-#' @section MTuples/GTuples compatibility (rowData access):
-#' Since an \code{MTuples} classes (used in the \code{rowData}) slot) extends 
+#' @section MTuples/GTuples compatibility (rowRanges access):
+#' Since an \code{MTuples} classes (used in the \code{rowRanges}) slot) extends 
 #' the \code{GTuples}, many \code{\link[GenomicTuples]{GTuples}} operations are 
-#' supported on \code{MetPath} and derived instances, using \code{rowData}. 
+#' supported on \code{MetPath} and derived instances, using \code{rowRanges}. 
 #' 
 #' \strong{WARNING:} The preferred getter/setter of tuple information is 
 #' \code{tuples(x)}/\code{tuples(x) <- value}. In short, the use of 
@@ -202,7 +202,7 @@
 #'  \code{MethPat} instance with dimensions, dimension names, and assay 
 #'  elements consistent with the subset \code{x[i, j]} being replaced.}
 #'  \item{\code{subset(x, subset, select)}:}{Create a subset of \code{x} using 
-#'  an expression \code{subset} referring to columns of \code{rowData(x)} 
+#'  an expression \code{subset} referring to columns of \code{rowRanges(x)} 
 #'  (including \code{seqnames}, \code{start}, \code{end}, \code{width}, 
 #'  \code{strand}, and \code{names(mcols(x))}) and / or \code{select} referring 
 #'  to column names of \code{colData(x)}.}
@@ -223,12 +223,12 @@
 #' have the same \code{\link{size}} tuples and have compatible \code{seqinfo}.
 #' \describe{
 #'  \item{\code{cbind(...), rbind(...)}:}{\code{cbind} combines objects with 
-#'  identical tuples (\code{rowData}) but different samples (columns in 
+#'  identical tuples (\code{rowRanges}) but different samples (columns in 
 #'  \code{assays}). The colnames in \code{colData} must match or an error is 
-#'  thrown. Duplicate columns of \code{mcols(rowData(MethPat))} must contain 
+#'  thrown. Duplicate columns of \code{mcols(rowRanges(MethPat))} must contain 
 #'  the same data.
 #'  
-#'  \code{rbind} combines objects with different tuples (\code{rowData}) and 
+#'  \code{rbind} combines objects with different tuples (\code{rowRanges}) and 
 #'  the same subjects in (columns in \code{assays}). Duplicate columns of 
 #'  \code{colData} must contain the same data.
 #'  
@@ -236,7 +236,7 @@
 #'  \code{\link[S4Vectors]{SimpleList} with no name checking.}
 #'  }
 #'  \item{\code{combine(x, y, ...)}:}{\code{combine} combines objects with 
-#'  different tuples (\code{rowData}) and different samples (columns in 
+#'  different tuples (\code{rowRanges}) and different samples (columns in 
 #'  \code{assays}) using an "incomplete" union strategy. Please read 
 #'  \code{\link[BiocGenerics]{combine}} for the difference between the union 
 #'  and intersection strategies; the current method is "incomplete" because it 
@@ -247,7 +247,7 @@
 #'  
 #'  The colnames in \code{colData} must 
 #'  match or an error is thrown. Duplicate columns of 
-#'  \code{mcols(rowData(MethPat))} must contain the same data.
+#'  \code{mcols(rowRanges(MethPat))} must contain the same data.
 #'  
 #'  \code{exptData} from all objects are combined into a 
 #'  \code{\link[S4Vectors]{SimpleList} with no name checking.}
@@ -274,12 +274,12 @@ setClass('MethPat',
 ### Validity
 ###
 
-.valid.MethPat.rowData <- function(object) {
+.valid.MethPat.rowRanges <- function(object) {
   msg <- NULL
   
   if (!is(object@rowData, "MTuples")) {
-    msg <- validMsg(msg, paste0("'rowData' slot of a 'MethPat' object must be ", 
-                                "a 'MTuples' object."))
+    msg <- validMsg(msg, paste0("'rowRanges' slot of a 'MethPat' object must ", 
+                                "be a 'MTuples' object."))
   }
   
   return(msg)
@@ -316,9 +316,9 @@ setClass('MethPat',
 }  
 .valid.MethPat <- function(object) {
   
-  # First need to check that rowData is an MTuples object.
+  # First need to check that rowRanges is an MTuples object.
   # Otherwise some of the .valid.MethPat.* functions won't work
-  msg <- .valid.MethPat.rowData(object)
+  msg <- .valid.MethPat.rowRanges(object)
   if (is.null(msg)){
     
     # Include all other .valid.MethPat.* functions in this vector
@@ -339,7 +339,7 @@ setValidity2("MethPat", .valid.MethPat)
 ###
 
 #' @export
-MethPat <- function(assays = SimpleList(), rowData = MTuples(), 
+MethPat <- function(assays = SimpleList(), rowRanges = MTuples(), 
                     colData = DataFrame(), exptData = SimpleList(), ..., 
                     verbose = FALSE) {
   
@@ -351,7 +351,7 @@ MethPat <- function(assays = SimpleList(), rowData = MTuples(),
     colData <- DataFrame(row.names = nms)
   }
   
-  new("MethPat", SummarizedExperiment(assays = assays, rowData = rowData, 
+  new("MethPat", SummarizedExperiment(assays = assays, rowRanges = rowRanges, 
                                       colData = colData, exptData = exptData, 
                                       ..., verbose = verbose))
 }
@@ -377,12 +377,12 @@ setMethod("combine",
           c("MethPat", "MethPat"), 
           function(x, y, ...) {
             args <- list(x, y, ...)
-            rowData <- do.call(c, lapply(args, function(i) {
+            rowRanges <- do.call(c, lapply(args, function(i) {
               slot(i, "rowData")
             }))
             # Remove duplicate tuples
-            rowData <- unique(rowData)
-            nr <- length(rowData)
+            rowRanges <- unique(rowRanges)
+            nr <- length(rowRanges)
             colnames <- unlist(lapply(args, colnames))
             if (anyDuplicated(colnames)) {
               stop("Cannot combine 'MethPat' objects with duplicate colnames.")
@@ -408,7 +408,7 @@ setMethod("combine",
             }, nr = nr, colnames = colnames)
             for (i in seq_along(assays)) {
               for (j in seq_along(args)) {
-                ol <- findOverlaps(args[[j]], rowData, type = 'equal')
+                ol <- findOverlaps(args[[j]], rowRanges, type = 'equal')
                 assays[[i]][subjectHits(ol), 
                             match(colnames(args[[j]]), colnames)] <- 
                   assays(args[[j]])[[i]]
@@ -416,7 +416,7 @@ setMethod("combine",
             }
             assays <- GenomicRanges:::.ShallowSimpleListAssays(data = assays)
             exptData <- do.call(c, lapply(args, exptData))
-            initialize(args[[1]], assays = assays, rowData = rowData, 
+            initialize(args[[1]], assays = assays, rowRanges = rowRanges, 
                        colData = colData, exptData = exptData)
           }
 )
@@ -439,13 +439,13 @@ setMethod('granges',
 )
 
 # TODO: Why isn't unique,SummarizedExperiment implemented; at least as 
-# unique(rowData(x))
+# unique(rowRanges(x))
 
 #' @export 
 setMethod("methinfo", 
           "MethPat", 
           function(object) {
-            methinfo(rowData(object))
+            methinfo(rowRanges(object))
           }
 )
 
@@ -453,7 +453,7 @@ setMethod("methinfo",
 setMethod("methtype", 
           "MethPat", 
           function(object) {
-            methtype(rowData(object))
+            methtype(rowRanges(object))
           }
 )
 
@@ -553,7 +553,7 @@ setMethod("getCoverage",
 setReplaceMethod("methinfo", 
                  "MethPat", 
                  function(object, value) {
-                   methinfo(rowData(object)) <- value
+                   methinfo(rowRanges(object)) <- value
                    object
                  }
 )
@@ -561,7 +561,7 @@ setReplaceMethod("methinfo",
 setReplaceMethod("methtype", 
                  "MethPat", 
                  function(object, value) {
-                   methtype(rowData(object)) <- value
+                   methtype(rowRanges(object)) <- value
                    object
                  }
 )
@@ -574,7 +574,7 @@ setReplaceMethod("methtype",
 setMethod("size", 
           "MethPat", 
           function(x) {
-            size(rowData(x))
+            size(rowRanges(x))
           }
 )
 
@@ -582,7 +582,7 @@ setMethod("size",
 setMethod("tuples", 
           "MethPat", 
           function(x) {
-            tuples(rowData(x))
+            tuples(rowRanges(x))
           }
 )
 
@@ -590,7 +590,7 @@ setMethod("tuples",
 setReplaceMethod("tuples", 
                  "MethPat", 
                  function(x, value) {
-                   tuples(rowData(x)) <- value
+                   tuples(rowRanges(x)) <- value
                    x
                  }
 )
@@ -599,7 +599,7 @@ setReplaceMethod("tuples",
 setMethod("IPD", 
           "MethPat", 
           function(x) {
-            IPD(rowData(x))
+            IPD(rowRanges(x))
           }
 )
 
@@ -635,8 +635,8 @@ setMethod("show",
             dlen <- sapply(dimnames, length)
             if (dlen[[1]]) scat("rownames(%d): %s\n", dimnames[[1]])
             else scat("rownames: NULL\n")
-            scat("rowData metadata column names(%d): %s\n",
-                 names(mcols(rowData(object))))
+            scat("rowRanges metadata column names(%d): %s\n",
+                 names(mcols(rowRanges(object))))
             if (dlen[[2]]) scat("colnames(%d): %s\n", dimnames[[2]])
             else cat("colnames: NULL\n")
             scat("colData names(%d): %s\n", names(colData(object)))

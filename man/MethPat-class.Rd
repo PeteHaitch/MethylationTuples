@@ -9,7 +9,7 @@
 \item{assays}{A \code{\link[base]{list}} or
 \code{\link[S4Vectors]{SimpleList}} of matrix elements. All elements of the
 list must have the same dimensions, and dimension names (if present) must be
-consistent across elements and with row names of \code{rowData} and
+consistent across elements and with row names of \code{rowRanges} and
 \code{colData}. Specifically, for a \code{MethPat} object containing the
 methylation patterns at genomic tuples of \code{\link[GenomicTuples]{size}}
 \eqn{= m}, there are \eqn{2^m} required assays. For example, for 2-tuples
@@ -18,7 +18,7 @@ there are 4 required assays that must be named \code{MM}, \code{MU},
 \strong{TODO:} Should the \code{.makeMethPatNames} function be exported
 and referenced here?}
 
-\item{rowData}{A \code{\link{MTuples}} instance describing
+\item{rowRanges}{A \code{\link{MTuples}} instance describing
 the genomic tuple of the methylation loci. Row names, if present, become the
 row names of the \code{MethPat}. The length of the \code{\link{MTuples}}
 must equal the number of rows of the matrices in \code{assays}.}
@@ -51,15 +51,15 @@ coerction during construction should be printed.}
 numeric scalar; see 'Details' for additional constraints.
 
 For \code{[,MethPat}, \code{[,MethPat<-}, \code{i}, \code{j} are instances
-that can act to subset the underlying \code{rowData}, \code{colData}, and
+that can act to subset the underlying \code{rowRanges}, \code{colData}, and
 \code{\link[base]{matrix}} elements of \code{assays}.
 
 For \code{[[,MethPat}, \code{[[<-MethPat}, \code{i} is a scalar index (e.g.
 \code{character(1)}, or \code{integer(1)}) into a column of \code{colData}.}
 
 \item{subset}{An expression which, when evaluated in the context of
-\code{rowData(x)}, is a logical vector indiciating elements or rows to keep:
-missing values are taken as false.}
+\code{rowRanges(x)}, is a logical vector indiciating elements or rows to
+keep:  missing values are taken as false.}
 
 \item{select}{An expression which, when evaluated in the context of
 \code{colData(x)}, is a logical vector indicating elements or rows to keep:
@@ -92,7 +92,7 @@ The \code{MethPat} class extends the
 \code{\link[GenomicRanges]{SummarizedExperiment}} class. The key
 differences are:
 \itemize{
- \item The \code{rowData} must be a \code{\link{MTuples}}
+ \item The \code{rowRanges} must be a \code{\link{MTuples}}
  object rather than a \code{\link[GenomicRanges]{GRanges}} object.
  \item Certain \code{assays} are required. See \code{assays} argument below.
 }
@@ -117,10 +117,10 @@ In the following code snippets, \code{x} is a \code{MethPat} instance.
  get or set the \code{i}th (default first) assay element. \code{value} must
  be a \code{\link[base]{matrix}} of the same dimensions as \code{x}, and
  with dimension names \code{NULL} or consistent with those of \code{x}.}
- \item{\code{rowData(x)}, \code{rowData(x) <- value}:}{Get or set the row
- data. \code{value} is a \code{\link{MTuples}} instance. Row
- names of \code{value} must be \code{NULL} or consistent with the existing
- row names of \code{x}.}
+ \item{\code{rowRanges(x)}, \code{rowRanges(x) <- value}:}{Get or set the
+ row data. \code{value} is a \code{\link{MTuples}} instance. Row names of
+ \code{value} must be \code{NULL} or consistent with the existing row names
+ of \code{x}.}
  \item{\code{colData(x)}, \code{colData(x) <- value}:}{Get or set the column
  data. \code{value} is a \code{\link[S4Vectors]{DataFrame}} instance. Row
  names of \code{value} must be \code{NULL} or consistent with the existing
@@ -140,11 +140,11 @@ In the following code snippets, \code{x} is a \code{MethPat} instance.
 }
 }
 
-\section{MTuples/GTuples compatibility (rowData access)}{
+\section{MTuples/GTuples compatibility (rowRanges access)}{
 
-Since an \code{MTuples} classes (used in the \code{rowData}) slot) extends
+Since an \code{MTuples} classes (used in the \code{rowRanges}) slot) extends
 the \code{GTuples}, many \code{\link[GenomicTuples]{GTuples}} operations are
-supported on \code{MetPath} and derived instances, using \code{rowData}.
+supported on \code{MetPath} and derived instances, using \code{rowRanges}.
 
 \strong{WARNING:} The preferred getter/setter of tuple information is
 \code{tuples(x)}/\code{tuples(x) <- value}. In short, the use of
@@ -215,7 +215,7 @@ Additionally, all \code{MTuples}-specific methods are also defined, such as
  \code{MethPat} instance with dimensions, dimension names, and assay
  elements consistent with the subset \code{x[i, j]} being replaced.}
  \item{\code{subset(x, subset, select)}:}{Create a subset of \code{x} using
- an expression \code{subset} referring to columns of \code{rowData(x)}
+ an expression \code{subset} referring to columns of \code{rowRanges(x)}
  (including \code{seqnames}, \code{start}, \code{end}, \code{width},
  \code{strand}, and \code{names(mcols(x))}) and / or \code{select} referring
  to column names of \code{colData(x)}.}
@@ -238,12 +238,12 @@ In the code snippets below, \code{x}, \code{y} and \code{...} are
 have the same \code{\link{size}} tuples and have compatible \code{seqinfo}.
 \describe{
  \item{\code{cbind(...), rbind(...)}:}{\code{cbind} combines objects with
- identical tuples (\code{rowData}) but different samples (columns in
+ identical tuples (\code{rowRanges}) but different samples (columns in
  \code{assays}). The colnames in \code{colData} must match or an error is
- thrown. Duplicate columns of \code{mcols(rowData(MethPat))} must contain
+ thrown. Duplicate columns of \code{mcols(rowRanges(MethPat))} must contain
  the same data.
 
- \code{rbind} combines objects with different tuples (\code{rowData}) and
+ \code{rbind} combines objects with different tuples (\code{rowRanges}) and
  the same subjects in (columns in \code{assays}). Duplicate columns of
  \code{colData} must contain the same data.
 
@@ -251,7 +251,7 @@ have the same \code{\link{size}} tuples and have compatible \code{seqinfo}.
  \code{\link[S4Vectors]{SimpleList} with no name checking.}
  }
  \item{\code{combine(x, y, ...)}:}{\code{combine} combines objects with
- different tuples (\code{rowData}) and different samples (columns in
+ different tuples (\code{rowRanges}) and different samples (columns in
  \code{assays}) using an "incomplete" union strategy. Please read
  \code{\link[BiocGenerics]{combine}} for the difference between the union
  and intersection strategies; the current method is "incomplete" because it
@@ -262,7 +262,7 @@ have the same \code{\link{size}} tuples and have compatible \code{seqinfo}.
 
  The colnames in \code{colData} must
  match or an error is thrown. Duplicate columns of
- \code{mcols(rowData(MethPat))} must contain the same data.
+ \code{mcols(rowRanges(MethPat))} must contain the same data.
 
  \code{exptData} from all objects are combined into a
  \code{\link[S4Vectors]{SimpleList} with no name checking.}

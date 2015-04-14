@@ -6,83 +6,83 @@
 ###
 context("MethPat validity methods")
 
-test_that(".valid.MethPat.rowData works for empty MTuples", {
-  expect_error(MethPat(rowData = granges(gt0)), 
-               paste0("'rowData' slot of a 'MethPat' object must be a ", 
+test_that(".valid.MethPat.rowRanges works for empty MTuples", {
+  expect_error(MethPat(rowRanges = granges(gt0)), 
+               paste0("'rowRanges' slot of a 'MethPat' object must be a ", 
                       "'MTuples' object."))
 })
 
-test_that(".valid.MethPat.rowData works for 1-tuples", {
-  expect_error(MethPat(rowData = granges(mt1)), 
-               paste0("'rowData' slot of a 'MethPat' object must be a ", 
+test_that(".valid.MethPat.rowRanges works for 1-tuples", {
+  expect_error(MethPat(rowRanges = granges(mt1)), 
+               paste0("'rowRanges' slot of a 'MethPat' object must be a ", 
                       "'MTuples' object."))
 })
 
-test_that(".valid.MethPat.rowData works for 2-tuples", {
-  expect_error(MethPat(rowData = granges(mt2)), 
-               paste0("'rowData' slot of a 'MethPat' object must be a ", 
+test_that(".valid.MethPat.rowRanges works for 2-tuples", {
+  expect_error(MethPat(rowRanges = granges(mt2)), 
+               paste0("'rowRanges' slot of a 'MethPat' object must be a ", 
                       "'MTuples' object."))
 })
 
-test_that(".valid.MethPat.rowData works for 3-tuples", {
-  expect_error(MethPat(rowData = granges(mt3)), 
-               paste0("'rowData' slot of a 'MethPat' object must be a ", 
+test_that(".valid.MethPat.rowRanges works for 3-tuples", {
+  expect_error(MethPat(rowRanges = granges(mt3)), 
+               paste0("'rowRanges' slot of a 'MethPat' object must be a ", 
                       "'MTuples' object."))
 })
 
 test_that(".valid.MethPat.assays works for 1-tuples", {
-  expect_error(MethPat(assays = list(), rowData = mt1), 
+  expect_error(MethPat(assays = list(), rowRanges = mt1), 
                paste0("Assay names must include all of: M, U"))
   # Extra assays are allowed
   ea <- c(assays(mp1), list('extraAssay' = 
                               matrix(1:20, ncol = 2, 
                                      dimnames = list(NULL, c('A', 'B')))))
-  expect_is(MethPat(assays = ea, rowData = rowData(mp1)), "MethPat")
+  expect_is(MethPat(assays = ea, rowRanges = rowRanges(mp1)), "MethPat")
   # Assays must be non-negative (except extraAssays)
   a <- endoapply(ea, `-`, 10)
-  expect_error(MethPat(assays = a, rowData = rowData(mp1)), 
+  expect_error(MethPat(assays = a, rowRanges = rowRanges(mp1)), 
                paste0("All counts of methylation patterns \\(stored in assays ", 
                       "slot\\) must be non-negative integers."))
   a <- ea
   a[['extraAssay']] <- a[['extraAssay']] - 100L
-  expect_is(MethPat(assays = a, rowData = rowData(mp1)), "MethPat")
+  expect_is(MethPat(assays = a, rowRanges = rowRanges(mp1)), "MethPat")
 })
 
 test_that(".valid.MethPat.assays works for 2-tuples", {
-  expect_error(MethPat(assays = list(), rowData = mt2), 
+  expect_error(MethPat(assays = list(), rowRanges = mt2), 
                paste0("Assay names must include all of: MM, MU, UM, UU"))
   # Extra assays are allowed
   ea <- c(assays(mp2), list('extraAssay' = 
                               matrix(1:20, ncol = 2, 
                                      dimnames = list(NULL, c('A', 'B')))))
-  expect_is(MethPat(assays = ea, rowData = rowData(mp2)), "MethPat")
+  expect_is(MethPat(assays = ea, rowRanges = rowRanges(mp2)), "MethPat")
   # Assays must be non-negative (except extraAssays)
   a <- endoapply(ea, `-`, 10)
-  expect_error(MethPat(assays = a, rowData = rowData(mp2)), 
+  expect_error(MethPat(assays = a, rowRanges = rowRanges(mp2)), 
                paste0("All counts of methylation patterns \\(stored in assays ", 
                       "slot\\) must be non-negative integers."))
   a <- ea
   a[['extraAssay']] <- a[['extraAssay']] - 100L
-  expect_is(MethPat(assays = a, rowData = rowData(mp2)), "MethPat")
+  expect_is(MethPat(assays = a, rowRanges = rowRanges(mp2)), "MethPat")
 })
 
 test_that(".valid.MethPat.assays works for 3-tuples", {
-  expect_error(MethPat(assays = list(), rowData = mt3), 
+  expect_error(MethPat(assays = list(), rowRanges = mt3), 
                paste0("Assay names must include all of: MMM, MMU, MUM, MUU, ", 
                       "UMM, UMU, UUM, UUU"))
   # Extra assays are allowed
   ea <- c(assays(mp3), list('extraAssay' = 
                               matrix(1:20, ncol = 2, 
                                      dimnames = list(NULL, c('A', 'B')))))
-  expect_is(MethPat(assays = ea, rowData = rowData(mp3)), "MethPat")
+  expect_is(MethPat(assays = ea, rowRanges = rowRanges(mp3)), "MethPat")
   # Assays must be non-negative (except extraAssays)
   a <- endoapply(ea, `-`, 10)
-  expect_error(MethPat(assays = a, rowData = rowData(mp3)), 
+  expect_error(MethPat(assays = a, rowRanges = rowRanges(mp3)), 
                paste0("All counts of methylation patterns \\(stored in assays ", 
                       "slot\\) must be non-negative integers."))
   a <- ea
   a[['extraAssay']] <- a[['extraAssay']] - 100L
-  expect_is(MethPat(assays = a, rowData = rowData(mp3)), "MethPat")
+  expect_is(MethPat(assays = a, rowRanges = rowRanges(mp3)), "MethPat")
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -184,7 +184,7 @@ test_that("combine,MethPat-method works for two MethPat objects", {
                                            NA, 19, 18)), ncol = 4, 
                               dimnames = list(NULL, 
                                               c('A', 'B', 'C', 'D')))),
-                 rowData = rowData(mp1)[1:3]
+                 rowRanges = rowRanges(mp1)[1:3]
                )
   )
   # 2-tuples
@@ -208,7 +208,7 @@ test_that("combine,MethPat-method works for two MethPat objects", {
                    UU = matrix(as.integer(c(40, 39, NA, 31, 32, NA, NA, 39, 38, 
                                             NA, 32, 33)), ncol = 4, 
                                dimnames = list(NULL, c('A', 'B', 'C', 'D')))),
-                 rowData = rowData(mp2)[1:3]
+                 rowRanges = rowRanges(mp2)[1:3]
                )
   )
   # 3-tuples
@@ -244,7 +244,7 @@ test_that("combine,MethPat-method works for two MethPat objects", {
                    UUU = matrix(as.integer(c(80, 79, NA, 71, 72, NA, NA, 79, 
                                              78, NA, 72, 73)), ncol = 4, 
                                 dimnames = list(NULL, c('A', 'B', 'C', 'D')))),
-                 rowData = rowData(mp3)[1:3]
+                 rowRanges = rowRanges(mp3)[1:3]
                )
   )
 })
@@ -314,15 +314,15 @@ test_that("SummarizedExperiment inherited getters work", {
   expect_identical(genome(mp3), genome(mp3@rowData@seqinfo))
   expect_identical(seqlevelsStyle(mp3), seqlevelsStyle(mp3@rowData@seqinfo))
   # TODO: Notifiy Bioc-Devel that granges,SummarizedExperiment-method should 
-  # return granges(rowData(x)) rather than rowData(x) since rowData may not be 
-  # a GRanges object (e.g. might be a GTuples object)
+  # return granges(rowRanges(x)) rather than rowRanges(x) since rowRanges may 
+  # not be a GRanges object (e.g. might be a GTuples object)?
   # expect_identical(granges(mp3), granges(mp3@rowData))
   expect_error(granges(mp3), "Not yet implemented")
 })
 
 test_that("methinfo getters work", {
-  expect_identical(methinfo(mp1), methinfo(rowData(mp1)))
-  expect_identical(methtype(mp1), methtype(rowData(mp1)))
+  expect_identical(methinfo(mp1), methinfo(rowRanges(mp1)))
+  expect_identical(methtype(mp1), methtype(rowRanges(mp1)))
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

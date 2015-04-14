@@ -65,7 +65,7 @@ filterOutVariants <- function(methpat, vcfs, remove = FALSE,
     GRanges(seqnames(vcf), 
             ranges = unname(ranges(vcf)),
             strand = Rle(strand), 
-            seqinfo = seqinfo(vcf))[rowData(vcf)$FILTER == "PASS"]
+            seqinfo = seqinfo(vcf))[rowRanges(vcf)$FILTER == "PASS"]
   }, methpat = methpat)
   
   # Split m-tuples into list of GRanges storing 1-tuples

@@ -13,13 +13,13 @@ x <- readVcf(file = "/Volumes/hickey/Adipose/E13BUF/E13BUF.realign.recal.snp.fil
 x
 ```
 
-Look at the `rowData`:
+Look at the `rowRanges`:
 
 ```{r}
-rowData(x)
+rowRanges(x)
 table(strand(x))
-table(rowData(x)$REF)
-table(rowData(x)$FILTER, useNA = "ifany")
+table(rowRanges(x)$REF)
+table(rowRanges(x)$FILTER, useNA = "ifany")
 ```
 
 Look at the `info`:
@@ -28,7 +28,7 @@ Look at the `info`:
 info(x)
 table(info(x)$CS, useNA = "ifany")
 # What's the REF at positions where the strand is NA
-table(as.character(rowData(x)$REF[is.na(info(x)$CS)]))
+table(as.character(rowRanges(x)$REF[is.na(info(x)$CS)]))
 table(info(x)$Context@unlistData, useNA = "ifany")
 table(info(x)$DB, useNA = "ifany")
 table(info(x)$DB, useNA = "ifany") / nrow(x) * 100
