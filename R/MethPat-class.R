@@ -416,7 +416,7 @@ setMethod("combine",
             }
             assays <- GenomicRanges:::.ShallowSimpleListAssays(data = assays)
             exptData <- do.call(c, lapply(args, exptData))
-            initialize(args[[1]], assays = assays, rowRanges = rowRanges, 
+            initialize(args[[1]], assays = assays, rowData = rowRanges, 
                        colData = colData, exptData = exptData)
           }
 )
