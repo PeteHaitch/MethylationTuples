@@ -2,6 +2,8 @@
 ### methinfo
 ###
 
+# TODO: Document generic rather than method (consistent with 
+# http://r-pkgs.had.co.nz/man.html).
 #' @export
 setGeneric("methinfo", 
            function(object) {
@@ -9,7 +11,8 @@ setGeneric("methinfo",
            }
 )
 
-#' @export
+# TODO: Document generic rather than method (consistent with 
+# http://r-pkgs.had.co.nz/man.html).#' @export
 setGeneric("methinfo<-", 
            function(object, value) {
              standardGeneric("methinfo<-")
@@ -20,6 +23,8 @@ setGeneric("methinfo<-",
 ### methtype
 ###
 
+# TODO: Document generic rather than method (consistent with 
+# http://r-pkgs.had.co.nz/man.html).
 #' @export
 setGeneric("methtype", 
            function(object) {
@@ -27,6 +32,8 @@ setGeneric("methtype",
            }
 )
 
+# TODO: Document generic rather than method (consistent with 
+# http://r-pkgs.had.co.nz/man.html).
 #' @export
 setGeneric("methtype<-", 
            function(object, value) {
@@ -38,6 +45,8 @@ setGeneric("methtype<-",
 ### methLevel
 ###
 
+# TODO: Document generic rather than method (consistent with 
+# http://r-pkgs.had.co.nz/man.html).
 #' @export
 setGeneric("methLevel", 
            function(object, ...) {
@@ -49,7 +58,10 @@ setGeneric("methLevel",
 ### getCoverage
 ###
 
-## TODO: Decide on a name
+
+# TODO: Decide on a name.
+# TODO: Document generic rather than method (consistent with 
+# http://r-pkgs.had.co.nz/man.html).
 #' @export
 setGeneric("getCoverage", 
            function(object) {
@@ -62,11 +74,12 @@ setGeneric("getCoverage",
 ###
 ###
 
-## TODO: Decide on a better name. Will clash with dplyr's filter()
+# TODO: Decide on a better name. Will clash with dplyr's filter()
+# TODO: Document generic rather than method (consistent with 
+# http://r-pkgs.had.co.nz/man.html).
 #' @export
 setGeneric("filter", 
            function(object, ...) {
              standardGeneric("filter")
            }
 )
-

@@ -1,7 +1,9 @@
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### cometh: Compute within-sample, within-fragment co-methylation.
+### cometh: Estimate within-sample, within-fragment co-methylation.
 ###
 
+# TODO: Merge cometh() and mantelhaen(), i.e., make mantelhaen() an option 
+# in cometh() via the 'method' argument. 
 # TODO: Should pair_type even by an option? That is, should the user have already 
 # decided whether to remove pairs of loci with NIL > 0? If so, provide a function 
 # filter_nil().
