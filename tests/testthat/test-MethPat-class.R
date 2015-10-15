@@ -6,83 +6,104 @@
 ###
 context("MethPat validity methods")
 
-test_that(".valid.MethPat.rowRanges works for empty MTuples", {
-  expect_error(MethPat(rowRanges = granges(gt0)), 
-               paste0("'rowRanges' slot of a 'MethPat' object must be a ", 
+test_that(".valid.MethPat.rowTuples works for empty MTuples", {
+  expect_error(MethPat(rowTuples = granges(gt0)), 
+               paste0("'rowTuples' of 'MethPat' object must be an ", 
                       "'MTuples' object."))
 })
 
-test_that(".valid.MethPat.rowRanges works for 1-tuples", {
-  expect_error(MethPat(rowRanges = granges(mt1)), 
-               paste0("'rowRanges' slot of a 'MethPat' object must be a ", 
+test_that(".valid.MethPat.rowTuples works for 1-tuples", {
+  expect_error(MethPat(rowTuples = granges(mt1)), 
+               paste0("'rowTuples' of 'MethPat' object must be an ", 
                       "'MTuples' object."))
 })
 
-test_that(".valid.MethPat.rowRanges works for 2-tuples", {
-  expect_error(MethPat(rowRanges = granges(mt2)), 
-               paste0("'rowRanges' slot of a 'MethPat' object must be a ", 
+test_that(".valid.MethPat.rowTuples works for 2-tuples", {
+  expect_error(MethPat(rowTuples = granges(mt2)), 
+               paste0("'rowTuples' of 'MethPat' object must be an ", 
                       "'MTuples' object."))
 })
 
-test_that(".valid.MethPat.rowRanges works for 3-tuples", {
-  expect_error(MethPat(rowRanges = granges(mt3)), 
-               paste0("'rowRanges' slot of a 'MethPat' object must be a ", 
+test_that(".valid.MethPat.rowTuples works for 3-tuples", {
+  expect_error(MethPat(rowTuples = granges(mt3)), 
+               paste0("'rowTuples' of 'MethPat' object must be an ", 
                       "'MTuples' object."))
 })
 
 test_that(".valid.MethPat.assays works for 1-tuples", {
-  expect_error(MethPat(assays = list(), rowRanges = mt1), 
-               paste0("Assay names must include all of: M, U"))
+  expect_error(MethPat(assays = list(), rowTuples = mt1), 
+               paste0("Assay names must include all of: 'M', 'U'"))
   # Extra assays are allowed
-  ea <- c(assays(mp1), list('extraAssay' = 
+  ea <- c(assays(mp1), list("extraAssay" = 
                               matrix(1:20, ncol = 2, 
-                                     dimnames = list(NULL, c('A', 'B')))))
-  expect_is(MethPat(assays = ea, rowRanges = rowRanges(mp1)), "MethPat")
+                                     dimnames = list(NULL, c("A", "B")))))
+  expect_is(MethPat(assays = ea, 
+                    rowTuples = rowTuples(mp1), 
+                    colData = colData(mp1)), 
+            "MethPat")
   # Assays must be non-negative (except extraAssays)
   a <- endoapply(ea, `-`, 10)
-  expect_error(MethPat(assays = a, rowRanges = rowRanges(mp1)), 
+  expect_error(MethPat(assays = a, 
+                       rowTuples = rowTuples(mp1),
+                       colData = colData(mp1)), 
                paste0("All counts of methylation patterns \\(stored in assays ", 
                       "slot\\) must be non-negative integers."))
   a <- ea
-  a[['extraAssay']] <- a[['extraAssay']] - 100L
-  expect_is(MethPat(assays = a, rowRanges = rowRanges(mp1)), "MethPat")
+  a[["extraAssay"]] <- a[["extraAssay"]] - 100L
+  expect_is(MethPat(assays = a, 
+                    rowTuples = rowTuples(mp1),
+                    colData = colData(mp1)), 
+            "MethPat")
 })
 
 test_that(".valid.MethPat.assays works for 2-tuples", {
-  expect_error(MethPat(assays = list(), rowRanges = mt2), 
-               paste0("Assay names must include all of: MM, MU, UM, UU"))
+  expect_error(MethPat(assays = list(), rowTuples = mt2), 
+               paste0("Assay names must include all of: 'MM', 'MU', 'UM', 'UU'"))
   # Extra assays are allowed
-  ea <- c(assays(mp2), list('extraAssay' = 
-                              matrix(1:20, ncol = 2, 
-                                     dimnames = list(NULL, c('A', 'B')))))
-  expect_is(MethPat(assays = ea, rowRanges = rowRanges(mp2)), "MethPat")
+  ea <- c(assays(mp2), list("extraAssay" = 
+                              matrix(1:20, ncol = 2)))
+  expect_is(MethPat(assays = ea, 
+                    rowTuples = rowTuples(mp2),
+                    colData = colData(mp2)), 
+            "MethPat")
   # Assays must be non-negative (except extraAssays)
   a <- endoapply(ea, `-`, 10)
-  expect_error(MethPat(assays = a, rowRanges = rowRanges(mp2)), 
+  expect_error(MethPat(assays = a, 
+                       rowTuples = rowTuples(mp2),
+                       colData = colData(mp2)), 
                paste0("All counts of methylation patterns \\(stored in assays ", 
                       "slot\\) must be non-negative integers."))
   a <- ea
-  a[['extraAssay']] <- a[['extraAssay']] - 100L
-  expect_is(MethPat(assays = a, rowRanges = rowRanges(mp2)), "MethPat")
+  a[["extraAssay"]] <- a[["extraAssay"]] - 100L
+  expect_is(MethPat(assays = a, 
+                    rowTuples = rowTuples(mp2),
+                    colData = colData(mp2)), "MethPat")
 })
 
 test_that(".valid.MethPat.assays works for 3-tuples", {
-  expect_error(MethPat(assays = list(), rowRanges = mt3), 
-               paste0("Assay names must include all of: MMM, MMU, MUM, MUU, ", 
-                      "UMM, UMU, UUM, UUU"))
+  expect_error(MethPat(assays = list(), rowTuples = mt3), 
+               paste0("Assay names must include all of: 'MMM', 'MMU', 'MUM', ",
+                      "'MUU', 'UMM', 'UMU', 'UUM', 'UUU'"))
   # Extra assays are allowed
-  ea <- c(assays(mp3), list('extraAssay' = 
-                              matrix(1:20, ncol = 2, 
-                                     dimnames = list(NULL, c('A', 'B')))))
-  expect_is(MethPat(assays = ea, rowRanges = rowRanges(mp3)), "MethPat")
+  ea <- c(assays(mp3), list("extraAssay" = 
+                              matrix(1:20, ncol = 2)))
+  expect_is(MethPat(assays = ea,
+                    rowTuples = rowTuples(mp3),
+                    colData = colData(mp3)), 
+            "MethPat")
   # Assays must be non-negative (except extraAssays)
   a <- endoapply(ea, `-`, 10)
-  expect_error(MethPat(assays = a, rowRanges = rowRanges(mp3)), 
+  expect_error(MethPat(assays = a, 
+                       rowTuples = rowTuples(mp3),
+                       colData = colData(mp3)), 
                paste0("All counts of methylation patterns \\(stored in assays ", 
                       "slot\\) must be non-negative integers."))
   a <- ea
-  a[['extraAssay']] <- a[['extraAssay']] - 100L
-  expect_is(MethPat(assays = a, rowRanges = rowRanges(mp3)), "MethPat")
+  a[["extraAssay"]] <- a[["extraAssay"]] - 100L
+  expect_is(MethPat(assays = a, 
+                    rowTuples = rowTuples(mp3),
+                    colData = colData(mp3)),
+            "MethPat")
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -107,7 +128,7 @@ test_that("MethPat constructor returns a valid object when m = 3", {
 })
 
 test_that("MethPat constructor returns errors on bad input", {
-  # TODO: None yet since the constructor doesn't check the input but relies on 
+  # TODO: None yet since the constructor doesn"t check the input but relies on 
   # the validity methods.
 })
 
@@ -163,7 +184,7 @@ test_that("rbind,MethPat-method returns error on bad input", {
   expect_error(rbind(mp1, mp2), 
                "Cannot combine MTuples containing tuples of different 'size'.")
   mp1_ <- mp1
-  colnames(mp1_) <- c('A', 'b')
+  colnames(mp1_) <- c("A", "b")
   expect_error(rbind(mp1, mp1_), "'...' objects must have the same colnames")
 })
 
@@ -171,80 +192,68 @@ test_that("combine,MethPat-method works for two MethPat objects", {
   # 1-tuples
   x <- mp1[1:2]
   y <- mp1[2:3]
-  colnames(y) <- c('C', 'D')
-  # Can't expect_identical because identical doesn't work on assay slot, 
+  colnames(y) <- c("C", "D")
+  # Can"t expect_identical because identical doesn"t work on assay slot, 
   # because it is a refernece class (I think).
   expect_equal(combine(x, y), 
                MethPat(
                  assays = list(
                    M = matrix(as.integer(c(10, 9, NA, 1, 2, NA, NA, 9, 8, NA, 
-                                           2, 3)), ncol = 4, 
-                              dimnames = list(NULL, c('A', 'B', 'C', 'D'))), 
+                                           2, 3)), ncol = 4), 
                    U = matrix(as.integer(c(11, 12, NA, 20, 19, NA, NA, 12, 13, 
-                                           NA, 19, 18)), ncol = 4, 
-                              dimnames = list(NULL, 
-                                              c('A', 'B', 'C', 'D')))),
-                 rowRanges = rowRanges(mp1)[1:3]
+                                           NA, 19, 18)), ncol = 4)),
+                 rowTuples = rowTuples(mp1)[1:3],
+                 colData = DataFrame(row.names = c("A", "B", "C", "D"))
                )
   )
   # 2-tuples
   x <- mp2[1:2]
   y <- mp2[2:3]
-  colnames(y) <- c('C', 'D')
-  # Can't expect_identical because identical() returns false on assays slot, 
+  colnames(y) <- c("C", "D")
+  # Can"t expect_identical because identical() returns false on assays slot, 
   # (I think this is because it is a reference class).
   expect_equal(combine(x, y), 
                MethPat(
                  assays = list(
                    MM = matrix(as.integer(c(10, 9, NA, 1, 2, NA, NA, 9, 8, NA, 
-                                            2, 3)), ncol = 4, 
-                               dimnames = list(NULL, c('A', 'B', 'C', 'D'))), 
+                                            2, 3)), ncol = 4), 
                    MU = matrix(as.integer(c(11, 12, NA, 20, 19, NA, NA, 12, 13, 
-                                            NA, 19, 18)), ncol = 4, 
-                               dimnames = list(NULL, c('A', 'B', 'C', 'D'))),
+                                            NA, 19, 18)), ncol = 4),
                    UM = matrix(as.integer(c(30, 29, NA, 21, 22, NA, NA, 29, 28, 
-                                            NA, 22, 23)), ncol = 4, 
-                               dimnames = list(NULL, c('A', 'B', 'C', 'D'))), 
+                                            NA, 22, 23)), ncol = 4), 
                    UU = matrix(as.integer(c(40, 39, NA, 31, 32, NA, NA, 39, 38, 
-                                            NA, 32, 33)), ncol = 4, 
-                               dimnames = list(NULL, c('A', 'B', 'C', 'D')))),
-                 rowRanges = rowRanges(mp2)[1:3]
+                                            NA, 32, 33)), ncol = 4)),
+                 rowTuples = rowRanges(mp2)[1:3],
+                 colData = DataFrame(row.names = c("A", "B", "C", "D"))
                )
   )
   # 3-tuples
   x <- mp3[1:2]
   y <- mp3[2:3]
-  colnames(y) <- c('C', 'D')
-  # Can't expect_identical because identical() returns false on assays slot, 
+  colnames(y) <- c("C", "D")
+  # Can"t expect_identical because identical() returns false on assays slot, 
   # (I think this is because it is a reference class).
   expect_equal(combine(x, y), 
                MethPat(
                  assays = list(
                    MMM = matrix(as.integer(c(10, 9, NA, 1, 2, NA, NA, 9, 8, NA, 
-                                             2, 3)), ncol = 4, 
-                                dimnames = list(NULL, c('A', 'B', 'C', 'D'))), 
+                                             2, 3)), ncol = 4), 
                    MMU = matrix(as.integer(c(11, 12, NA, 20, 19, NA, NA, 12, 
-                                             13, NA, 19, 18)), ncol = 4, 
-                                dimnames = list(NULL, c('A', 'B', 'C', 'D'))),
+                                             13, NA, 19, 18)), ncol = 4),
                    MUM = matrix(as.integer(c(30, 29, NA, 21, 22, NA, NA, 29, 
-                                             28, NA, 22, 23)), ncol = 4, 
-                                dimnames = list(NULL, c('A', 'B', 'C', 'D'))), 
+                                             28, NA, 22, 23)), ncol = 4), 
                    MUU = matrix(as.integer(c(40, 39, NA, 31, 32, NA, NA, 39, 
-                                             38, NA, 32, 33)), ncol = 4, 
-                                dimnames = list(NULL, c('A', 'B', 'C', 'D'))),
+                                             38, NA, 32, 33)), ncol = 4),
                    UMM = matrix(as.integer(c(50, 49, NA, 41, 42, NA, NA, 49, 
-                                             48, NA, 42, 43)), ncol = 4, 
-                                dimnames = list(NULL, c('A', 'B', 'C', 'D'))), 
+                                             48, NA, 42, 43)), ncol = 4), 
                    UMU = matrix(as.integer(c(60, 59, NA, 51, 52, NA, NA, 59, 
-                                             58, NA, 52, 53)), ncol = 4, 
-                                dimnames = list(NULL, c('A', 'B', 'C', 'D'))), 
+                                             58, NA, 52, 53)), ncol = 4), 
                    UUM = matrix(as.integer(c(70, 69, NA, 61, 62, NA, NA, 69, 
-                                             68, NA, 62, 63)), ncol = 4, 
-                                dimnames = list(NULL, c('A', 'B', 'C', 'D'))), 
+                                             68, NA, 62, 63)), ncol = 4), 
                    UUU = matrix(as.integer(c(80, 79, NA, 71, 72, NA, NA, 79, 
-                                             78, NA, 72, 73)), ncol = 4, 
-                                dimnames = list(NULL, c('A', 'B', 'C', 'D')))),
-                 rowRanges = rowRanges(mp3)[1:3]
+                                             78, NA, 72, 73)), ncol = 4)),
+                 rowTuples = rowRanges(mp3)[1:3],
+                 colData <- DataFrame(row.names = c("A", "B", "C", "D"))
                )
   )
 })
@@ -259,7 +268,7 @@ test_that("combine,MethPat-method returns error on bad input", {
                "Cannot combine MTuples containing tuples of different 'size'.")
   x <- mp1[1:2]
   y <- mp1[2:3]
-  colnames(y) <- c('C', 'D')
+  colnames(y) <- c("C", "D")
   mcols(y) <- NULL
   # TODO: Write a more informative error message - might need to be specified 
   # for SummarizedExperiment.
@@ -267,25 +276,25 @@ test_that("combine,MethPat-method returns error on bad input", {
                "number of columns for arg 2 do not match those of first arg")
   x <- mp1[1:2]
   y <- mp1[2:3]
-  colnames(y) <- c('C', 'D')
-  assays(y) <- c(assays(y), list('extraAssay' = 
+  colnames(y) <- c("C", "D")
+  assays(y) <- c(assays(y), list("extraAssay" = 
                                    matrix(1:4, ncol = 2, 
-                                          dimnames = list(NULL, c('C', 'D')))))
+                                          dimnames = list(NULL, c("C", "D")))))
   expect_error(combine(x, y), 
                "'MethPat' objects must all contain the same assays.")
   x <- mp3
   y <- mp3
-  genome(y) <- 'mock2'
+  genome(y) <- "mock2"
   expect_error(combine(x, y), 
                "sequences chr1, chr2, chr3 have incompatible genomes")
   y <- mp3
-  colnames(y) <- c('C', 'D')
-  seqlevelsStyle(y) <- 'NCBI'
+  colnames(y) <- c("C", "D")
+  seqlevelsStyle(y) <- "NCBI"
   expect_warning(combine(x, y), 
                "The 2 combined objects have no sequence levels in common")
-  y <- renameSeqlevels(y, c('chr1', '2', '3'))
+  y <- renameSeqlevels(y, c("chr1", "2", "3"))
   expect_identical(seqlevels(combine(x, y)), 
-                   c('chr1', 'chr2', 'chr3', '2', '3'))
+                   c("chr1", "chr2", "chr3", "2", "3"))
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -302,22 +311,22 @@ test_that("SummarizedExperiment inherited getters work", {
   expect_identical(ncol(mp2), 2L)
   expect_identical(nrow(mp3), 10L)
   expect_identical(ncol(mp3), 2L)
-  expect_identical(seqnames(mp1), mp1@rowData@seqnames)
-  expect_identical(ranges(mp2), mp2@rowData@ranges)
-  expect_identical(strand(mp3), mp3@rowData@strand)
-  expect_identical(mcols(mp3), mp3@rowData@elementMetadata)
-  expect_identical(elementMetadata(mp3), mp3@rowData@elementMetadata)
-  expect_identical(seqinfo(mp3), mp3@rowData@seqinfo)
-  expect_identical(seqlevels(mp3), seqlevels(mp3@rowData@seqinfo))
-  expect_identical(seqlengths(mp3), seqlengths(mp3@rowData@seqinfo))
-  expect_identical(isCircular(mp3), isCircular(mp3@rowData@seqinfo))
-  expect_identical(genome(mp3), genome(mp3@rowData@seqinfo))
-  expect_identical(seqlevelsStyle(mp3), seqlevelsStyle(mp3@rowData@seqinfo))
-  # TODO: Notifiy Bioc-Devel that granges,SummarizedExperiment-method should 
-  # return granges(rowRanges(x)) rather than rowRanges(x) since rowRanges may 
-  # not be a GRanges object (e.g. might be a GTuples object)?
-  # expect_identical(granges(mp3), granges(mp3@rowData))
-  expect_error(granges(mp3), "Not yet implemented")
+  expect_identical(seqnames(mp1), mp1@rowRanges@seqnames)
+  expect_identical(ranges(mp2), mp2@rowRanges@ranges)
+  expect_identical(strand(mp3), mp3@rowRanges@strand)
+  expect_identical(mcols(mp3), mp3@rowRanges@elementMetadata)
+  expect_identical(elementMetadata(mp3), mp3@rowRanges@elementMetadata)
+  expect_identical(seqinfo(mp3), mp3@rowRanges@seqinfo)
+  expect_identical(seqlevels(mp3), seqlevels(mp3@rowRanges@seqinfo))
+  expect_identical(seqlengths(mp3), seqlengths(mp3@rowRanges@seqinfo))
+  expect_identical(isCircular(mp3), isCircular(mp3@rowRanges@seqinfo))
+  expect_identical(genome(mp3), genome(mp3@rowRanges@seqinfo))
+  expect_identical(seqlevelsStyle(mp3), seqlevelsStyle(mp3@rowRanges@seqinfo))
+  # TODO: Should granges,SummarizedExperiment-method granges(rowRanges(x)) 
+  # rather than rowRanges(x) since rowRanges may not be a GRanges object (e.g. 
+  # might be a GTuples object)?
+  # expect_identical(granges(mp3), granges(mp3@rowRanges))
+  # expect_error(granges(mp3), "Not yet implemented")
 })
 
 test_that("methinfo getters work", {
@@ -332,15 +341,12 @@ context("MethPat splitting")
 
 test_that("inherited split works", {
   # Split by integer
-  mp3_s <- split(mp3, 1:10)
+  mp3_s <- S4Vectors::split(mp3, 1:10)
   expect_identical(length(mp3_s), 10L)
   expect_is(mp3_s, "SimpleList")
   expect_true(all(sapply(mp3_s, is, class = "MethPat")))
   # Split by Rle
-  expect_message(mp3_s <- split(mp3, seqnames(mp3)), 
-                 paste0("Note: method with signature ", 
-                        sQuote("SummarizedExperiment#ANY"), " chosen for ", 
-                        "function ", sQuote("split"), "."))
+  mp3_s <- S4Vectors::split(mp3, seqnames(mp3))
   expect_identical(length(mp3_s), 3L)
   expect_is(mp3_s, "SimpleList")
   expect_true(all(sapply(mp3_s, is, class = "MethPat")))
@@ -354,7 +360,7 @@ context("MethPat setters")
 
 test_that("SummarizedExperiment inherited setters work", {
   mp3_ <- mp3
-  # TODO: Why isn't there a seqnames<-,SummarizedExperiment-method?
+  # TODO: Why isn"t there a seqnames<-,SummarizedExperiment-method?
   expect_error(seqnames(mp3_) <- rev(seqnames(mp3)), 
                paste0("unable to find an inherited method for function ", 
                       sQuote("seqnames<-"), " for signature ", 
@@ -380,25 +386,25 @@ test_that("SummarizedExperiment inherited setters work", {
                                           genome = c("mock1", "mock1", 
                                                      "mock1")))
   mp3_ <- mp3
-  seqlevels(mp3_) <- c('chrI', 'chrII', 'chrIII')
-  expect_identical(seqlevels(mp3_), c('chrI', 'chrII', 'chrIII'))
+  seqlevels(mp3_) <- c("chrI", "chrII", "chrIII")
+  expect_identical(seqlevels(mp3_), c("chrI", "chrII", "chrIII"))
   mp3_ <- mp3
   seqlengths(mp3_) <- c(10000L, 20000L, 15000L)
-  expect_identical(seqlengths(mp3_), c('chr1' = 10000L, 'chr2' = 20000L, 
-                                       'chr3' = 15000L))
+  expect_identical(seqlengths(mp3_), c("chr1" = 10000L, "chr2" = 20000L, 
+                                       "chr3" = 15000L))
   mp3_ <- mp3
-  isCircular(mp3_) <- c('chr1' = TRUE, 'chr2' = FALSE, 'chr3' = FALSE)
-  expect_identical(isCircular(mp3_), c('chr1' = TRUE, 'chr2' = FALSE, 
-                                       'chr3' = FALSE))
+  isCircular(mp3_) <- c("chr1" = TRUE, "chr2" = FALSE, "chr3" = FALSE)
+  expect_identical(isCircular(mp3_), c("chr1" = TRUE, "chr2" = FALSE, 
+                                       "chr3" = FALSE))
   mp3_ <- mp3
-  genome(mp3_) <- 'foo'
-  expect_identical(genome(mp3_), c('chr1' = 'foo', 'chr2' = 'foo', 
-                                   'chr3' = 'foo'))
+  genome(mp3_) <- "foo"
+  expect_identical(genome(mp3_), c("chr1" = "foo", "chr2" = "foo", 
+                                   "chr3" = "foo"))
 })
 
 test_that("methinfo setters work", {
-  methinfo(mp1) <- MethInfo(c('CG', 'CHG'))
-  expect_identical(methinfo(mp1), MethInfo(c('CG', 'CHG')))
+  methinfo(mp1) <- MethInfo(c("CG", "CHG"))
+  expect_identical(methinfo(mp1), MethInfo(c("CG", "CHG")))
   methtype(mp1) <- c("CG", "CHG", "CHH")
   expect_identical(methtype(mp1), c("CG", "CHG", "CHH"))
 })
@@ -432,15 +438,15 @@ test_that("tuples,MethPat-method works", {
 test_that("tuples<-,MethPat-method works", {
   tuples(mp1) <- matrix(101:110, ncol = 1)
   expect_identical(tuples(mp1), 
-                   matrix(101:110, ncol = 1, dimnames = list(NULL, 'pos1')))
+                   matrix(101:110, ncol = 1, dimnames = list(NULL, "pos1")))
   tuples(mp2) <- matrix(c(101:110, 102:111), ncol = 2)
   expect_identical(tuples(mp2), 
                    matrix(c(101:110, 102:111), ncol = 2, 
-                          dimnames = list(NULL, c('pos1', 'pos2'))))
+                          dimnames = list(NULL, c("pos1", "pos2"))))
   tuples(mp3) <- matrix(c(101:110, 102:111, 103:112), ncol = 3)
   expect_identical(tuples(mp3), 
                    matrix(c(101:110, 102:111, 103:112), ncol = 3, 
-                          dimnames = list(NULL, c('pos1', 'pos2', 'pos3'))))
+                          dimnames = list(NULL, c("pos1", "pos2", "pos3"))))
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -47,17 +47,17 @@ test_that("methinfo works", {
 })
 
 test_that("methinfo<- works", {
-  methinfo(mtl1) <- MethInfo(c('CHG', 'CHH'))
-  expect_identical(methinfo(mtl1), MethInfo(c('CHG', 'CHH')))
+  methinfo(mtl1) <- MethInfo(c("CHG", "CHH"))
+  expect_identical(methinfo(mtl1), MethInfo(c("CHG", "CHH")))
 })
 
 test_that("methtype works", {
-  expect_identical(methtype(mtl1), 'CG')
+  expect_identical(methtype(mtl1), "CG")
 })
 
 test_that("methtype<- works", {
-  methtype(mtl1) <- c('CNN')
-  expect_identical(methtype(mtl1), 'CNN')
+  methtype(mtl1) <- c("CNN")
+  expect_identical(methtype(mtl1), "CNN")
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -120,3 +120,4 @@ test_that("MTuplesList endoapply works", {
   expect_identical(mtl2, endoapply(mtl2, function(x) {x}))
   expect_identical(mtl3, endoapply(mtl3, function(x) {x}))
 })
+

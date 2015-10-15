@@ -7,9 +7,9 @@
 context("MTuples validity methods")
 
 test_that("methinfo slot is checked", {
-  expect_error(mt1@methinfo <- 'kraken', 
+  expect_error(mt1@methinfo <- "kraken", 
                paste0("assignment of an object of class ", dQuote("character"), 
-                      " is not valid for @", sQuote('methinfo'), " in an ", 
+                      " is not valid for @", sQuote("methinfo"), " in an ", 
                       "object of class ", dQuote("MTuples"), "; is\\(value, ", 
                       "\"MethInfo\"\\) is not TRUE"))
 })
@@ -38,21 +38,21 @@ test_that("MTuples constructor returns a valid object when m >= 3", {
 })
 
 test_that("MTuples constructor returns warnings on unexpected input", {
-  expect_warning(MTuples(GTuples('chr1', tuples = matrix(c(1.1, 2, 3), 
+  expect_warning(MTuples(GTuples("chr1", tuples = matrix(c(1.1, 2, 3), 
                                                          ncol = 1)), 
                          mi), 
                  "Converting 'tuples' to integer mode")
 })
 
 test_that("MTuples constructor returns errors on bad input", {
-  expect_error(MTuples(GTuples('chr1', tuples = 1:10), mi),
+  expect_error(MTuples(GTuples("chr1", tuples = 1:10), mi),
                "'tuples' must be an integer matrix")
-  expect_error(MTuples(GTuples('chr1', tuples = as.matrix(letters)), mi), 
+  expect_error(MTuples(GTuples("chr1", tuples = as.matrix(letters)), mi), 
                "'tuples' must be an integer matrix")
-  expect_error(MTuples(GTuples('chr1', tuples = matrix(c(1, NA), ncol = 1)), 
+  expect_error(MTuples(GTuples("chr1", tuples = matrix(c(1, NA), ncol = 1)), 
                        mi),
                "'NA' detected in 'tuples'")
-  expect_error(MTuples(mt1, MethInfo('CpG')), 
+  expect_error(MTuples(mt1, MethInfo("CpG")), 
                paste0("Invalid 'methtype'. Must be one or more of 'CG', 'CHG',", 
                       " 'CHH' or 'CNN'"))
 })
@@ -115,7 +115,7 @@ test_that("update works on all relevant slots", {
   mt1_metadata <- mt1
   metadata(mt1_metadata) <- list("foo" = "bar")
   expect_identical(mt1_update, mt1_metadata)
-  methinfo <- MethInfo('CNN')
+  methinfo <- MethInfo("CNN")
   mt1_update <- update(mt1, methinfo = methinfo)
   expect_identical(mt1_update, 
                    MTuples(GTuples(seqnames(mt1), tuples(mt1), strand(mt1),
@@ -197,19 +197,19 @@ test_that("c works", {
   expect_identical(c(mt3[1:5], mt3[6:10]), mt3)
   expect_error(c(mt3, as(mt3, "GTuples")), 
                paste0("unable to find an inherited method for function ", 
-                      sQuote('methinfo'), " for signature ", 
+                      sQuote("methinfo"), " for signature ", 
                       sQuote('"GTuples"')))
   expect_error(c(mt3, granges(mt3)), 
                paste0("unable to find an inherited method for function ", 
-                      sQuote('size'), " for signature ", sQuote('"GRanges"')))
+                      sQuote("size"), " for signature ", sQuote('"GRanges"')))
   expect_error(c(mt3, mt2), 
                paste0("Cannot combine MTuples containing tuples of ", 
                       "different 'size'"))
   mt1_ <- mt1
-  methinfo(mt1_) <- MethInfo('CHG')
+  methinfo(mt1_) <- MethInfo("CHG")
   expect_identical(c(mt1, mt1_),
     MTuples(c(as(mt1, "GTuples"), as(mt1, "GTuples")), 
-                           MethInfo(c('CG', 'CHG'))))
+                           MethInfo(c("CG", "CHG"))))
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -218,8 +218,8 @@ test_that("c works", {
 context("MTuples getters")
 
 test_that("MTuples-specific getters work", {
-  expect_identical(methinfo(mt1), MethInfo('CG'))
-  expect_identical(methtype(mt1), 'CG')
+  expect_identical(methinfo(mt1), MethInfo("CG"))
+  expect_identical(methtype(mt1), "CG")
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -244,10 +244,10 @@ test_that("inherited split works", {
 context("MTuples setters")
 
 test_that("MTuples-specific setters work", {
-  methinfo(mt1) <- MethInfo('CNN')
-  expect_identical(methinfo(mt1), MethInfo('CNN'))
-  methtype(mt1) <- 'CHG'
-  expect_identical(methtype(mt1), 'CHG')
+  methinfo(mt1) <- MethInfo("CNN")
+  expect_identical(methinfo(mt1), MethInfo("CNN"))
+  methtype(mt1) <- "CHG"
+  expect_identical(methtype(mt1), "CHG")
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

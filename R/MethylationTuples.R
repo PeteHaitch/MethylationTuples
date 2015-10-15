@@ -10,18 +10,12 @@
 #'
 #' @docType package
 #' @name MethylationTuples-package
-#' @useDynLib MethylationTuples, .registration = TRUE
+#' @import methods
+#' @import SummarizedExperiment
+#' @import SparseSummarizedExperiment
 #' @import GenomicTuples
-#' @import Rcpp
 #' @import BiocGenerics
 #' @import IRanges
-#' @import data.table
-#' @import R.utils
-#' @import BiocParallel
-#' @import Biostrings
-#' @import methods
-#' @import ggplot2
 #' @importFrom Biobase validMsg
-#' @importFrom VariantAnnotation readVcf ScanVcfParam
-#' @importFrom stats4 plot
+#' @importFrom S4Vectors isTRUEorFALSE SimpleList DataFrame split
 NULL

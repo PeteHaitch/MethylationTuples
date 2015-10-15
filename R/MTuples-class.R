@@ -55,6 +55,8 @@ setClass("MTuples",
 ### Constructor
 ###
 
+# TODO: Improve the constructor to allow MTuples(seqnames, tuples, seqinfo, methinfo)
+
 #' @export
 MTuples <- function(gtuples = GTuples(), methinfo = MethInfo()) {
   new("MTuples", gtuples, methinfo = methinfo)
@@ -118,8 +120,7 @@ showMTuples <- function(x, margin = "", print.classinfo = FALSE,
 }
 
 #' @export
-setMethod("show", 
-          "MTuples", 
+setMethod("show", "MTuples", 
           function(object) {
             showMTuples(object, margin="  ", print.seqinfo = TRUE, 
                         print.methinfo = TRUE)
@@ -146,14 +147,16 @@ setMethod("show",
     ans_mcols <- do.call(rbind, lapply(x, mcols, FALSE))
   }
   new(ans_class, 
-      GTuples(seqnames = ans_seqnames, tuples = ans_tuples, 
-      strand = ans_strand, ans_mcols, seqinfo = ans_seqinfo),
+      GTuples(seqnames = ans_seqnames, 
+              tuples = ans_tuples, 
+              strand = ans_strand, 
+              ans_mcols, 
+              seqinfo = ans_seqinfo),
       methinfo = ans_methinfo)
 }
 
 #' @export
-setMethod("c", 
-          "MTuples", 
+setMethod("c", "MTuples", 
           function(x, ..., ignore.mcols = FALSE, recursive = FALSE) {
             if (!identical(recursive, FALSE)) {
               stop("'recursive' argument not supported")
@@ -166,7 +169,7 @@ setMethod("c",
             if (!GenomicTuples:::.zero_range(sapply(args, size)) && 
                   !isTRUE(all(is.na(sapply(args, size))))) {
               stop(paste0("Cannot combine ", paste0(unique(sapply(args, class)), 
-                                                    collapse = ' and '), 
+                                                    collapse = " and "), 
                           " containing tuples of different 'size'."))
             }
             .unlist_list_of_MTuples(args, ignore.mcols = ignore.mcols)
@@ -178,18 +181,16 @@ setMethod("c",
 ###
 
 #' @export
-setMethod("methinfo", 
-          "MTuples", 
-          function(object) {
-            object@methinfo
+setMethod("methinfo", "MTuples", 
+          function(x) {
+            x@methinfo
           }
 )
 
 #' @export
-setMethod("methtype", 
-          "MTuples", 
-          function(object) {
-            methtype(object@methinfo)
+setMethod("methtype", "MTuples", 
+          function(x) {
+            methtype(x@methinfo)
           }
 )
 
@@ -198,19 +199,17 @@ setMethod("methtype",
 ###
 
 #' @export
-setReplaceMethod("methinfo", 
-                 c("MTuples", "MethInfo"), 
-                 function(object, value) {
-                   object@methinfo <- value
-                   object
+setReplaceMethod("methinfo", c("MTuples", "MethInfo"), 
+                 function(x, value) {
+                   x@methinfo <- value
+                   x
                  }
 )
 
 #' @export
-setReplaceMethod("methtype", 
-                 c("MTuples", "character"), 
-                 function(object, value) {
-                   methtype(object@methinfo) <- value
-                   object
+setReplaceMethod("methtype", c("MTuples", "character"), 
+                 function(x, value) {
+                   methtype(x@methinfo) <- value
+                   x
                  }
 )

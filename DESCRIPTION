@@ -1,8 +1,8 @@
 Package: MethylationTuples
 Type: Package
 Title: Tools for analysing methylation patterns at genomic tuples
-Version: 0.3.0.9007
-Date: 2015-04-24
+Version: 0.4.0.9000
+Date: 2015-10-14
 Authors@R: c(person("Peter", "Hickey", role = c("aut", "cre"),
     email = "peter.hickey@gmail.com"))
 Author: Peter Hickey <peter.hickey@gmail.com>
@@ -15,46 +15,28 @@ BugReports: https://github.com/PeteHaitch/MethylationTuples/issues
 biocViews: DNAMethylation, DataImport, Software, MethylSeq
 VignetteBuilder: knitr
 Depends:
-    R (>= 2.10),
-    GenomicTuples (>= 1.1.9),
-    data.table
+    R (>= 3.2.1),
+    GenomicTuples (>= 1.3.1)
 Imports:
     BiocGenerics,
-    Rcpp (>= 0.11.2),
+    SummarizedExperiment (>= 0.3.9),
     Biobase,
     IRanges,
-    BiocParallel,
-    R.utils,
-    Biostrings,
-    VariantAnnotation,
     methods,
-    GenomicRanges (>= 1.19.17),
-    stats4,
-    ggplot2,
-    S4Vectors
+    GenomicRanges (>= 1.21.28),
+    S4Vectors,
+    SparseSummarizedExperiment (>= 0.0.0.9000)
 Suggests:
     testthat,
     knitr,
     BiocStyle
-LinkingTo: Rcpp, RcppArmadillo
 License: Artistic-2.0
 Collate:
     'AllGenerics.R'
     'AllUtilities.R'
-    'MBias.R'
     'MethInfo-class.R'
     'MTuples-class.R'
     'MTuplesList-class.R'
     'MethPat-class.R'
     'MethylationTuples.R'
-    'RcppExports.R'
-    'collapseStrand.R'
-    'cometh.R'
-    'filterOutVariants.R'
-    'findMTuples.R'
-    'mantelhaen.R'
-    'methLevelCor.R'
-    'patternFreqs.R'
-    'readMethtuple.R'
-    'tmpFixes.R'
-    'zzz.R'
+    'SparseMethPat-class.R'

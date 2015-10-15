@@ -1,20 +1,42 @@
+# TODO: See https://stat.ethz.ch/pipermail/bioc-devel/2015-September/008007.html 
+# about proper way of writing and documenting S4 generics.
+
+# TODO: Document generic rather than method (consistent with 
+# http://r-pkgs.had.co.nz/man.html).
+
+### -------------------------------------------------------------------------
+### rowTuples
+###
+
+#' @export
+setGeneric("rowTuples",
+           function(x, ...) {
+             standardGeneric("rowTuples")
+           }
+)
+
+#' @export
+setGeneric("rowTuples<-",
+           function(x, ..., value) {
+             standardGeneric("rowTuples<-")
+           }
+)
+
+
 ### -------------------------------------------------------------------------
 ### methinfo
 ###
 
-# TODO: Document generic rather than method (consistent with 
-# http://r-pkgs.had.co.nz/man.html).
 #' @export
 setGeneric("methinfo", 
-           function(object) {
+           function(x) {
              standardGeneric("methinfo")
            }
 )
 
-# TODO: Document generic rather than method (consistent with 
-# http://r-pkgs.had.co.nz/man.html).#' @export
+#' @export
 setGeneric("methinfo<-", 
-           function(object, value) {
+           function(x, value) {
              standardGeneric("methinfo<-")
            }
 )
@@ -23,63 +45,18 @@ setGeneric("methinfo<-",
 ### methtype
 ###
 
-# TODO: Document generic rather than method (consistent with 
-# http://r-pkgs.had.co.nz/man.html).
 #' @export
 setGeneric("methtype", 
-           function(object) {
+           function(x) {
              standardGeneric("methtype")
            }
 )
 
-# TODO: Document generic rather than method (consistent with 
-# http://r-pkgs.had.co.nz/man.html).
 #' @export
 setGeneric("methtype<-", 
-           function(object, value) {
+           function(x, value) {
              standardGeneric("methtype<-")
            }
 )
 
-### -------------------------------------------------------------------------
-### methLevel
-###
-
-# TODO: Document generic rather than method (consistent with 
-# http://r-pkgs.had.co.nz/man.html).
-#' @export
-setGeneric("methLevel", 
-           function(object, ...) {
-             standardGeneric("methLevel")
-           }
-)
-
-### -------------------------------------------------------------------------
-### getCoverage
-###
-
-
-# TODO: Decide on a name.
-# TODO: Document generic rather than method (consistent with 
-# http://r-pkgs.had.co.nz/man.html).
-#' @export
-setGeneric("getCoverage", 
-           function(object) {
-             standardGeneric("getCoverage")
-           }
-)
-
-### -------------------------------------------------------------------------
-### filter
-###
-###
-
-# TODO: Decide on a better name. Will clash with dplyr's filter()
-# TODO: Document generic rather than method (consistent with 
-# http://r-pkgs.had.co.nz/man.html).
-#' @export
-setGeneric("filter", 
-           function(object, ...) {
-             standardGeneric("filter")
-           }
-)
+# TODO: methLevel(), getCoverage() (or similarly named generics)

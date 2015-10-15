@@ -77,18 +77,16 @@ MTuplesList <- function(...) {
 ###
 
 #' @export
-setMethod("methinfo", 
-          "MTuplesList", 
-          function(object) {
-            object@unlistData@methinfo
+setMethod("methinfo", "MTuplesList", 
+          function(x) {
+            x@unlistData@methinfo
           }
 )
 
 #' @export
-setMethod("methtype", 
-          "MTuplesList", 
-          function(object) {
-            methtype(object@unlistData@methinfo)
+setMethod("methtype", "MTuplesList", 
+          function(x) {
+            methtype(x@unlistData@methinfo)
           }
 )
 
@@ -97,20 +95,18 @@ setMethod("methtype",
 ###
 
 #' @export
-setReplaceMethod("methinfo", 
-                 c("MTuplesList", "MethInfo"), 
-                 function(object, value) {
-                   object@unlistData@methinfo <- value
-                   object
+setReplaceMethod("methinfo", c("MTuplesList", "MethInfo"), 
+                 function(x, value) {
+                   x@unlistData@methinfo <- value
+                   x
                  }
 )
 
 #' @export
-setReplaceMethod("methtype", 
-                 c("MTuplesList", "character"), 
-                 function(object, value) {
-                   methtype(object@unlistData@methinfo) <- value
-                   object
+setReplaceMethod("methtype", c("MTuplesList", "character"), 
+                 function(x, value) {
+                   methtype(x@unlistData@methinfo) <- value
+                   x
                  }
 )
 
@@ -118,8 +114,7 @@ setReplaceMethod("methtype",
 ### Going from MTuples to MTuplesList with extractList() and family.
 ###
 #' @export
-setMethod("relistToClass", 
-          "MTuples", 
+setMethod("relistToClass", "MTuples", 
           function(x) {
             "MTuplesList"
           }
@@ -195,8 +190,7 @@ my_showList <- function(object, showFunction, print.classinfo)
 }
 
 #' @export
-setMethod("show", 
-          "MTuplesList",
+setMethod("show", "MTuplesList",
           function(object) {
             my_showList(object, showMTuples, FALSE)
           }

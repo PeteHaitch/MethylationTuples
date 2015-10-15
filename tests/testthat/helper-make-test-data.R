@@ -69,41 +69,30 @@ mql3 <- MTuplesList(mq3)
 mp0 <- MethPat()
 # 1-tuples
 mp1 <- MethPat(assays = 
-                 SimpleList('M' = matrix(c(10:1, 1:10), ncol = 2,
-                                         dimnames = list(NULL, c('A', 'B'))), 
-                            'U' = matrix(c(11:20, 20:11), ncol = 2,
-                                         dimnames = list(NULL, c('A', 'B')))), 
-               rowRanges = mt1)
+                 SimpleList("M" = matrix(c(10:1, 1:10), ncol = 2), 
+                            "U" = matrix(c(11:20, 20:11), ncol = 2)), 
+               rowTuples = mt1, 
+               colData = DataFrame(row.names = c("A", "B")))
 # 2-tuples
 mp2 <- MethPat(assays = 
-                 SimpleList('MM' = matrix(c(10:1, 1:10), ncol = 2,
-                                         dimnames = list(NULL, c('A', 'B'))), 
-                            'MU' = matrix(c(11:20, 20:11), ncol = 2,
-                                         dimnames = list(NULL, c('A', 'B'))), 
-                            'UM' = matrix(c(30:21, 21:30), ncol = 2,
-                                          dimnames = list(NULL, c('A', 'B'))), 
-                            'UU' = matrix(c(40:31, 31:40), ncol = 2,
-                                          dimnames = list(NULL, c('A', 'B')))), 
-               rowRanges = mt2)
+                 SimpleList('MM' = matrix(c(10:1, 1:10), ncol = 2), 
+                            'MU' = matrix(c(11:20, 20:11), ncol = 2), 
+                            'UM' = matrix(c(30:21, 21:30), ncol = 2), 
+                            'UU' = matrix(c(40:31, 31:40), ncol = 2)), 
+               rowTuples = mt2,
+               colData = DataFrame(row.names = c("A", "B")))
 # 3-tuples
 mp3 <- MethPat(assays = 
-                 SimpleList('MMM' = matrix(c(10:1, 1:10), ncol = 2,
-                                           dimnames = list(NULL, c('A', 'B'))), 
-                            'MMU' = matrix(c(11:20, 20:11), ncol = 2,
-                                           dimnames = list(NULL, c('A', 'B'))), 
-                            'MUM' = matrix(c(30:21, 21:30), ncol = 2,
-                                           dimnames = list(NULL, c('A', 'B'))), 
-                            'MUU' = matrix(c(40:31, 31:40), ncol = 2,
-                                           dimnames = list(NULL, c('A', 'B'))), 
-                            'UMM' = matrix(c(50:41, 41:50), ncol = 2,
-                                           dimnames = list(NULL, c('A', 'B'))), 
-                            'UMU' = matrix(c(60:51, 51:60), ncol = 2,
-                                           dimnames = list(NULL, c('A', 'B'))), 
-                            'UUM' = matrix(c(70:61, 61:70), ncol = 2,
-                                           dimnames = list(NULL, c('A', 'B'))), 
-                            'UUU' = matrix(c(80:71, 71:80), ncol = 2,
-                                           dimnames = list(NULL, c('A', 'B')))), 
-               rowRanges = mt3)
+                 SimpleList('MMM' = matrix(c(10:1, 1:10), ncol = 2), 
+                            'MMU' = matrix(c(11:20, 20:11), ncol = 2), 
+                            'MUM' = matrix(c(30:21, 21:30), ncol = 2), 
+                            'MUU' = matrix(c(40:31, 31:40), ncol = 2), 
+                            'UMM' = matrix(c(50:41, 41:50), ncol = 2), 
+                            'UMU' = matrix(c(60:51, 51:60), ncol = 2), 
+                            'UUM' = matrix(c(70:61, 61:70), ncol = 2), 
+                            'UUU' = matrix(c(80:71, 71:80), ncol = 2)), 
+               rowTuples = mt3,
+               colData = DataFrame(row.names = c("A", "B")))
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Objects used in test of makeAdjacentPairsCpp and makeAllPairsCpp
@@ -115,10 +104,9 @@ gt <- GTuples(seqnames = Rle(c('chr1', 'chr3', 'chr2'), c(6, 6, 1)),
               strand = Rle(c('+', '-', '+', '-', '+'), c(3, 3, 3, 3, 1)), 
               seqinfo = Seqinfo(seqnames = c('chr1', 'chr2', 'chr3')))
 mt <- rev(MTuples(gt, MethInfo('CG')))
-methpat <- MethPat(mt, assays = 
-                     list("M" = matrix(1:13, ncol = 1, 
-                                       dimnames = list(NULL, "A")), 
-                          "U" = matrix(1:13, ncol = 1, 
-                                       dimnames = list(NULL, "A"))))
+methpat <- MethPat(mt, 
+                   assays = list("M" = matrix(1:13, ncol = 1), 
+                                 "U" = matrix(1:13, ncol = 1)),
+                   colData = DataFrame(row.names = "A"))
 methpat_order <- order(methpat)
-methpat_rd_sorted <- sort(rowRanges(methpat))
+methpat_rd_sorted <- sort(rowTuples(methpat))

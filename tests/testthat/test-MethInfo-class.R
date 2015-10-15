@@ -9,21 +9,21 @@ context("MethInfo getters")
 
 test_that("methtype,MethInfo-method works", {
   expect_identical(methtype(MethInfo(NA_character_)), NA_character_)
-  expect_identical(methtype(MethInfo(c('CG'))), c('CG'))
-  expect_identical(methtype(MethInfo(c('CHG'))), c('CHG'))
-  expect_identical(methtype(MethInfo(c('CHH'))), c('CHH'))
-  expect_identical(methtype(MethInfo(c('CNN'))), c('CNN'))
-  expect_identical(methtype(MethInfo(c('CG', 'CHG'))), c('CG', 'CHG'))
-  expect_identical(methtype(MethInfo(c('CG', 'CHH'))), c('CG', 'CHH'))
-  expect_identical(methtype(MethInfo(c('CG', 'CNN'))), c('CG', 'CNN'))
-  expect_identical(methtype(MethInfo(c('CG', 'CHG', 'CHH'))), 
-                   c('CG', 'CHG', 'CHH'))
-  expect_identical(methtype(MethInfo(c('CG', 'CHG', 'CNN'))), 
-                   c('CG', 'CHG', 'CNN'))
-  expect_identical(methtype(MethInfo(c('CG', 'CHH', 'CNN'))), 
-                   c('CG', 'CHH', 'CNN'))
-  expect_identical(methtype(MethInfo(c('CG', 'CHG', 'CHH', 'CNN'))), 
-                   c('CG', 'CHG', 'CHH', 'CNN'))
+  expect_identical(methtype(MethInfo(c("CG"))), c("CG"))
+  expect_identical(methtype(MethInfo(c("CHG"))), c("CHG"))
+  expect_identical(methtype(MethInfo(c("CHH"))), c("CHH"))
+  expect_identical(methtype(MethInfo(c("CNN"))), c("CNN"))
+  expect_identical(methtype(MethInfo(c("CG", "CHG"))), c("CG", "CHG"))
+  expect_identical(methtype(MethInfo(c("CG", "CHH"))), c("CG", "CHH"))
+  expect_identical(methtype(MethInfo(c("CG", "CNN"))), c("CG", "CNN"))
+  expect_identical(methtype(MethInfo(c("CG", "CHG", "CHH"))), 
+                   c("CG", "CHG", "CHH"))
+  expect_identical(methtype(MethInfo(c("CG", "CHG", "CNN"))), 
+                   c("CG", "CHG", "CNN"))
+  expect_identical(methtype(MethInfo(c("CG", "CHH", "CNN"))), 
+                   c("CG", "CHH", "CNN"))
+  expect_identical(methtype(MethInfo(c("CG", "CHG", "CHH", "CNN"))), 
+                   c("CG", "CHG", "CHH", "CNN"))
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -42,15 +42,15 @@ test_that("MethInfo validity works", {
 ###
 
 test_that("MethInfo constructor works", {
-  expect_is(MethInfo('CG'), 'MethInfo')
+  expect_is(MethInfo("CG"), "MethInfo")
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Setters.
 ###
 test_that("methtype<-,MethInfo-method works", {
-  methtype(mi) <- 'CHG'
-  expect_identical(mi, MethInfo('CHG'))
+  methtype(mi) <- "CHG"
+  expect_identical(mi, MethInfo("CHG"))
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -68,8 +68,8 @@ test_that("summary,MethInfo-method works", {
 
 # TODO: All the various combinations of MethInfo, NULL and missing
 test_that("merge,MethInfo-method works", {
-  expect_identical(merge(MethInfo('CHG'), MethInfo('CG')), 
-                   MethInfo(c('CG', 'CHG')))
+  expect_identical(merge(MethInfo("CHG"), MethInfo("CG")), 
+                   MethInfo(c("CG", "CHG")))
   expect_identical(merge(mi, mi), mi)
   expect_identical(merge(mi, MethInfo()), MethInfo())
   expect_identical(merge(mi), mi)
@@ -77,11 +77,11 @@ test_that("merge,MethInfo-method works", {
   expect_identical(merge(NULL, mi), mi)
   expect_identical(merge(mi), mi)
   expect_identical(merge(y = mi), mi)
-  expect_identical(merge(mi, NULL, NULL, MethInfo('CHG')), 
-                   MethInfo(c('CG', 'CHG')))
-  expect_identical(merge(y = mi, NULL, MethInfo('CHH')), 
-                   MethInfo(c('CG', 'CHH')))
-  expect_error(merge(mi, 'a'), 
+  expect_identical(merge(mi, NULL, NULL, MethInfo("CHG")), 
+                   MethInfo(c("CG", "CHG")))
+  expect_identical(merge(y = mi, NULL, MethInfo("CHH")), 
+                   MethInfo(c("CG", "CHH")))
+  expect_error(merge(mi, "a"), 
                paste0("cannot coerce class \"structure\\(\"MethInfo\", ", 
                       "package = \"MethylationTuples\"\\)\" to a data.frame"))
 })

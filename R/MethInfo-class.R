@@ -75,20 +75,19 @@ setClass("MethInfo",
 
 #' @aliases methtype
 #' @export
-setMethod("methtype", 
-          "MethInfo", 
-          function(object) {
-            object@methtype
+setMethod("methtype", "MethInfo", 
+          function(x) {
+            x@methtype
           })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Validity.
 ###
 
-.valid.MethInfo <- function(object) {
+.valid.MethInfo <- function(x) {
   
   # Include all other .valid.MethInfo.* functions in this vector
-  msg <- c(.valid.MethInfo.methtype(object))
+  msg <- c(.valid.MethInfo.methtype(x))
   
   if (is.null(msg)){
     return(TRUE)
@@ -97,10 +96,10 @@ setMethod("methtype",
   }
 }
 
-.valid.MethInfo.methtype <- function(object) {
+.valid.MethInfo.methtype <- function(x) {
   
   msg <- NULL
-  if (!.validMethtype(object@methtype)) {
+  if (!.validMethtype(x@methtype)) {
     msg <- validMsg(msg, paste0("Invalid 'methtype'. Must be one or more of ", 
                                 "'CG', 'CHG', 'CHH' or 'CNN'"))
   }
@@ -123,11 +122,10 @@ MethInfo <- function(methtype = NA_character_) {
 ###
 
 #' @export
-setReplaceMethod("methtype", 
-                 c("MethInfo", "character"),
-                 function(object, value) { 
-                   object@methtype <- value
-                   object
+setReplaceMethod("methtype", c("MethInfo", "character"),
+                 function(x, value) { 
+                   x@methtype <- value
+                   x
                  }
 ) 
 
@@ -136,23 +134,21 @@ setReplaceMethod("methtype",
 ###
 
 #' @export
-setMethod("summary", 
-          "MethInfo", 
-          function(object) {
+setMethod("summary", "MethInfo", 
+          function(object, ...) {
             if (all(is.na(methtype(object)))) {
               ans <- "NA"
             } else {
-              ans <- paste0(sort(methtype(object)), collapse = '/')
+              ans <- paste0(sort(methtype(object)), collapse = "/")
             }
             paste0(ans, " methylation type")
           }
 )
 
 #' @export
-setMethod("show", 
-          "MethInfo", 
+setMethod("show", "MethInfo", 
           function(object) {
-            cat(class(object), " object with ", summary(object), "\n", sep="")
+            cat(class(object), " object with ", summary(object), "\n", sep = "")
           }
 )
 
@@ -181,39 +177,34 @@ setMethod("show",
 }
 
 #' @export
-setMethod("merge", 
-          c("MethInfo", "MethInfo"), 
+setMethod("merge", c("MethInfo", "MethInfo"), 
           function(x, y, ...) {
             .MethInfo.merge(x, y, ...)
           }
 )
 
 #' @export
-setMethod("merge", 
-          c("MethInfo", "missing"), 
+setMethod("merge", c("MethInfo", "missing"), 
           function(x, y, ...) { 
             .MethInfo.merge(x, ...)
           }
 )
 
 #' @export
-setMethod("merge", 
-          c("MethInfo", "NULL"), 
+setMethod("merge", c("MethInfo", "NULL"), 
           function(x, y, ...) {
             .MethInfo.merge(x, ...)
           })
 
 #' @export
-setMethod("merge", 
-          c("NULL", "MethInfo"), 
+setMethod("merge", c("NULL", "MethInfo"), 
           function(x, y, ...) {
             .MethInfo.merge(y, ...)
           }
 )
 
 #' @export
-setMethod("merge", 
-          c("missing", "MethInfo"), 
+setMethod("merge", c("missing", "MethInfo"), 
           function(x, y, ...) {
             .MethInfo.merge(y, ...)
           }
