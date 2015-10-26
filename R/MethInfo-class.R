@@ -88,22 +88,16 @@ setMethod("methtype", "MethInfo",
   
   # Include all other .valid.MethInfo.* functions in this vector
   msg <- c(.valid.MethInfo.methtype(x))
-  
-  if (is.null(msg)){
-    return(TRUE)
-  } else{
-    return(msg)
-  }
 }
 
 .valid.MethInfo.methtype <- function(x) {
   
-  msg <- NULL
   if (!.validMethtype(x@methtype)) {
-    msg <- validMsg(msg, paste0("Invalid 'methtype'. Must be one or more of ", 
-                                "'CG', 'CHG', 'CHH' or 'CNN'"))
+    return(paste0("Invalid 'methtype'. Must be one or more of 'CG', 'CHG',", 
+                  "'CHH' or 'CNN'"))
   }
-  return(msg)
+  
+  NULL
 }
 
 setValidity2("MethInfo", .valid.MethInfo)

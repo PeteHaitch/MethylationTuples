@@ -16,6 +16,5 @@
 #' @import GenomicTuples
 #' @import BiocGenerics
 #' @import IRanges
-#' @importFrom Biobase validMsg
 #' @importFrom S4Vectors isTRUEorFALSE SimpleList DataFrame split
 NULL

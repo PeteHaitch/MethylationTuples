@@ -232,33 +232,31 @@ setClass("MethPat",
 ###
 
 .valid.MethPat.assays <- function(x) {
-  msg <- NULL
-  
+
   m <- x@rowRanges@size
   if (!is.na(m)) {
     # Check assay names and, if assay names are okay, check counts are all >= 0
     an <- assayNames(x)
     if (is.null(an)) {
-      msg <- validMsg(msg, paste0("Assay names must include all of: '", 
-                                  paste0(.makeMethPatNames(m), 
-                                         collapse = "', '"), "'"))
+      return(paste0("Assay names must include all of: '", 
+                    paste0(.makeMethPatNames(m), 
+                           collapse = "', '"), "'"))
     } else {
       if (any(is.na(match(.makeMethPatNames(m), an)))) {
-        msg <- validMsg(msg, paste0("Assay names must include all of: '", 
-                                    paste0(.makeMethPatNames(m), 
-                                           collapse = "', '"), "'"))
+        return(paste0("Assay names must include all of: '", 
+                      paste0(.makeMethPatNames(m), collapse = "', '"), "'"))
       } else {
         # Note from bsseq: benchmarking shows that min(assay()) < 0 is faster 
         # than any(assay() < 0) if it is false
         if (min(sapply(assays(x)[.makeMethPatNames(m)], 
                        min, na.rm = TRUE), na.rm = TRUE) < 0) {
-          msg <- validMsg(msg, paste0("All counts of methylation patterns ", 
-                                      "(stored in assays slot) must be ", 
-                                      "non-negative integers."))
+          return(paste0("All counts of methylation patterns (stored in assays ", 
+                 "slot) must be non-negative integers."))
         }
       }
     }
   }
+  NULL
 }
 
 # TODO: Some sort of validity check on assays, e.g., I require them to be 
@@ -269,16 +267,12 @@ setClass("MethPat",
   # First need to check that rowTuples is an MTuples object.
   # Otherwise some of the .valid.MethPat.* functions won't work
   msg <- .valid.MethPat.rowTuples(x)
-  if (is.null(msg)){
+  if (is.null(msg)) {
     
     # Include all other .valid.MethPat.* functions in this vector
-    msg <- c(.valid.MethPat.assays(x))
-  }
-  
-  if (is.null(msg)) {
-    return(TRUE)
-  } else{
-    return(msg)
+    c(.valid.MethPat.assays(x))
+  } else {
+    msg
   }
 }
 
