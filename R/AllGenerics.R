@@ -8,6 +8,8 @@
 ### rowTuples
 ###
 
+#' @importFrom methods setGeneric
+#' 
 #' @export
 setGeneric("rowTuples",
            function(x, ...) {
@@ -15,6 +17,8 @@ setGeneric("rowTuples",
            }
 )
 
+#' @importFrom methods setGeneric
+#' 
 #' @export
 setGeneric("rowTuples<-",
            function(x, ..., value) {
@@ -27,6 +31,8 @@ setGeneric("rowTuples<-",
 ### methinfo
 ###
 
+#' @importFrom methods setGeneric
+#' 
 #' @export
 setGeneric("methinfo", 
            function(x) {
@@ -34,6 +40,8 @@ setGeneric("methinfo",
            }
 )
 
+#' @importFrom methods setGeneric
+#' 
 #' @export
 setGeneric("methinfo<-", 
            function(x, value) {
@@ -45,6 +53,8 @@ setGeneric("methinfo<-",
 ### methtype
 ###
 
+#' @importFrom methods setGeneric
+#' 
 #' @export
 setGeneric("methtype", 
            function(x) {
@@ -52,6 +62,8 @@ setGeneric("methtype",
            }
 )
 
+#' @importFrom methods setGeneric
+#' 
 #' @export
 setGeneric("methtype<-", 
            function(x, value) {

@@ -30,11 +30,14 @@
 #' 
 #' @aliases MTuplesList
 #'
-#' @export
 #' @include MethInfo-class.R
 #' @author Peter Hickey
 #' @examples 
 #' ## TODO
+#' 
+#' @importFrom methods setClass
+#' 
+#' @export
 setClass("MTuplesList",
          contains = c("GTuplesList"),
          representation(
@@ -50,6 +53,8 @@ setClass("MTuplesList",
 ### Constructor
 ###
 
+#' @importFrom IRanges PartitioningByEnd
+#' 
 #' @export
 MTuplesList <- function(...) {
   listData <- list(...)
@@ -66,6 +71,7 @@ MTuplesList <- function(...) {
           !isTRUE(all(is.na(sapply(listData, size))))) {
       stop("all MTuples in '...' must have the same 'size'")
     }
+    # TODO: Why suppressWarnings()?
     unlistData <- suppressWarnings(do.call("c", unname(listData)))
   }
   
@@ -76,6 +82,8 @@ MTuplesList <- function(...) {
 ### Getters
 ###
 
+#' @importFrom methods setMethod
+#' 
 #' @export
 setMethod("methinfo", "MTuplesList", 
           function(x) {
@@ -83,6 +91,8 @@ setMethod("methinfo", "MTuplesList",
           }
 )
 
+#' @importFrom methods setMethod
+#' 
 #' @export
 setMethod("methtype", "MTuplesList", 
           function(x) {
@@ -94,6 +104,8 @@ setMethod("methtype", "MTuplesList",
 ### Setters
 ###
 
+#' @importFrom methods setReplaceMethod
+#' 
 #' @export
 setReplaceMethod("methinfo", c("MTuplesList", "MethInfo"), 
                  function(x, value) {
@@ -102,6 +114,8 @@ setReplaceMethod("methinfo", c("MTuplesList", "MethInfo"),
                  }
 )
 
+#' @importFrom methods setReplaceMethod
+#' 
 #' @export
 setReplaceMethod("methtype", c("MTuplesList", "character"), 
                  function(x, value) {
@@ -113,6 +127,10 @@ setReplaceMethod("methtype", c("MTuplesList", "character"),
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Going from MTuples to MTuplesList with extractList() and family.
 ###
+
+#' @importFrom methods setMethod
+#' @importMethodsFrom IRanges relistToClass
+#' 
 #' @export
 setMethod("relistToClass", "MTuples", 
           function(x) {
@@ -126,8 +144,10 @@ setMethod("relistToClass", "MTuples",
 ###
 
 # Based on GenomicRanges::showList
-my_showList <- function(object, showFunction, print.classinfo)
-{
+#' @importFrom utils head tail
+#' @importMethodsFrom GenomeInfoDb seqinfo
+#' @importMethodsFrom S4Vectors elementLengths
+my_showList <- function(object, showFunction, print.classinfo) {
   k <- length(object)
   cumsumN <- cumsum(elementLengths(object))
   N <- tail(cumsumN, 1)
@@ -146,20 +166,24 @@ my_showList <- function(object, showFunction, print.classinfo)
     }
     for (i in seq_len(k)) {
       cat(nms[i], "\n")
-      showFunction(object[[i]], margin="  ",
-                   print.classinfo=print.classinfo)
-      if (print.classinfo)
+      showFunction(object[[i]], margin = "  ", 
+                   print.classinfo = print.classinfo)
+      if (print.classinfo) {
         print.classinfo <- FALSE
+      }
       cat("\n")
     }
   } else {
     sketch <- function(x) c(head(x, 3), "...", tail(x, 3))
-    if (k >= 3 && cumsumN[3L] <= 20)
+    if (k >= 3 && cumsumN[3L] <= 20) {
       showK <- 3
-    else if (k >= 2 && cumsumN[2L] <= 20)
+    }
+    else if (k >= 2 && cumsumN[2L] <= 20) {
       showK <- 2
-    else
+    }
+    else {
       showK <- 1
+    }
     diffK <- k - showK
     nms <- names(object)[seq_len(showK)]
     defnms <- paste0("[[", seq_len(showK), "]]")
@@ -172,23 +196,25 @@ my_showList <- function(object, showFunction, print.classinfo)
     }
     for (i in seq_len(showK)) {
       cat(nms[i], "\n")
-      showFunction(object[[i]], margin="  ",
-                   print.classinfo=print.classinfo)
-      if (print.classinfo)
+      showFunction(object[[i]], margin = "  ",
+                   print.classinfo = print.classinfo)
+      if (print.classinfo) {
         print.classinfo <- FALSE
+      }
       cat("\n")
     }
     if (diffK > 0) {
       cat("...\n<", k - showK,
-          ifelse(diffK == 1, " more element>\n", " more elements>\n"),
-          sep="")
+          ifelse(diffK == 1, " more element>\n", " more elements>\n"), sep = "")
     }
   }
   cat("-------\n")
-  cat("seqinfo: ", summary(seqinfo(object)), "\n", sep="")
+  cat("seqinfo: ", summary(seqinfo(object)), "\n", sep = "")
   cat("methinfo: ", summary(methinfo(object)), "\n", sep = "")
 }
 
+#' @importFrom methods setMethod
+#' 
 #' @export
 setMethod("show", "MTuplesList",
           function(object) {

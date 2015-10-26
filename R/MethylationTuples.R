@@ -10,11 +10,25 @@
 #'
 #' @docType package
 #' @name MethylationTuples-package
-#' @import methods
-#' @import SummarizedExperiment
-#' @import SparseSummarizedExperiment
-#' @import GenomicTuples
+#' 
+# NOTE: For simplicity, just import the entire BiocGenerics package
 #' @import BiocGenerics
-#' @import IRanges
-#' @importFrom S4Vectors isTRUEorFALSE SimpleList DataFrame split
+#' 
 NULL
+
+#------------------------------------------------------------------------------
+# OLD IMPORTS BELOW THIS LINE
+# 
+# 
+# 
+# 
+# 
+# 
+# @import methods
+# @import SummarizedExperiment
+# @import SparseSummarizedExperiment
+# @import GenomicTuples
+# @import BiocGenerics
+# @import IRanges
+# @importFrom S4Vectors isTRUEorFALSE SimpleList DataFrame split
+

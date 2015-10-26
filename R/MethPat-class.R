@@ -217,12 +217,14 @@
 #'  package.
 #' }
 #' 
-#' @export
-#' 
 #' @aliases MethPat
 #' 
 #' @examples
 #' ## TODO
+#' 
+#' @importFrom methods setClass
+#' 
+#' @export
 setClass("MethPat", 
          contains = "RangedSummarizedExperiment"
 )
@@ -231,6 +233,7 @@ setClass("MethPat",
 ### Validity
 ###
 
+#' @importMethodsFrom SummarizedExperiment assayNames
 .valid.MethPat.assays <- function(x) {
 
   m <- x@rowRanges@size
@@ -266,7 +269,7 @@ setClass("MethPat",
   
   # First need to check that rowTuples is an MTuples object.
   # Otherwise some of the .valid.MethPat.* functions won't work
-  msg <- .valid.MethPat.rowTuples(x)
+  msg <- .valid.MP.rowTuples(x)
   if (is.null(msg)) {
     
     # Include all other .valid.MethPat.* functions in this vector
@@ -276,12 +279,16 @@ setClass("MethPat",
   }
 }
 
+#' @importFrom S4Vectors setValidity2
 setValidity2("MethPat", .valid.MethPat)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Constructor
 ###
 
+#' @importFrom methods new
+#' @importFrom S4Vectors DataFrame SimpleList
+#' @importFrom SummarizedExperiment SummarizedExperiment
 #' @export
 MethPat <- function(assays = SimpleList(), 
                     rowTuples = MTuples(), 
@@ -319,6 +326,12 @@ MethPat <- function(assays = SimpleList(),
 # combine(x, y, ..., nomatch = NA_integer_), that uses a complete union 
 # strategy, i.e., properly combines objects containing potentially duplicate 
 # samples and rows.
+#' @importMethodsFrom IRanges findOverlaps
+#' @importMethodsFrom S4Vectors endoapply subjectHits
+#' @importMethodsFrom SummarizedExperiment assayNames assays
+#' @importFrom methods setMethod
+#' @importFrom SummarizedExperiment Assays
+#' 
 #' @export
 setMethod("combine", 
           c("MethPat", "MethPat"), 
@@ -357,7 +370,7 @@ setMethod("combine",
                               assays(args[[j]], withDimnames = FALSE)[[i]]
               }
             }
-            assays <- SummarizedExperiment::Assays(assays)
+            assays <- Assays(assays)
             
             # WARNING: elementMetadata is dropped
             # TOOD: Properly combine elementMetadata slot
@@ -379,6 +392,9 @@ setMethod("combine",
 ### Getters
 ###
 
+#' @importFrom methods setMethod
+#' @importMethodsFrom SummarizedExperiment rowRanges
+#' 
 #' @export
 setMethod("rowTuples", "MethPat", 
           function(x, ...) {
@@ -389,6 +405,9 @@ setMethod("rowTuples", "MethPat",
 # TODO: Why isn't unique,SummarizedExperiment implemented; at least as 
 # unique(rowRanges(x))
 
+#' @importFrom methods setMethod
+#' @importMethodsFrom SummarizedExperiment rowRanges
+#' 
 #' @export 
 setMethod("methinfo", "MethPat", 
           function(x) {
@@ -396,6 +415,9 @@ setMethod("methinfo", "MethPat",
           }
 )
 
+#' @importFrom methods setMethod
+#' @importMethodsFrom SummarizedExperiment rowRanges
+#' 
 #' @export
 setMethod("methtype", "MethPat", 
           function(x) {
@@ -428,6 +450,9 @@ setMethod("methtype", "MethPat",
 # Most defined via inheritance to SummarizedExperiment or implemented in Tuples 
 # methods
 
+#' @importFrom methods setReplaceMethod
+#' @importMethodsFrom SummarizedExperiment "rowRanges<-"
+#' 
 #' @export
 setReplaceMethod("rowTuples", "MethPat",
                  function(x, ..., value) {
@@ -436,6 +461,8 @@ setReplaceMethod("rowTuples", "MethPat",
                  }
 )
 
+#' @importFrom methods setReplaceMethod
+#' 
 #' @export
 setReplaceMethod("methinfo", "MethPat", 
                  function(x, value) {
@@ -444,6 +471,8 @@ setReplaceMethod("methinfo", "MethPat",
                  }
 )
 
+#' @importFrom methods setReplaceMethod
+#' 
 #' @export
 setReplaceMethod("methtype", "MethPat", 
                  function(x, value) {
@@ -456,6 +485,9 @@ setReplaceMethod("methtype", "MethPat",
 ### Tuples methods
 ###
 
+#' @importFrom methods setMethod
+#' @importMethodsFrom GenomicTuples size
+#' 
 #' @export
 setMethod("size", "MethPat", 
           function(x) {
@@ -463,6 +495,9 @@ setMethod("size", "MethPat",
           }
 )
 
+#' @importFrom methods setMethod
+#' @importMethodsFrom GenomicTuples tuples
+#'
 #' @export
 setMethod("tuples", "MethPat", 
           function(x) {
@@ -470,6 +505,9 @@ setMethod("tuples", "MethPat",
           }
 )
 
+#' @importFrom methods setReplaceMethod
+#' @importMethodsFrom GenomicTuples "tuples<-"
+#' 
 #' @export
 setReplaceMethod("tuples", "MethPat", 
                  function(x, value) {
@@ -478,6 +516,8 @@ setReplaceMethod("tuples", "MethPat",
                  }
 )
 
+#' @importFrom methods setMethod
+#' @importMethodsFrom GenomicTuples IPD
 #' @export
 setMethod("IPD", "MethPat", 
           function(x) {

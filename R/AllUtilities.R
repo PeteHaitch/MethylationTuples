@@ -14,13 +14,13 @@
 #' order for a given value of m
 #' @param m The size of the m-tuple. Must be an int.
 #' 
-#' 
 #' @keywords internal
 #' 
 #' @examples
 #' .makeMethPatNames(1L)
 #' .makeMethPatNames(2L)
 #' .makeMethPatNames(3L)
+#' 
 #' @return A character vector
 .makeMethPatNames <- function(m) {
   m <- as.integer(m)
@@ -31,7 +31,9 @@
 #' Is the methylation type valid
 #' 
 #' @param methtype A character.
+#' 
 #' @keywords internal
+#' 
 #' @return Returns \code{TRUE} if a valid methylation type, \code{FALSE} 
 #' otherwise.
 .validMethtype <- function(methtype) {
@@ -53,8 +55,11 @@
 #' 
 #' @param x An object with a \code{strand}.
 #' 
+#' @importFrom S4Vectors runValue
+#' 
 #' @return \code{TRUE} if object is stranded, \code{FALSE} if unstranded and 
 #' \code{NA} if ambiguous.
+#' 
 #' @keywords internal
 .isStranded <- function(x) {
   s <- try(strand(x), silent = TRUE)
@@ -67,8 +72,9 @@
     } else if ("*" %in% levels && ("+" %in% levels || "-" %in% levels) ||
                length(levels) == 0) {
       return(FALSE)
-    } else
+    } else {
       TRUE
+    }
   }
 }
 

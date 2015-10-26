@@ -60,6 +60,8 @@
 #' merge(x, y)
 #'  
 #' @aliases MethInfo
+#' 
+#' @importFrom methods setClass
 #'  
 #' @export
 setClass("MethInfo", 
@@ -74,11 +76,15 @@ setClass("MethInfo",
 ###
 
 #' @aliases methtype
+#' 
+#' @importFrom methods setMethod
+#' 
 #' @export
 setMethod("methtype", "MethInfo", 
           function(x) {
             x@methtype
-          })
+          }
+)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Validity.
@@ -87,7 +93,7 @@ setMethod("methtype", "MethInfo",
 .valid.MethInfo <- function(x) {
   
   # Include all other .valid.MethInfo.* functions in this vector
-  msg <- c(.valid.MethInfo.methtype(x))
+  c(.valid.MethInfo.methtype(x))
 }
 
 .valid.MethInfo.methtype <- function(x) {
@@ -100,12 +106,15 @@ setMethod("methtype", "MethInfo",
   NULL
 }
 
+#' @importFrom S4Vectors setValidity2
 setValidity2("MethInfo", .valid.MethInfo)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Constructor.
 ###
 
+#' @importFrom methods new
+#'
 #' @export
 MethInfo <- function(methtype = NA_character_) {
   new("MethInfo", methtype = methtype)
@@ -150,7 +159,9 @@ setMethod("show", "MethInfo",
 ### Combining.
 ###
 
+#' @importFrom methods new
 .MethInfo.merge <- function(...) {
+  
   args <- unname(list(...))
   # Drop any NULLs
   arg_is_null <- sapply(args, is.null)
@@ -170,6 +181,8 @@ setMethod("show", "MethInfo",
   new("MethInfo", methtype = methtype) 
 }
 
+#' @importFrom methods setMethod
+#' 
 #' @export
 setMethod("merge", c("MethInfo", "MethInfo"), 
           function(x, y, ...) {
@@ -177,6 +190,8 @@ setMethod("merge", c("MethInfo", "MethInfo"),
           }
 )
 
+#' @importFrom methods setMethod
+#' 
 #' @export
 setMethod("merge", c("MethInfo", "missing"), 
           function(x, y, ...) { 
@@ -184,12 +199,16 @@ setMethod("merge", c("MethInfo", "missing"),
           }
 )
 
+#' @importFrom methods setMethod
+#' 
 #' @export
 setMethod("merge", c("MethInfo", "NULL"), 
           function(x, y, ...) {
             .MethInfo.merge(x, ...)
           })
 
+#' @importFrom methods setMethod
+#' 
 #' @export
 setMethod("merge", c("NULL", "MethInfo"), 
           function(x, y, ...) {
@@ -197,6 +216,8 @@ setMethod("merge", c("NULL", "MethInfo"),
           }
 )
 
+#' @importFrom methods setMethod
+#' 
 #' @export
 setMethod("merge", c("missing", "MethInfo"), 
           function(x, y, ...) {

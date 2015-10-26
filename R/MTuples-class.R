@@ -32,11 +32,14 @@
 #' 
 #' @aliases MTuples
 #'
-#' @export
 #' @include MethInfo-class.R
 #' @author Peter Hickey
 #' @examples
 #' ## TODO
+#' 
+#' @importFrom methods setClass
+#' 
+#' @export
 setClass("MTuples",
          contains = "GTuples",
          representation(
@@ -57,6 +60,9 @@ setClass("MTuples",
 
 # TODO: Improve the constructor to allow MTuples(seqnames, tuples, seqinfo, methinfo)
 
+#' @importFrom GenomicTuples GTuples
+#' @importFrom methods new
+#' 
 #' @export
 MTuples <- function(gtuples = GTuples(), methinfo = MethInfo()) {
   new("MTuples", gtuples, methinfo = methinfo)
@@ -68,6 +74,8 @@ MTuples <- function(gtuples = GTuples(), methinfo = MethInfo()) {
 ###
 
 # TODO: Need to keep this up to date with the show,GTuples-method
+#' @importMethodsFrom GenomeInfoDb seqinfo
+#' @importMethodsFrom S4Vectors mcols
 showMTuples <- function(x, margin = "", print.classinfo = FALSE, 
                         print.seqinfo = FALSE, print.methinfo = FALSE) {
   if (!identical(print.classinfo, FALSE)) {
@@ -119,10 +127,12 @@ showMTuples <- function(x, margin = "", print.classinfo = FALSE,
   }
 }
 
+#' @importFrom methods setMethod
+#' 
 #' @export
 setMethod("show", "MTuples", 
           function(object) {
-            showMTuples(object, margin="  ", print.seqinfo = TRUE, 
+            showMTuples(object, margin = "  ", print.seqinfo = TRUE, 
                         print.methinfo = TRUE)
           }
 )
@@ -131,7 +141,13 @@ setMethod("show", "MTuples",
 ### Combining
 ###
 
+#' @importClassesFrom S4Vectors DataFrame
+#' @importFrom GenomicTuples GTuples
+#' @importFrom S4Vectors isTRUEorFALSE
+#' @importMethodsFrom GenomeInfoDb seqnames
+#' @importMethodsFrom S4Vectors mcols
 .unlist_list_of_MTuples <- function(x, ignore.mcols = FALSE) {
+  
   if (!isTRUEorFALSE(ignore.mcols)) {
     stop("'ignore.mcols' must be TRUE or FALSE")
   }
@@ -155,6 +171,8 @@ setMethod("show", "MTuples",
       methinfo = ans_methinfo)
 }
 
+#' @importFrom methods setMethod
+#' 
 #' @export
 setMethod("c", "MTuples", 
           function(x, ..., ignore.mcols = FALSE, recursive = FALSE) {
@@ -180,6 +198,8 @@ setMethod("c", "MTuples",
 ### Getters
 ###
 
+#' @importFrom methods setMethod
+#' 
 #' @export
 setMethod("methinfo", "MTuples", 
           function(x) {
@@ -187,6 +207,8 @@ setMethod("methinfo", "MTuples",
           }
 )
 
+#' @importFrom methods setMethod
+#' 
 #' @export
 setMethod("methtype", "MTuples", 
           function(x) {
@@ -198,6 +220,8 @@ setMethod("methtype", "MTuples",
 ### Setters
 ###
 
+#' @importFrom methods setReplaceMethod
+#' 
 #' @export
 setReplaceMethod("methinfo", c("MTuples", "MethInfo"), 
                  function(x, value) {
@@ -206,6 +230,8 @@ setReplaceMethod("methinfo", c("MTuples", "MethInfo"),
                  }
 )
 
+#' @importFrom methods setReplaceMethod
+#' 
 #' @export
 setReplaceMethod("methtype", c("MTuples", "character"), 
                  function(x, value) {

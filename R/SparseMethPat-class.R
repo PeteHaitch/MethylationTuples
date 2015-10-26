@@ -6,6 +6,8 @@
 #' SparseMethPat objects
 #'
 #' @rdname SparseMethPat
+#' 
+#' @importFrom methods setClass
 #'
 #' @export
 setClass("SparseMethPat", 
@@ -16,18 +18,11 @@ setClass("SparseMethPat",
 ### Validity
 ###
 
-.valid.MethPat.rowTuples <- function(x) {
-  if (!is(x@rowRanges, "MTuples")) {
-    return(paste0("'rowTuples' of '", class(x), "' object must be an ", 
-                  "'MTuples' object."))
-  }
-  NULL
-}
-
+#' @importMethodsFrom SparseSummarizedExperiment sparseAssayNames
 .valid.SparseMethPat <- function(x) {
   
   # Check that rowTuples slot is an MTuples object
-  .valid.MethPat.rowTuples(x)
+  .valid.MP.rowTuples(x)
   
   # Check sparseAssays
   # NOTE: Only check these if object has size.
@@ -63,7 +58,8 @@ setClass("SparseMethPat",
   NULL
 }
 
-S4Vectors::setValidity2("SparseMethPat", .valid.SparseMethPat)
+#' @importFrom S4Vectors setValidity2
+setValidity2("SparseMethPat", .valid.SparseMethPat)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Constructor
@@ -74,6 +70,11 @@ S4Vectors::setValidity2("SparseMethPat", .valid.SparseMethPat)
 # sparse = TRUE returns a SparseMethPat object, otherwise a MethPat object.
 
 #' @rdname SparseMethPat
+#'
+#' @importFrom methods new
+#' @importFrom SparseSummarizedExperiment sparseAssays 
+#'                                        SparseSummarizedExperiment
+#' @importFrom S4Vectors DataFrame
 #'
 #' @export
 SparseMethPat <- function(sparseAssays = sparseAssays(), 
@@ -100,8 +101,6 @@ SparseMethPat <- function(sparseAssays = sparseAssays(),
 # Currently requires that colnames are unique across MethPat objects, i.e., you 
 # are combining objects that contain distinct samples.
 
-# TODO: A
-
 # TODO: A general combine,RangedSparseSummarizedExperiment-method would be 
 # great, e.g., combine(x, y, ..., nomatch = NA_integer_):
 # (1) [easier] using an incomplete union strategy, combining objects with 
@@ -114,6 +113,9 @@ SparseMethPat <- function(sparseAssays = sparseAssays(),
 ###
 
 #' @rdname SparseMethPat
+#' 
+#' @importFrom methods setMethod
+#' @importMethodsFrom SummarizedExperiment rowRanges
 #'
 #' @export
 setMethod("rowTuples", "SparseMethPat", 
@@ -136,6 +138,9 @@ setMethod("methinfo", "SparseMethPat",
 
 #' @rdname SparseMethPat
 #'
+#' @importFrom methods setMethod
+#' @importMethodsFrom SummarizedExperiment rowRanges
+#' 
 #' @export
 setMethod("methtype", "SparseMethPat", 
           function(x) {
@@ -169,6 +174,9 @@ setMethod("methtype", "SparseMethPat",
 # methods
 
 #' @rdname SparseMethPat
+#' 
+#' @importFrom methods setReplaceMethod
+#' @importMethodsFrom SummarizedExperiment "rowRanges<-"
 #'
 #' @export
 setReplaceMethod("rowTuples", "SparseMethPat",
@@ -179,6 +187,8 @@ setReplaceMethod("rowTuples", "SparseMethPat",
 )
 
 #' @rdname SparseMethPat
+#' 
+#' @importFrom methods setReplaceMethod
 #'
 #' @export
 setReplaceMethod("methinfo", "SparseMethPat", 
@@ -189,6 +199,8 @@ setReplaceMethod("methinfo", "SparseMethPat",
 )
 
 #' @rdname SparseMethPat
+#' 
+#' @importFrom methods setReplaceMethod
 #'
 #' @export
 setReplaceMethod("methtype", "SparseMethPat", 
@@ -203,6 +215,9 @@ setReplaceMethod("methtype", "SparseMethPat",
 ###
 
 #' @rdname SparseMethPat
+#' 
+#' @importFrom methods setMethod
+#' @importMethodsFrom GenomicTuples size
 #'
 #' @export
 setMethod("size", "SparseMethPat", 
@@ -212,6 +227,9 @@ setMethod("size", "SparseMethPat",
 )
 
 #' @rdname SparseMethPat
+#' 
+#' @importFrom methods setMethod
+#' @importMethodsFrom GenomicTuples tuples
 #'
 #' @export
 setMethod("tuples", "SparseMethPat", 
@@ -221,6 +239,9 @@ setMethod("tuples", "SparseMethPat",
 )
 
 #' @rdname SparseMethPat
+#' 
+#' @importFrom methods setReplaceMethod
+#' @importMethodsFrom GenomicTuples "tuples<-"
 #'
 #' @export
 setReplaceMethod("tuples", "SparseMethPat", 
@@ -231,6 +252,8 @@ setReplaceMethod("tuples", "SparseMethPat",
 )
 
 #' @rdname SparseMethPat
+#'
+#' @importMethodsFrom GenomicTuples IPD
 #'
 #' @export
 setMethod("IPD", "SparseMethPat", 
