@@ -11,3 +11,4 @@ notes_on_bissnp.Rmd
 ^\.Rprofile$
 .coveralls.R
 ^appveyor\.yml$
+NOTES.R

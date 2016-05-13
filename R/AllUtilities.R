@@ -78,8 +78,47 @@
   }
 }
 
-# TODO: Following a full release cycle, make this Defunct
-.stranded <- function(x) {
-  .Deprecated(".isStranded")
-  .isStranded(x)
+#' The slice names of a 3-dimensional array-like object
+#' 
+#' A non-exported helper function that generalises 
+#' \code{\link[DSArray]{slicenames}}.
+#' 
+#' @param x A 3-dimensional array-like object.
+#' 
+#' @note Assumes that \code{x} has a well-defined \code{dimnames} getter
+#' 
+#' @seealso \code{\link[DSArray]{slicenames}}
+#' 
+#' @importMethodsFrom DSArray slicenames
+#'
+#' @keywords internal 
+.slicenames <- function(x) {
+  if (is(x, "DSArray")) {
+    return(slicenames(x))
+  } else {
+    dimnames(x)[[3L]]
+  }
+}
+
+#' The slice names of a 3-dimensional array-like object
+#' 
+#' A non-exported helper function that generalises 
+#' \code{\link[DSArray]{slicenames<-}}.
+#' 
+#' @param A 3-dimensional array-like object
+#' 
+#' @note Assumes that \code{x} has a well-defined \code{dimnames<-} setter
+#' 
+#' @seealso \code{\link[DSArray]{slicenames<-}}
+#' 
+#' @importMethodsFrom DSArray slicenames<-
+#'
+#' @keywords internal 
+`.slicenames<-` <- function(x, value) {
+  if (is(x, "DSArray")) {
+    slicenames(x) <- value
+  } else {
+    dimnames(x)[[3L]] <- value
+  }
+  x
 }

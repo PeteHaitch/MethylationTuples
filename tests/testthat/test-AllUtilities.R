@@ -31,16 +31,16 @@ test_that(".validMethtype works", {
   expect_false(.validMethtype("CG/CHG"))
 })
 
-test_that(".stranded works", {
-  expect_true(.stranded(GRanges("1", IRanges(1:3, 1:3), strand = "+")))
-  expect_true(.stranded(GRanges("1", IRanges(1:3, 1:3), strand = "-")))
-  expect_false(.stranded(GRanges("1", IRanges(1:3, 1:3), strand = "*")))
-  expect_true(.stranded(GRanges("1", IRanges(1:3, 1:3), 
+test_that(".isStranded works", {
+  expect_true(.isStranded(GRanges("1", IRanges(1:3, 1:3), strand = "+")))
+  expect_true(.isStranded(GRanges("1", IRanges(1:3, 1:3), strand = "-")))
+  expect_false(.isStranded(GRanges("1", IRanges(1:3, 1:3), strand = "*")))
+  expect_true(.isStranded(GRanges("1", IRanges(1:3, 1:3), 
                                 strand = c("+", "-", "+"))))
-  expect_false(.stranded(GRanges("1", IRanges(1:3, 1:3), 
+  expect_false(.isStranded(GRanges("1", IRanges(1:3, 1:3), 
                                  strand = c("+", "*", "+"))))
-  expect_false(.stranded(GRanges("1", IRanges(1:3, 1:3), 
+  expect_false(.isStranded(GRanges("1", IRanges(1:3, 1:3), 
                                  strand = c("-", "*", "-"))))
-  expect_false(.stranded(GRanges("1", IRanges(1:3, 1:3), 
+  expect_false(.isStranded(GRanges("1", IRanges(1:3, 1:3), 
                                  strand = c("+", "*", "-"))))
 })

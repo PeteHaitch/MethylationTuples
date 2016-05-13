@@ -3,17 +3,9 @@
 ### -------------------------------------------------------------------------
 ###
 
-## TODO: Make a constructor that is tailored to the MethPat object and not just 
-## a thin-wrapper of SummarizedExperiment?
-## TODO: Look into using a file-based storage system like NetCDF or the ff 
-## package (see ?SummarizedExperiment and 
-## https://stat.ethz.ch/pipermail/bioc-devel/2015-September/007992.html).
-## TODO: Note, new("MethPat") won't return a valid object although MethPath()
-## will. This isn't ideal - I find it merely an annoyance but it may be a 
-## bigger problem than I realise.
 ## TODO: Usage section (will differ from RangedSummarizedExperiment usage 
 ## section)
-#' MethPat instances
+#' MethPat objects
 #' 
 #' @description
 #' The MethPat class is a matrix-like container where rows represent genomic 
@@ -27,60 +19,36 @@
 #' 
 #' MethPat is a subclass of the 
 #' \link[SummarizedExperiment]{RangedSummarizedExperiment} class and, as such, 
-#' (almost) all the methods documented in 
-#' \code{?\link[SummarizedExperiment]{RangedSummarizedExperiment}} also work on 
-#' a MethPat object. The methods documented below are additional methods that 
-#' are specific to MethPat objects. The key differences are:
+#' all the slots documented in 
+#' \code{?\link[SummarizedExperiment]{RangedSummarizedExperiment}} also exist 
+#' for a MethPat object. The key differences are:
 #' \itemize{
 #'  \item The \code{rowRanges} must be a \code{\link{MTuples}} 
-#'  object rather than a \code{\link[GenomicRanges]{GRanges}} object.
-#'  \item Certain \code{assays} are required. See \code{assays} argument below.
+#'  object rather than a \code{\link[GenomicRanges]{GRanges}} object. 
+#'  \item The \code{assays} must include an element named 'counts', 
+#'  which is a 3-dimensional array-like object storing the counts of 
+#'  methylation patterns at each genomic tuple; each row corresponds to a 
+#'  genomic tuple, each column to a sample, and each slice to a particular 
+#'  methylation pattern. For example, for a MethPat object containing the 
+#'  methylation patterns at 10 2-tuples for 5 samples has a 'counts' assay with 
+#'  10 rows, 5 columns, and \eqn{2^3 = 8} slices (named \code{MMM}, \code{MMU}, 
+#'  \code{MUM}, \code{MUU}, \code{UMM}, \code{UMU}, \code{UUM}, and \code{UUU}, 
+#'  where \code{M} = methylated and \code{U} = unmethylated). The counts can be 
+#'  stored using any 3-dimensional array-like object. The 
+#'  \linkS4class{DSArray} (in-memory) and \linkS4class{HDF5Array} 
+#'  (on-disk) representations are particularly useful compared to using the 
+#'  \link[base]{array} representation when the 
+#'  \code{\link[GenomicTuples]{size}} of the tuples is > 1. 
 #' }
-#' 
-#' @param assays A \code{\link[base]{list}} or 
-#' \code{\link[S4Vectors]{SimpleList}} of matrix elements. All elements of the 
-#' list must have the same dimensions, and dimension names (if present) must be 
-#' consistent across elements and with row names of \code{rowRanges} and 
-#' \code{colData}. Specifically, for a MethPat object containing the 
-#' methylation patterns at genomic tuples of \code{\link[GenomicTuples]{size}} 
-#' \eqn{= m}, there are \eqn{2^m} required assays. For example, for 2-tuples 
-#' there are 4 required assays that must be named \code{MM}, \code{MU}, 
-#' \code{UM} and \code{UU} (\code{M} = methylated, \code{U} = unmethylated).
-#' \strong{TODO:} Should the \code{.makeMethPatNames} function be exported 
-#' and referenced here?
-#' @param rowTuples A \code{\link{MTuples}} instance describing 
-#' the genomic tuple of the methylation loci. Names, if present, become the 
-#' row names of the MethPat. The length of the \code{\link{MTuples}} 
-#' must equal the number of rows of the matrices in \code{assays}.
-#' @param colData An optional, but recommended, 
-#' \code{\link[S4Vectors]{DataFrame}} describing the samples. Row names, if 
-#' present, become the column names of the MethPat object.
-#' @param metadata An optional \code{\link[base]{list}} of arbitrary content 
-#' describing the overall experiment.
-#' @param ... For \code{MethPat}, S4 methods \code{\link[base]{list}} and 
-#' \code{\link[base]{matrix}}, arguments identical to those of the 
-#' \code{\link[S4Vectors]{SimpleList}} method. 
-#' For \code{rowTuples}, ignored.
-#' \strong{TODO}: Check whether 
-#' this param can be deleted from docs since the documentation is rather 
-#' complex (inherited from RangedSummarizedExperiment).
-#' @param x A MethPat object. The \code{rowTuples} setter will also accept a 
-#' \link[SummarizedExperiment]{SummarizedExperiment0} object and will first 
-#' coerce it to a \link[SummarizedExperiment]{RangedSummarizedExperiment} 
-#' before it sets \code{value} on it. \strong{TODO}: Check whether this 
-#' actually works.
-#' @param value A \link{MTuples} or \link{MTuplesList} object.
-#' @param subset An expression which, when evaluated in the context of 
-#' \code{rowTuples(x)}, is a logical vector indicating elements of rows to 
-#' keep: missing values are taken as false.
-#' @param select An expression which, when evaluated in the context of 
-#' \code{colData(x)}, is a logical vector indicating elements or rows to 
-#' keep: missing values are taken as false.
+#' Similarly, all the methods documented in 
+#' \code{?\link[SummarizedExperiment]{RangedSummarizedExperiment}} also work on 
+#' a MethPat object. The methods documented below are additional methods that 
+#' are specific to MethPat objects.
 #' 
 #' @section Details:
 #' The rows of a MethPat object represent tuples (in genomic coordinates) of 
 #' interest. The tuples of interest are described by a \link{MTuples} or a 
-#' \link{MTuplesList} object, accessible using the \code{rowTuples} function, 
+#' \link{MTuplesList} object, accessible using the \code{rowTuples} method, 
 #' described below. The \link{MTuples} and \link{MTuplesList} classes contain 
 #' sequence (e.g., chromosome) name, genomic coordinates, and strand 
 #' information, along with methylation-type information (e.g., CG or CHG). Each 
@@ -90,8 +58,10 @@
 #' not.
 #' 
 #' @section Constructor:
-#' MethPat instances are constructed using the \code{MethPat} function with 
-#' arguments outlined above.
+#' MethPat instances are typically constructed by importing data using 
+#' \code{\link{read.methtuple}}, but they can also be created using the 
+#' \code{MethPat} constructor using arguments similar to the 
+#' \code{\link[SummarizedExperiment]{SummarizedExperiment}} constructor.
 #' 
 #' @section Accessors:
 #' In the following code snippets, \code{x} is a MethPat instance.
@@ -100,7 +70,8 @@
 #'  \item{\code{rowTuples(x)}, \code{rowTuples(x) <- value}:}{Get or set the row 
 #'  data. \code{value} is a \link{MTuples} or \link{MTuplesList} object. Row 
 #'  names of \code{value} must be \code{NULL} or consistent with the existing 
-#'  row names of \code{x}}.
+#'  row names of \code{x}. These are just aliases for \code{rowRanges} and 
+#'  \code{rowRanges<-}, respectively.}
 #' }
 #' 
 #' @section MTuples compatibility (rowTuples access):
@@ -109,7 +80,7 @@
 #' 
 #' Supported operations include: \code{\link{compare}}, 
 #' \code{\link{duplicated}}, \code{\link{end}}, \code{\link{end<-}}, 
-#' \code{\link{granges}}, \code{\link{match}}, \code{\link{mcols}}, 
+#' \code{\link[GTuples]{gtuples}}, \code{\link{match}}, \code{\link{mcols}}, 
 #' \code{\link{mcols<-}}, \code{\link{methinfo}}, \code{\link{methtype}}, 
 #' \code{\link{order}}, \code{\link{ranges}}, \code{\link{ranges<-}}, 
 #' \code{\link{seqinfo}}, \code{\link{seqinfo<-}}, \code{\link{seqnames}},
@@ -137,13 +108,6 @@
 #' \code{gaps}, \code{reduce}, \code{unique}) or have not yet been implemented 
 #' (\code{Ops}, \code{map}, \code{window}, \code{window<-}).
 #' 
-#' \strong{WARNING:} The preferred getter and setter of tuple information are 
-#' \code{rowTuples(x)} and \code{rowTuples(x) <- value}, respectively. 
-#' \code{rowRanges(x)}/\code{granges(x)} and \code{rowRanges(x) <- value}/
-#' \code{granges(x) <- value} have the same effect since \code{rowTuples} 
-#' is merely more informatively named alias to \code{rowRanges} for 
-#' \code{MethPat} objects.
-#' 
 #' \strong{WARNING:} The use of \code{ranges(x)}, \code{ranges(x) <- value}, 
 #' \code{start(x)}, \code{start(x) <- value}, \code{end(x)}, 
 #' \code{end(x) <- value}, \code{width(x)} and \code{width(x) <- value} are 
@@ -155,11 +119,11 @@
 #' In the code snippets below, \code{x} is a MethPat object.
 #' 
 #' \describe{
-#'  \item{\code{subset(x, subset, select):}{Create a subset of \code{x} using 
+#'  \item{\code{subset(x, subset, select):}}{Create a subset of \code{x} using 
 #'  an expression \code{subset} referring to columns of \code{rowTuples(x)} 
 #'  (including "seqnames", "start", "end", "width", "strand", and 
 #'  \code{names(mcols(x))}) and/or \code{select} referring to column names of 
-#'  \code{colData(x)}}}.
+#'  \code{colData(x)}.}
 #' }
 #' 
 #' @section Extension:
@@ -185,17 +149,6 @@
 #'  
 #'  \code{metadata} from all objects are combined into a 
 #'  \code{list} with no name checking.}
-#'  
-#'  \item{\code{combine(x, y, ...)}:}{\code{combine} combines objects with 
-#'  different tuples (\code{rowTuples}) and different samples (columns in 
-#'  \code{assays}) using an "incomplete" union strategy. Please read 
-#'  \code{\link[BiocGenerics]{combine}} for the difference between the union 
-#'  and intersection strategies; the current method is "incomplete" because 
-#'  it requires that the samples (columns in \code{assays}) are distinct 
-#'  across \code{x}, \code{y} and \code{...}. This behaviour may change in 
-#'  future versions so that data from the same sample that is stored across 
-#'  multiple objects can be safely combined.
-#'  }
 #' }
 #' 
 #' @author Peter Hickey, \email{peter.hickey@@gmail.com}, building on all the 
@@ -222,8 +175,8 @@
 #' @examples
 #' ## TODO
 #' 
+#' @importClassesFrom SummarizedExperiment RangedSummarizedExperiment
 #' @importFrom methods setClass
-#' 
 #' @export
 setClass("MethPat", 
          contains = "RangedSummarizedExperiment"
@@ -233,28 +186,36 @@ setClass("MethPat",
 ### Validity
 ###
 
-#' @importMethodsFrom SummarizedExperiment assayNames
+#' @importFrom methods is
+.valid.MethPat.rowTuples <- function(x) {
+  if (!is(x@rowRanges, "MTuples")) {
+    return(paste0("'rowTuples' of '", class(x), "' object must be an ", 
+                  "'MTuples' object."))
+  }
+  NULL
+}
+
+
+#' @importMethodsFrom DSArray slicenames
+#' @importMethodsFrom SummarizedExperiment assayNames assay
 .valid.MethPat.assays <- function(x) {
 
-  m <- x@rowRanges@size
+  m <- size(x@rowRanges)
   if (!is.na(m)) {
     # Check assay names and, if assay names are okay, check counts are all >= 0
     an <- assayNames(x)
-    if (is.null(an)) {
-      return(paste0("Assay names must include all of: '", 
-                    paste0(.makeMethPatNames(m), 
-                           collapse = "', '"), "'"))
+    if (is.null(an) || !("counts" %in% an)) {
+      return("Assays must include an element named 'counts'")
     } else {
-      if (any(is.na(match(.makeMethPatNames(m), an)))) {
-        return(paste0("Assay names must include all of: '", 
+      if (any(is.na(match(.makeMethPatNames(m), 
+                          .slicenames(assay(x, "counts")))))) {
+        return(paste0("'counts' slicenames must be: '", 
                       paste0(.makeMethPatNames(m), collapse = "', '"), "'"))
       } else {
         # Note from bsseq: benchmarking shows that min(assay()) < 0 is faster 
         # than any(assay() < 0) if it is false
-        if (min(sapply(assays(x)[.makeMethPatNames(m)], 
-                       min, na.rm = TRUE), na.rm = TRUE) < 0) {
-          return(paste0("All counts of methylation patterns (stored in assays ", 
-                 "slot) must be non-negative integers."))
+        if (min(assay(x, "counts")) < 0) {
+          return("All 'counts' must be non-negative integers.")
         }
       }
     }
@@ -262,14 +223,14 @@ setClass("MethPat",
   NULL
 }
 
-# TODO: Some sort of validity check on assays, e.g., I require them to be 
-#       integers.
-
+# TODO: Some sort of validity check on assays? E.g., they should be counts 
+#       (integers) but this could be a costly check when the assays use the 
+#       DSArray or HDF5Array class.
 .valid.MethPat <- function(x) {
   
   # First need to check that rowTuples is an MTuples object.
   # Otherwise some of the .valid.MethPat.* functions won't work
-  msg <- .valid.MP.rowTuples(x)
+  msg <- .valid.MethPat.rowTuples(x)
   if (is.null(msg)) {
     
     # Include all other .valid.MethPat.* functions in this vector
@@ -286,28 +247,61 @@ setValidity2("MethPat", .valid.MethPat)
 ### Constructor
 ###
 
-#' @importFrom methods new
-#' @importFrom S4Vectors DataFrame SimpleList
+#' @rdname MethPat-class
+#' @param assays A \link{list} of \linkS4class{SimpleList} of 
+#' assays. Must include a 3-dimensional array-like assay named 'counts'; see 
+#' 'Description' for further details.
+#' @param rowTuples A \linkS4class{MTuples} object; see 'Description' for 
+#' further details.
+#' @param ... Additional arguments passed down to the 
+#' \code{\link[SummarizedExperiment]{SummarizedExperiment}} constructor, such 
+#' as \code{colData} and \code{metadata}. Note that this may not include 
+#' \code{rowRanges} or \code{rowData} since MethPat objects instead use 
+#' \code{rowTuples}.
+#' @importFrom methods callNextMethod setMethod
+#' @importFrom S4Vectors SimpleList
 #' @importFrom SummarizedExperiment SummarizedExperiment
+#' 
 #' @export
-MethPat <- function(assays = SimpleList(), 
-                    rowTuples = MTuples(), 
-                    colData = DataFrame(), 
-                    metadata = list()) {
-  
-  #   if (missing(colData) && 0L != length(assays)) {
-  #     nms <- colnames(assays[[1]])
-  #     if (is.null(nms) && 0L != ncol(assays[[1]])) {
-  #       stop("'MethPat' assay colnames must not be NULL.")
-  #     }
-  #     colData <- DataFrame(row.names = nms)
-  #   }
-  
-  new("MethPat", SummarizedExperiment(assays = assays, 
-                                      rowRanges = rowTuples, 
-                                      colData = colData,
-                                      metadata = metadata))
-}
+setMethod("MethPat", "ANY", 
+          function(assays, rowTuples, ...) {
+            dots <- list(...)
+            if ("rowRanges" %in% names(dots) | 
+                "rowData" %in% names(dots)) {
+              stop("'...' must not include 'rowRanges' or 'rowData'")
+            }
+            if (!is.list(assays) | !is(assays, "List")) {
+              assays <- SimpleList(counts = assays)
+            }
+            if (missing(rowTuples)) {
+              rowTuples <- MTuples()
+            }
+           new("MethPat", SummarizedExperiment(assays = assays, 
+                                               rowRanges = rowTuples, 
+                                               ...))
+          }
+)
+
+#' @rdname MethPat-class
+#' @inheritParams MethPat
+#' @importFrom methods callNextMethod setMethod
+#' @importFrom S4Vectors SimpleList
+#' @export
+setMethod("MethPat", "missing", 
+          function(assays, rowTuples, ...) {
+            dots <- list(...)
+            if ("rowRanges" %in% names(dots) | 
+                "rowData" %in% names(dots)) {
+              stop("'...' must not include 'rowRanges' or 'rowData'")
+            }
+            if (missing(rowTuples)) {
+              rowTuples <- MTuples()
+            }
+            new("MethPat", SummarizedExperiment(SimpleList(), 
+                                                rowRanges = rowTuples, 
+                                                ...))
+          }
+)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Combining
@@ -317,84 +311,21 @@ MethPat <- function(assays = SimpleList(),
 # cbind,SummarizedExperiment-method and rbind,SummarizedExperiment-method, 
 # respectively.
 
-# I also define a combine,MethPat-method using a (incomplete) union strategy.
-# Currently requires that colnames are unique across MethPat objects, i.e., you 
-# are combining objects that contain distinct samples.
-
-# WARNING: elementMetadata is dropped
 # TODO: A general combine,SummarizedExperiment-method would be great, e.g.,
-# combine(x, y, ..., nomatch = NA_integer_), that uses a complete union 
-# strategy, i.e., properly combines objects containing potentially duplicate 
-# samples and rows.
-#' @importMethodsFrom IRanges findOverlaps
-#' @importMethodsFrom S4Vectors endoapply subjectHits
-#' @importMethodsFrom SummarizedExperiment assayNames assays
-#' @importFrom methods setMethod
-#' @importFrom SummarizedExperiment Assays
-#' 
-#' @export
-setMethod("combine", 
-          c("MethPat", "MethPat"), 
-          function(x, y, ...) {
-            args <- list(x, y, ...)
-            rowTuples <- do.call(c, lapply(args, rowTuples))
-            # Remove duplicate tuples
-            rowTuples <- unique(rowTuples)
-            nt <- length(rowTuples)
-            colnames <- unlist(lapply(args, colnames))
-            if (anyDuplicated(colnames)) {
-              stop("Cannot combine 'MethPat' objects with duplicate colnames.")
-            }
-            colData <- do.call(rbind, lapply(args, colData))
-            an <- lapply(args, assayNames)
-            if (any(sapply(an, function(x, y) any(is.na(match(x, y))), 
-                           y = an[[1]]))) {
-              stop("'MethPat' objects must all contain the same assays.")
-            }
-            
-            # TODO: I suspect that there are faster and more efficient ways to 
-            # combine the assays
-            # Create assays of the correct dimension (fill with NA_integer_)
-            assays <- endoapply(
-              assays(args[[1]], withDimnames = FALSE), function(i, nt, colnames) {
-                matrix(NA_integer_, nrow = nt, ncol = length(colnames), 
-                       dimnames = list(NULL, c(colnames(x), colnames(y))))
-              }, nt = nt, colnames = colnames)
-            
-            # Fill the assays with the values
-            for (j in seq_along(args)) {
-              ol <- findOverlaps(args[[j]], rowTuples, type = "equal")
-              for (i in seq_along(assays)) {
-                assays[[i]][subjectHits(ol),
-                            match(colnames(args[[j]]), colnames)] <- 
-                              assays(args[[j]], withDimnames = FALSE)[[i]]
-              }
-            }
-            assays <- Assays(assays)
-            
-            # WARNING: elementMetadata is dropped
-            # TOOD: Properly combine elementMetadata slot
-            elementMetadata <- x@elementMetadata
-            elementMetadata@nrows <- length(rowTuples)
-
-            metadata <- do.call(c, lapply(args, metadata))
-            
-            BiocGenerics:::replaceSlots(args[[1L]], 
-                                        rowRanges = rowTuples,
-                                        colData = colData, 
-                                        assays = assays,
-                                        metadata = metadata,
-                                        elementMetadata = elementMetadata)
-          }
-)
+#       combine(x, y, ..., nomatch = NA_integer_), that uses a complete union 
+#       strategy, i.e., properly combines objects containing potentially 
+#       duplicate samples and rows. This would require that any array-like 
+#       class that are used as elements in the assays slot have a well-defined 
+#       combine() method.
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Getters
 ###
 
+#' @rdname MethPat-class
+#' @param x A MethPat object.
 #' @importFrom methods setMethod
 #' @importMethodsFrom SummarizedExperiment rowRanges
-#' 
 #' @export
 setMethod("rowTuples", "MethPat", 
           function(x, ...) {
@@ -402,12 +333,10 @@ setMethod("rowTuples", "MethPat",
           }
 )
 
-# TODO: Why isn't unique,SummarizedExperiment implemented; at least as 
-# unique(rowRanges(x))
-
+#' @rdname MethPat-class
+#' @inheritParams rowTuples
 #' @importFrom methods setMethod
 #' @importMethodsFrom SummarizedExperiment rowRanges
-#' 
 #' @export 
 setMethod("methinfo", "MethPat", 
           function(x) {
@@ -415,9 +344,10 @@ setMethod("methinfo", "MethPat",
           }
 )
 
+#' @rdname MethPat-class
+#' @inheritParams rowTuples
 #' @importFrom methods setMethod
 #' @importMethodsFrom SummarizedExperiment rowRanges
-#' 
 #' @export
 setMethod("methtype", "MethPat", 
           function(x) {
@@ -432,16 +362,17 @@ setMethod("methtype", "MethPat",
 ### Splitting
 ###
 
-# Defined via inheritance to split,SummarizedExperiment-method, which in turn 
-# calls IRanges::splitAsList. Therefore, IRanges must be listed in Imports. 
-# NB: Can't selectivly import IRanges::splitAsList because this function calls 
-# other functions listed in IRanges, hence it is easiest to simply import the 
-# entire IRanges package.
-
 # TODO: split,MethPat,Rle-method has an ambiguous signature. According to 
-# http://adv-r.had.co.nz/S4.html this isn't desirable. This is the note - 
-# "Note: method with signature ‘SummarizedExperiment#ANY’ chosen for function 
-# ‘split’, target signature ‘MethPat#Rle’ "ANY#Vector" would also be valid."
+#       http://adv-r.had.co.nz/S4.html this isn't desirable. This is the note - 
+#       "Note: method with signature ‘SummarizedExperiment#ANY’ chosen for 
+#       function ‘split’, target signature ‘MethPat#Rle’ "ANY#Vector" would 
+#       also be valid."
+#       The same warning can be triggered by:
+#       example("RangedSummarizedExperiment)
+#       split(rse, seqnames(rse))
+#       ?RangedSummarizedExperiment does note that split() isn't supported for 
+#       RangedSummarizedExperiment objects, but it "appears" to work, which 
+#       might be confusing.
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Setters
@@ -450,9 +381,11 @@ setMethod("methtype", "MethPat",
 # Most defined via inheritance to SummarizedExperiment or implemented in Tuples 
 # methods
 
+#' @rdname MethPat-class
+#' @inheritParams rowTuples
+#' @param value A replacement object of the appropriate class.
 #' @importFrom methods setReplaceMethod
 #' @importMethodsFrom SummarizedExperiment "rowRanges<-"
-#' 
 #' @export
 setReplaceMethod("rowTuples", "MethPat",
                  function(x, ..., value) {
@@ -461,8 +394,9 @@ setReplaceMethod("rowTuples", "MethPat",
                  }
 )
 
+#' @rdname MethPat-class
+#' @inheritParams rowTuples<-
 #' @importFrom methods setReplaceMethod
-#' 
 #' @export
 setReplaceMethod("methinfo", "MethPat", 
                  function(x, value) {
@@ -471,8 +405,10 @@ setReplaceMethod("methinfo", "MethPat",
                  }
 )
 
+#' @rdname MethPat-class
+#' @inheritParams rowTuples<-
 #' @importFrom methods setReplaceMethod
-#' 
+#' @importFrom methods setReplaceMethod
 #' @export
 setReplaceMethod("methtype", "MethPat", 
                  function(x, value) {
@@ -485,9 +421,10 @@ setReplaceMethod("methtype", "MethPat",
 ### Tuples methods
 ###
 
+#' @rdname MethPat-class
+#' @inheritParams rowTuples
 #' @importFrom methods setMethod
 #' @importMethodsFrom GenomicTuples size
-#' 
 #' @export
 setMethod("size", "MethPat", 
           function(x) {
@@ -495,9 +432,10 @@ setMethod("size", "MethPat",
           }
 )
 
+#' @rdname MethPat-class
+#' @inheritParams rowTuples
 #' @importFrom methods setMethod
 #' @importMethodsFrom GenomicTuples tuples
-#'
 #' @export
 setMethod("tuples", "MethPat", 
           function(x) {
@@ -505,9 +443,10 @@ setMethod("tuples", "MethPat",
           }
 )
 
+#' @rdname MethPat-class
+#' @inheritParams rowTuples<-
 #' @importFrom methods setReplaceMethod
 #' @importMethodsFrom GenomicTuples "tuples<-"
-#' 
 #' @export
 setReplaceMethod("tuples", "MethPat", 
                  function(x, value) {
@@ -516,6 +455,8 @@ setReplaceMethod("tuples", "MethPat",
                  }
 )
 
+#' @rdname MethPat-class
+#' @inheritParams rowTuples
 #' @importFrom methods setMethod
 #' @importMethodsFrom GenomicTuples IPD
 #' @export
@@ -531,4 +472,3 @@ setMethod("IPD", "MethPat",
 
 # TODO: Re-write based on show,SummarizedExperiment-method. Be sure to include 
 # methinfo and rename rowRanges rowTuples
-# 

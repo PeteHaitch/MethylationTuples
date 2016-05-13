@@ -75,10 +75,9 @@ setClass("MethInfo",
 ### Getters.
 ###
 
-#' @aliases methtype
-#' 
+#' @rdname MethInfo-class
+#' @param x A MethInfo object.
 #' @importFrom methods setMethod
-#' 
 #' @export
 setMethod("methtype", "MethInfo", 
           function(x) {
@@ -113,8 +112,12 @@ setValidity2("MethInfo", .valid.MethInfo)
 ### Constructor.
 ###
 
+#' @rdname MethInfo-class
+#' @param methtype A character vector of methylation types: \code{"CG"} 
+#' (\emph{i.e.}, CpG), \code{"CHG"}, \code{"CHH"}, \code{"CNN"} or some 
+#' combination of these, e.g., \code{c("CG", "CHG")} (\code{NA_character_} is 
+#' also allowed, but not recommended).
 #' @importFrom methods new
-#'
 #' @export
 MethInfo <- function(methtype = NA_character_) {
   new("MethInfo", methtype = methtype)
@@ -124,6 +127,13 @@ MethInfo <- function(methtype = NA_character_) {
 ### Setters.
 ###
 
+#' @rdname MethInfo-class
+#' @inheritParams methype
+#' @param value A character vector of methylation types: \code{"CG"} 
+#' (\emph{i.e.}, CpG), \code{"CHG"}, \code{"CHH"}, \code{"CNN"} or some 
+#' combination of these, e.g., \code{c("CG", "CHG")} (\code{NA_character_} is 
+#' also allowed, but not recommended).
+#' @importFrom methods setReplaceMethod
 #' @export
 setReplaceMethod("methtype", c("MethInfo", "character"),
                  function(x, value) { 
@@ -136,6 +146,9 @@ setReplaceMethod("methtype", c("MethInfo", "character"),
 ### Show.
 ###
 
+#' @rdname MethInfo-class
+#' @importFrom methods setMethod
+#' @importMethodsFrom S4Vectors summary
 #' @export
 setMethod("summary", "MethInfo", 
           function(object, ...) {
@@ -148,6 +161,8 @@ setMethod("summary", "MethInfo",
           }
 )
 
+#' @rdname MethInfo-class
+#' @importFrom methods setMethod
 #' @export
 setMethod("show", "MethInfo", 
           function(object) {
@@ -181,8 +196,11 @@ setMethod("show", "MethInfo",
   new("MethInfo", methtype = methtype) 
 }
 
+#' @rdname MethInfo-class
+#' @param y,object A MethInfo object.
+#' @param ... Additional MethInfo objects.
 #' @importFrom methods setMethod
-#' 
+#' @importMethodsFrom S4Vectors merge
 #' @export
 setMethod("merge", c("MethInfo", "MethInfo"), 
           function(x, y, ...) {
@@ -190,8 +208,9 @@ setMethod("merge", c("MethInfo", "MethInfo"),
           }
 )
 
+#' @rdname MethInfo-class
 #' @importFrom methods setMethod
-#' 
+#' @importMethodsFrom S4Vectors merge
 #' @export
 setMethod("merge", c("MethInfo", "missing"), 
           function(x, y, ...) { 
@@ -199,16 +218,18 @@ setMethod("merge", c("MethInfo", "missing"),
           }
 )
 
+#' @rdname MethInfo-class
 #' @importFrom methods setMethod
-#' 
+#' @importMethodsFrom S4Vectors merge
 #' @export
 setMethod("merge", c("MethInfo", "NULL"), 
           function(x, y, ...) {
             .MethInfo.merge(x, ...)
           })
 
+#' @rdname MethInfo-class
 #' @importFrom methods setMethod
-#' 
+#' @importMethodsFrom S4Vectors merge
 #' @export
 setMethod("merge", c("NULL", "MethInfo"), 
           function(x, y, ...) {
@@ -216,8 +237,9 @@ setMethod("merge", c("NULL", "MethInfo"),
           }
 )
 
+#' @rdname MethInfo-class
 #' @importFrom methods setMethod
-#' 
+#' @importMethodsFrom S4Vectors merge
 #' @export
 setMethod("merge", c("missing", "MethInfo"), 
           function(x, y, ...) {

@@ -3,8 +3,6 @@
 ### -------------------------------------------------------------------------
 ###
 
-# TODO: Base documentation on GTuples
-# TODO: Methods to create MTuples from GRanges and BSgenome objects.
 #' MTuples objects
 #' 
 #' @description
@@ -12,23 +10,13 @@
 #' of methylation loci in a genome.
 #' 
 #' @details
-#' The \code{MTuples} class extends the 
-#' \code{\link[GenomicTuples]{GTuples}} class by adding the 
-#' \code{methinfo} slot, which records the information about the type of 
-#' methylation loci that are stored in the object.
-#' 
-#' @usage
-#' MTuples(gtuples = GTuples(), methinfo = MethInfo())
-#' 
-#' @param gtuples A \code{\link{GTuples}} object containing the positions of 
-#' the methylation loci as genomic tuples.
-#' @param methinfo A \code{\link{MethInfo}} object containing information about 
-#' the methylation loci present in the \code{MTuples} object.
+#' The \code{MTuples} class extends the \linkS4class{GTuples} class by adding 
+#' the \code{methinfo} slot, which records the information about the type of 
+#' methylation loci that are stored in the MTuplesList object.
 #'  
 #' @seealso \code{\link{findMTuples}} to find genomic tuples of methylation 
-#' loci in a \code{\link[BSgenome]{BSgenome}} object, and
-#' \code{\link[GenomicTuples]{GTuples}} for the class from which \code{MTuples} 
-#' inherits.
+#' loci in a \linkS4class{BSgenome} object, and \linkS4class{GTuples} for the 
+#' class from which MTuples inherits.
 #' 
 #' @aliases MTuples
 #'
@@ -37,8 +25,8 @@
 #' @examples
 #' ## TODO
 #' 
+#' @importClassesFrom GenomicTuples GTuples
 #' @importFrom methods setClass
-#' 
 #' @export
 setClass("MTuples",
          contains = "GTuples",
@@ -60,6 +48,11 @@ setClass("MTuples",
 
 # TODO: Improve the constructor to allow MTuples(seqnames, tuples, seqinfo, methinfo)
 
+#' @rdname MTuples-class
+#' @param gtuples A \linkS4class{GTuples} object containing the positions of 
+#' the methylation loci as genomic tuples.
+#' @param methinfo A \linkS4class{MethInfo} object containing information 
+#' about the methylation loci present in the \code{MTuples} object.
 #' @importFrom GenomicTuples GTuples
 #' @importFrom methods new
 #' 
@@ -67,7 +60,6 @@ setClass("MTuples",
 MTuples <- function(gtuples = GTuples(), methinfo = MethInfo()) {
   new("MTuples", gtuples, methinfo = methinfo)
 }
-
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Show
@@ -110,25 +102,26 @@ showMTuples <- function(x, margin = "", print.classinfo = FALSE,
   #    out <- rbind(classinfo, out)
   #}
   
-  if (nrow(out) != 0L){ 
+  if (nrow(out) != 0L) { 
     rownames(out) <- paste0(margin, rownames(out))
   }
   print(out, quote = FALSE, right = TRUE)
   if (print.seqinfo & print.methinfo) {
     cat(margin, "---\n", sep = "")
-    cat(margin, "seqinfo: ", summary(seqinfo(x)), "\n", sep ="")
+    cat(margin, "seqinfo: ", summary(seqinfo(x)), "\n", sep = "")
     cat(margin, "methinfo: ", summary(methinfo(x)), "\n", sep = "")
   } else if (print.seqinfo) {
     cat(margin, "---\n", sep = "")
-    cat(margin, "seqinfo: ", summary(seqinfo(x)), "\n", sep ="")
+    cat(margin, "seqinfo: ", summary(seqinfo(x)), "\n", sep = "")
   } else if (print.methinfo) {
     cat(margin, "---\n", sep = "")
     cat(margin, "methinfo: ", summary(methinfo(x)), "\n", sep = "")
   }
 }
 
+#' @rdname MTuples-class
+#' @inheritParams methinfo
 #' @importFrom methods setMethod
-#' 
 #' @export
 setMethod("show", "MTuples", 
           function(object) {
@@ -171,8 +164,12 @@ setMethod("show", "MTuples",
       methinfo = ans_methinfo)
 }
 
+#' @rdname MTuples-class
+#' @inheritParams methinfo
+#' @param ... Additional MTuples objects.
+#' @param ignore.mcols,recursive See 'Splitting and Combining' section of 
+#' \code{?}\linkS4class{GTuples}.
 #' @importFrom methods setMethod
-#' 
 #' @export
 setMethod("c", "MTuples", 
           function(x, ..., ignore.mcols = FALSE, recursive = FALSE) {
@@ -198,8 +195,9 @@ setMethod("c", "MTuples",
 ### Getters
 ###
 
+#' @rdname MTuples-class
+#' @param x,object An MTuples object.
 #' @importFrom methods setMethod
-#' 
 #' @export
 setMethod("methinfo", "MTuples", 
           function(x) {
@@ -207,8 +205,9 @@ setMethod("methinfo", "MTuples",
           }
 )
 
+#' @rdname MTuples-class
+#' @inheritParams methinfo
 #' @importFrom methods setMethod
-#' 
 #' @export
 setMethod("methtype", "MTuples", 
           function(x) {
@@ -220,8 +219,10 @@ setMethod("methtype", "MTuples",
 ### Setters
 ###
 
+#' @rdname MTuples-class
+#' @inheritParams methinfo
+#' @param value A replacement object of the appropriate class.
 #' @importFrom methods setReplaceMethod
-#' 
 #' @export
 setReplaceMethod("methinfo", c("MTuples", "MethInfo"), 
                  function(x, value) {
@@ -230,8 +231,9 @@ setReplaceMethod("methinfo", c("MTuples", "MethInfo"),
                  }
 )
 
+#' @rdname MTuples-class
+#' @inheritParams methinfo<-
 #' @importFrom methods setReplaceMethod
-#' 
 #' @export
 setReplaceMethod("methtype", c("MTuples", "character"), 
                  function(x, value) {

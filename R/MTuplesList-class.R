@@ -3,38 +3,32 @@
 ### -------------------------------------------------------------------------
 ###
 
-# TODO: unit tests
-# TODO: Base documentation on GTuplesList
 #' MTuplesList objects
 #' 
 #' @description
-#' The \code{MTuplesList} class is a container for storing a collection of 
-#' \code{\link{MTuples}} objects. The \code{MTuplesList} class is almost 
-#' identical to the \code{\link[GenomicTuples]{GTuplesList}} on which it is 
-#' based.
-#' 
-#' @usage
-#' MTuplesList(...)
+#' The \code{MTuplesList} class is a container for the genomic locations 
+#' of methylation loci in a genome.
 #' 
 #' @details
-#'  Please see 
-#' \code{\link[GenomicTuples]{GTuplesList}} for a description of available 
-#' methods. The only additional methods are \code{methinfo} and 
-#' \code{\link{methtype}}, which are identical to their \code{\link{MTuples}} 
-#' counterparts.
+#' The \code{MTuplesList} class extends the \linkS4class{GTuplesList} class by 
+#' adding the \code{methinfo} slot, which records the information about the 
+#' type of methylation loci that are stored in the MTuplesList object.
 #' 
-#' @param ... \code{\link{MTuples}} objects. All must contain the same 
-#' \code{size} tuples.
-#' 
-#' @seealso \code{\link{MTuples}}, \code{\link[GenomicTuples]{GTuplesList}}.
+#' @seealso 
+#' \itemize{
+#'  \item \linkS4class{GTuplesList} for the class from which MTuplesList 
+#'  inherits
+#'  \item \linkS4class{MTuples}
+#' }
 #' 
 #' @aliases MTuplesList
 #'
 #' @include MethInfo-class.R
 #' @author Peter Hickey
-#' @examples 
+#' @examples
 #' ## TODO
 #' 
+#' @importClassesFrom GenomicTuples GTuplesList
 #' @importFrom methods setClass
 #' 
 #' @export
@@ -53,8 +47,9 @@ setClass("MTuplesList",
 ### Constructor
 ###
 
+#' @rdname MTuplesList-class
+#' @param ... \linkS4class{MTuples} objects
 #' @importFrom IRanges PartitioningByEnd
-#' 
 #' @export
 MTuplesList <- function(...) {
   listData <- list(...)
@@ -82,8 +77,9 @@ MTuplesList <- function(...) {
 ### Getters
 ###
 
+#' @rdname MTuplesList-class
+#' @param x,object An MTuplesList object.
 #' @importFrom methods setMethod
-#' 
 #' @export
 setMethod("methinfo", "MTuplesList", 
           function(x) {
@@ -91,8 +87,9 @@ setMethod("methinfo", "MTuplesList",
           }
 )
 
+#' @rdname MTuplesList-class
+#' @inheritParams methinfo
 #' @importFrom methods setMethod
-#' 
 #' @export
 setMethod("methtype", "MTuplesList", 
           function(x) {
@@ -104,8 +101,10 @@ setMethod("methtype", "MTuplesList",
 ### Setters
 ###
 
+#' @rdname MTuplesList-class
+#' @inheritParams methinfo
+#' @param value A replacement object of the appropriate class.
 #' @importFrom methods setReplaceMethod
-#' 
 #' @export
 setReplaceMethod("methinfo", c("MTuplesList", "MethInfo"), 
                  function(x, value) {
@@ -114,8 +113,9 @@ setReplaceMethod("methinfo", c("MTuplesList", "MethInfo"),
                  }
 )
 
+#' @rdname MTuplesList-class
+#' @inheritParams methinfo<-
 #' @importFrom methods setReplaceMethod
-#' 
 #' @export
 setReplaceMethod("methtype", c("MTuplesList", "character"), 
                  function(x, value) {
@@ -128,16 +128,16 @@ setReplaceMethod("methtype", c("MTuplesList", "character"),
 ### Going from MTuples to MTuplesList with extractList() and family.
 ###
 
+#' @rdname MTuplesList-class
+#' @inheritParams methinfo
 #' @importFrom methods setMethod
 #' @importMethodsFrom IRanges relistToClass
-#' 
 #' @export
 setMethod("relistToClass", "MTuples", 
           function(x) {
             "MTuplesList"
           }
 )
-
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### show method.
@@ -213,8 +213,9 @@ my_showList <- function(object, showFunction, print.classinfo) {
   cat("methinfo: ", summary(methinfo(object)), "\n", sep = "")
 }
 
+#' @rdname MTuplesList-class
+#' @inheritParams methinfo
 #' @importFrom methods setMethod
-#' 
 #' @export
 setMethod("show", "MTuplesList",
           function(object) {
