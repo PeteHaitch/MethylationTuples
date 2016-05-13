@@ -241,3 +241,10 @@ setReplaceMethod("methtype", c("MTuples", "character"),
                    x
                  }
 )
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### Splitting
+###
+
+#' @importMethodsFrom S4Vectors split
+NULL

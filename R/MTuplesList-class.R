@@ -146,10 +146,10 @@ setMethod("relistToClass", "MTuples",
 # Based on GenomicRanges::showList
 #' @importFrom utils head tail
 #' @importMethodsFrom GenomeInfoDb seqinfo
-#' @importMethodsFrom S4Vectors elementLengths
+#' @importMethodsFrom S4Vectors elementNROWS
 my_showList <- function(object, showFunction, print.classinfo) {
   k <- length(object)
-  cumsumN <- cumsum(elementLengths(object))
+  cumsumN <- cumsum(elementNROWS(object))
   N <- tail(cumsumN, 1)
   cat(class(object), " object of length ", k, ":\n", sep = "")
   if (k == 0L) {

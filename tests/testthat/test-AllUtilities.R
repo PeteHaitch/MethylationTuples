@@ -11,7 +11,6 @@ test_that(".makeMethPatNames works", {
 })
 
 test_that(".validMethtype works", {
-  
   expect_true(.validMethtype("CG"))
   expect_true(.validMethtype("CHG"))
   expect_true(.validMethtype("CHH"))
@@ -29,6 +28,7 @@ test_that(".validMethtype works", {
   expect_true(.validMethtype(c("CG", "CHG", "CHH", "CNN")))  
   expect_false(.validMethtype("CpG"))
   expect_false(.validMethtype("CG/CHG"))
+  expect_false(.validMethtype(c(NA_character_, NA_character_)))
 })
 
 test_that(".isStranded works", {
@@ -43,4 +43,21 @@ test_that(".isStranded works", {
                                  strand = c("-", "*", "-"))))
   expect_false(.isStranded(GRanges("1", IRanges(1:3, 1:3), 
                                  strand = c("+", "*", "-"))))
+  expect_false(.isStranded(IRanges()))
+})
+
+test_that(".slicenames works", {
+  expect_identical(.slicenames(a2), c("MM", "MU", "UM", "UU"))
+  expect_identical(.slicenames(d2), c("MM", "MU", "UM", "UU"))
+  expect_identical(.slicenames(h2), c("MM", "MU", "UM", "UU"))
+})
+
+test_that(".slicenames<- works", {
+  sn <- letters[1:4]
+  .slicenames(a2) <- sn
+  .slicenames(d2) <- sn
+  .slicenames(h2) <- sn
+  expect_identical(.slicenames(a2), sn)
+  expect_identical(.slicenames(d2), sn)
+  expect_identical(.slicenames(h2), sn)
 })
