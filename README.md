@@ -1,33 +1,35 @@
-# MethylationTuples
 
-[![Project Status: Wip - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/0.1.0/wip.svg)](http://www.repostatus.org/#wip) [![](http://www.r-pkg.org/badges/version/reprex)](http://www.r-pkg.org/pkg/reprex)
-[![Linux Build Status](https://travis-ci.org/PeteHaitch/MethylationTuples.svg?branch=DSArray)](https://travis-ci.org/PeteHaitch/MethylationTuples)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/github/PeteHaitch/MethylationTuples?svg=true)](https://ci.appveyor.com/project/PeteHaitch/MethylationTuples)
-[![Coverage Status](https://img.shields.io/codecov/c/github/PeteHaitch/MethylationTuples/DSArray.svg)](https://codecov.io/github/PeteHaitch/MethylationTuples?branch=DSArray)
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+[![Project Status: Wip - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/0.1.0/wip.svg)](http://www.repostatus.org/#wip)
 
----
+R package: MethylationTuples
+----------------------------
 
-_MethylationTuples_ provides tools for analysing, managing and visualising 
-methylation patterns at genomic tuples. These include analyses of 
-co-methylation and epipolymorphisms.
+**MethylationTuples** provides tools for analysing, managing, and visualising methylation patterns at genomic tuples.
 
-_MethylationTuples_ is in development and can only be installed using the 
-development version of Bioconductor. Please first read 
-[these instructions on installing the development version of Bioconductor](http://www.bioconductor.org/developers/how-to/useDevel/). 
+Installation
+------------
 
----
+You can get the development version from GitHub. It depends on the [**DSArray**](www.github.com/PeteHaitch/DSArray).
 
-## Installation
-
-```r
-# Install devtools if not already installed
-if (suppressWarnings(!require(devtools))) {
-  install.packages("devtools")  
-}
-# Install development version of MethylationTuples
-devtools::install_github("PeteHaitch/MethylationTuples@DSArray")
+``` r
+devtools::install_github("PeteHaitch/DSArray")
+devtools::install_github("PeteHaitch/MethylationTuples")
 ```
 
-## License
+What the hell do I do with this?
+--------------------------------
 
-Artistic-2.0
+**MethylationTuples** was initially developed to work hand-in-hand with [**methtuple**](www.github.com/PeteHaitch/methtuple) to analyse counts of DNA methylation patterns at tuples of genomic loci. In particular, I developed **methtuple** and **MethylationTuples** to analyse the *co-methylation* of CpGs that exist on the same DNA fragment.
+
+**TODO:** Expand upon this and what **MethylationTuples** has become
+
+Quick demo
+----------
+
+**TODO**
+
+Have a feature request, need help, or want to get involved?
+-----------------------------------------------------------
+
+Code contributions, bug reports (and fixes!), and feature requests are most welcome. Please make any pull requests against the master branch at <https://github.com/PeteHaitch/MethylationTuples> and file issues at <https://github.com/PeteHaitch/MethylationTuples/issues>

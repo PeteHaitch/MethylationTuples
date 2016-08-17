@@ -1,14 +1,4 @@
-^packrat/
 ^.*\.Rproj$
 ^\.Rproj\.user$
-TODO.Rmd
-TODO.pdf
-.travis.yml
-.Rprofile
+README.Rmd
 ^\.travis\.yml$
-^tmp/
-notes_on_bissnp.Rmd
-^\.Rprofile$
-.coveralls.R
-^appveyor\.yml$
-NOTES.R

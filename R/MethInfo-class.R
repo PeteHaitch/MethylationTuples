@@ -7,8 +7,8 @@
 #' 
 #' @description 
 #' A \code{MethInfo} object is an object that contains basic 
-#' information about a set of methylation loci. Currently the only attributes 
-#' are the type or context of the methylation loci, but more attributes might 
+#' information about a set of methylation loci. Currently, the only attributes 
+#' are the type or context of the methylation loci, but more attributes may 
 #' be added in the future as the need arises.
 #' 
 #' @details
@@ -30,9 +30,9 @@
 #'      \code{methtype(x)}, \code{methtype(x) <- value}:
 #'      Get/set the methylation type of \code{x}. \code{value} must be a 
 #'      character vector: \code{"CG"} (\emph{i.e.}, CpG), \code{"CHG"}, 
-#'      \code{"CHH"}, \code{"CNN"} or some combination of these, e.g., 
+#'      \code{"CHH"}, \code{"CN"} or some combination of these, e.g., 
 #'      \code{c("CG", "CHG")} (\code{NA_character_} is also allowed, 
-#'      but not recommended).
+#'      although not recommended).
 #'    }
 #'  }
 #' @section Combining MethInfo objects:
@@ -55,8 +55,14 @@
 #' @examples
 #' x <- MethInfo("CG")
 #' y <- MethInfo(c("CHG", "CG"))
-#' y # NB: Pretty-prints methylation type as "CG/CHG"
-#' methtype(y) # NB: Returns the methylation type as a character vector
+#' 
+#' # Pretty-prints methylation type as "CG/CHG"
+#' y 
+#' 
+#' # Returns the methylation type as a character vector
+#' methtype(y)
+#' 
+#' # Merge two MethInfo objects
 #' merge(x, y)
 #'  
 #' @aliases MethInfo
@@ -76,7 +82,6 @@ setClass("MethInfo",
 ###
 
 #' @rdname MethInfo-class
-#' @param x A MethInfo object.
 #' @importFrom methods setMethod
 #' @export
 setMethod("methtype", "MethInfo", 
@@ -99,7 +104,7 @@ setMethod("methtype", "MethInfo",
   
   if (!.validMethtype(x@methtype)) {
     return(paste0("Invalid 'methtype'. Must be one or more of 'CG', 'CHG', ", 
-                  "'CHH' or 'CNN'"))
+                  "'CHH' or 'CN'"))
   }
   
   NULL
@@ -114,7 +119,7 @@ setValidity2("MethInfo", .valid.MethInfo)
 
 #' @rdname MethInfo-class
 #' @param methtype A character vector of methylation types: \code{"CG"} 
-#' (\emph{i.e.}, CpG), \code{"CHG"}, \code{"CHH"}, \code{"CNN"} or some 
+#' (\emph{i.e.}, CpG), \code{"CHG"}, \code{"CHH"}, \code{"CN"} or some 
 #' combination of these, e.g., \code{c("CG", "CHG")} (\code{NA_character_} is 
 #' also allowed, but not recommended).
 #' @importFrom methods new
@@ -128,11 +133,6 @@ MethInfo <- function(methtype = NA_character_) {
 ###
 
 #' @rdname MethInfo-class
-#' @inheritParams methype
-#' @param value A character vector of methylation types: \code{"CG"} 
-#' (\emph{i.e.}, CpG), \code{"CHG"}, \code{"CHH"}, \code{"CNN"} or some 
-#' combination of these, e.g., \code{c("CG", "CHG")} (\code{NA_character_} is 
-#' also allowed, but not recommended).
 #' @importFrom methods setReplaceMethod
 #' @export
 setReplaceMethod("methtype", c("MethInfo", "character"),
@@ -162,19 +162,19 @@ setMethod("summary", "MethInfo",
 )
 
 #' @rdname MethInfo-class
-#' @importFrom methods setMethod
+#' @importFrom methods setMethod show
 #' @export
-setMethod("show", "MethInfo", 
+setMethod("show", "MethInfo", # nocov start
           function(object) {
             cat(class(object), " object with ", summary(object), "\n", sep = "")
           }
-)
+) # nocov end
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Combining.
 ###
 
-#' @importFrom methods new
+#' @importFrom methods is new
 .MethInfo.merge <- function(...) {
   
   args <- unname(list(...))

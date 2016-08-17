@@ -3,13 +3,12 @@
 \docType{package}
 \name{MethylationTuples-package}
 \alias{MethylationTuples-package}
-\title{Tools for analysing methylation patterns at genomic tuples.}
-\description{
-\pkg{MethylationTuples} provides tools for analysing, managing and 
+\title{Tools for managing, analysing, and  visualising methylation patterns at 
+genomic tuples
+\pkg{MethylationTuples} provides tools for managing, analysing, and 
 visualising methylation patterns at genomic tuples. These include analyses 
-of co-methylation and epipolymorphism.
-}
-\details{
+of co-methylation and epipolymorphism.}
+\description{
 Please refer to the vignettes to see how to use the \pkg{MethylationTuples}
 package.
 }

@@ -12,18 +12,18 @@ test_that("methtype,MethInfo-method works", {
   expect_identical(methtype(MethInfo(c("CG"))), c("CG"))
   expect_identical(methtype(MethInfo(c("CHG"))), c("CHG"))
   expect_identical(methtype(MethInfo(c("CHH"))), c("CHH"))
-  expect_identical(methtype(MethInfo(c("CNN"))), c("CNN"))
+  expect_identical(methtype(MethInfo(c("CN"))), c("CN"))
   expect_identical(methtype(MethInfo(c("CG", "CHG"))), c("CG", "CHG"))
   expect_identical(methtype(MethInfo(c("CG", "CHH"))), c("CG", "CHH"))
-  expect_identical(methtype(MethInfo(c("CG", "CNN"))), c("CG", "CNN"))
+  expect_identical(methtype(MethInfo(c("CG", "CN"))), c("CG", "CN"))
   expect_identical(methtype(MethInfo(c("CG", "CHG", "CHH"))), 
                    c("CG", "CHG", "CHH"))
-  expect_identical(methtype(MethInfo(c("CG", "CHG", "CNN"))), 
-                   c("CG", "CHG", "CNN"))
-  expect_identical(methtype(MethInfo(c("CG", "CHH", "CNN"))), 
-                   c("CG", "CHH", "CNN"))
-  expect_identical(methtype(MethInfo(c("CG", "CHG", "CHH", "CNN"))), 
-                   c("CG", "CHG", "CHH", "CNN"))
+  expect_identical(methtype(MethInfo(c("CG", "CHG", "CN"))), 
+                   c("CG", "CHG", "CN"))
+  expect_identical(methtype(MethInfo(c("CG", "CHH", "CN"))), 
+                   c("CG", "CHH", "CN"))
+  expect_identical(methtype(MethInfo(c("CG", "CHG", "CHH", "CN"))), 
+                   c("CG", "CHG", "CHH", "CN"))
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -35,6 +35,8 @@ test_that("MethInfo validity works", {
                "invalid object for slot \"methtype\" in class \"MethInfo\":")
   expect_error(MethInfo("CpG"), "Invalid 'methtype'")
   expect_error(MethInfo("CG/CHG"), "Invalid 'methtype'")
+  mi@methtype <- "A"
+  expect_output(print(.valid.MethInfo(mi)), "Invalid 'methtype'")
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,6 @@
-# TODO: Only import what is needed from each package
-#' Tools for analysing methylation patterns at genomic tuples.
-#'
-#' \pkg{MethylationTuples} provides tools for analysing, managing and 
+#' Tools for managing, analysing, and  visualising methylation patterns at 
+#' genomic tuples
+#' \pkg{MethylationTuples} provides tools for managing, analysing, and 
 #' visualising methylation patterns at genomic tuples. These include analyses 
 #' of co-methylation and epipolymorphism.
 #'
@@ -11,24 +10,4 @@
 #' @docType package
 #' @name MethylationTuples-package
 #' 
-# NOTE: For simplicity, just import the entire BiocGenerics package
-#' @import BiocGenerics
-#' 
 NULL
-
-#------------------------------------------------------------------------------
-# OLD IMPORTS BELOW THIS LINE
-# 
-# 
-# 
-# 
-# 
-# 
-# @import methods
-# @import SummarizedExperiment
-# @import SparseSummarizedExperiment
-# @import GenomicTuples
-# @import BiocGenerics
-# @import IRanges
-# @importFrom S4Vectors isTRUEorFALSE SimpleList DataFrame split
-

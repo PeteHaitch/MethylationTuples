@@ -1,0 +1,53 @@
+---
+output: github_document
+---
+  
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+  
+[![Project Status: Wip - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/0.1.0/wip.svg)](http://www.repostatus.org/#wip)
+[![Linux Build Status](https://travis-ci.org/PeteHaitch/MethylationTuples.svg?branch=master)](https://travis-ci.org/PeteHaitch/MethylationTuples)
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+R package: MethylationTuples
+---
+
+__MethylationTuples__ provides tools for analysing, managing, and visualising 
+methylation patterns at genomic tuples.
+
+## Installation
+
+You can get the development version from GitHub. It depends on the 
+[__DSArray__](www.github.com/PeteHaitch/DSArray).
+
+```{r eval = FALSE}
+devtools::install_github("PeteHaitch/DSArray")
+devtools::install_github("PeteHaitch/MethylationTuples")
+```
+
+## What the hell do I do with this?
+
+__MethylationTuples__ was initially developed to work hand-in-hand with 
+[__methtuple__](www.github.com/PeteHaitch/methtuple) to analyse counts of DNA 
+methylation patterns at tuples of genomic loci. In particular, I developed 
+__methtuple__ and __MethylationTuples__ to analyse the _co-methylation_ of CpGs 
+that exist on the same DNA fragment.
+
+__TODO:__ Expand upon this and what __MethylationTuples__ has become
+
+## Quick demo
+
+__TODO__
+
+## Have a feature request, need help, or want to get involved?
+
+Code contributions, bug reports (and fixes!), and feature requests are most 
+welcome. Please make any pull requests against the master branch at [https://github.com/PeteHaitch/MethylationTuples](https://github.com/PeteHaitch/MethylationTuples) 
+and file issues at 
+[https://github.com/PeteHaitch/MethylationTuples/issues](https://github.com/PeteHaitch/MethylationTuples/issues)
