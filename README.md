@@ -16,7 +16,7 @@ R package: MethylationTuples
 Installation
 ------------
 
-You can get the development version from GitHub. It depends on the [**DSArray**](www.github.com/PeteHaitch/DSArray).
+You can get the development version from GitHub. You will also need to install the development version of [**DSArray**](www.github.com/PeteHaitch/DSArray).
 
 ``` r
 devtools::install_github("PeteHaitch/DSArray")
