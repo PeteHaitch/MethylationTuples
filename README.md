@@ -1,6 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Project Status: Wip - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/0.1.0/wip.svg)](http://www.repostatus.org/#wip) <!-- TODO: Use master branch once DSArray-refactor is merged with master --> [![Linux Build Status](https://travis-ci.org/PeteHaitch/MethylationTuples.svg?branch=DSArray-refactor)](https://travis-ci.org/PeteHaitch/MethylationTuples) [![Coverage Status](https://img.shields.io/codecov/c/github/PeteHaitch/MethylationTuples/DSArray-refactor.svg)](https://codecov.io/github/PeteHaitch/MethylationTuples?branch=DSArray-refactor)
+<!-- TODO: Use master branch once DSArray-refactor is merged with master -->
+[![Project Status: Wip - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/0.1.0/wip.svg)](http://www.repostatus.org/#wip) [![Linux Build Status](https://travis-ci.org/PeteHaitch/MethylationTuples.svg?branch=DSArray-refactor)](https://travis-ci.org/PeteHaitch/MethylationTuples) [![Coverage Status](https://img.shields.io/codecov/c/github/PeteHaitch/MethylationTuples/DSArray-refactor.svg)](https://codecov.io/github/PeteHaitch/MethylationTuples?branch=DSArray-refactor)
 
 <!-- TODO: Uncomment once in Bioc
 [![Bioconductor downloads](http://bioconductor.org/shields/downloads/MethylationTuples.svg)](http://bioconductor.org/packages/stats/bioc/MethylationTuples.html) -->
