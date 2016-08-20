@@ -3,6 +3,9 @@
 ### -------------------------------------------------------------------------
 ###
 
+# TODO: Need to note that CN doesn't stand for C[A,C,G,T] but rather stands for 
+#       literal CN; this follows Bismark rather than IUPAC terminology. Need to 
+#       check what methtuple follows.
 #' MethInfo objects
 #' 
 #' @description 
@@ -50,8 +53,12 @@
 #'      (\code{NA_character}).
 #'    }
 #' }
+#' 
+#' @seealso 
+#' \itemize{
+#'  \item \link{methinfo}
+#' }
 #'  
-#' @author Peter Hickey
 #' @examples
 #' x <- MethInfo("CG")
 #' y <- MethInfo(c("CHG", "CG"))
@@ -82,6 +89,7 @@ setClass("MethInfo",
 ###
 
 #' @rdname MethInfo-class
+#' @inheritParams methtype
 #' @importFrom methods setMethod
 #' @export
 setMethod("methtype", "MethInfo", 
@@ -133,6 +141,7 @@ MethInfo <- function(methtype = NA_character_) {
 ###
 
 #' @rdname MethInfo-class
+#' @inheritParams methtype
 #' @importFrom methods setReplaceMethod
 #' @export
 setReplaceMethod("methtype", c("MethInfo", "character"),
