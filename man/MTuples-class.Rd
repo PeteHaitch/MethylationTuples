@@ -9,6 +9,7 @@
 \alias{methtype,MTuples-method}
 \alias{methtype<-,MTuples,character-method}
 \alias{show,MTuples-method}
+\alias{strandCollapse,MTuples-method}
 \title{MTuples objects}
 \usage{
 \S4method{show}{MTuples}(object)
@@ -22,6 +23,8 @@
 \S4method{methinfo}{MTuples,MethInfo}(x) <- value
 
 \S4method{methtype}{MTuples,character}(x) <- value
+
+\S4method{strandCollapse}{MTuples}(x, ...)
 }
 \arguments{
 \item{object}{An MTuples object.}
@@ -40,11 +43,94 @@ also allowed, but not recommended).}
 }
 \description{
 The \code{MTuples} class is a container for the genomic locations 
-of methylation loci in a genome.
+of tuples of methylation loci in a genome. A CpG is the most common example 
+of a methylation locus, but non-CG (CHG, CHH, and CN) methylation loci are 
+also supported.
 }
 \details{
-The \code{MTuples} class extends the \linkS4class{GTuples} class by adding 
-the \code{methinfo} slot, which records the information about the type of 
-methylation loci that are stored in the MTuplesList object.
+The \code{MTuples} class extends the \linkS4class{GTuples} class. Briefly, 
+a \linkS4class{GTuples} is itself is an extension of the 
+\linkS4class{GRanges} class for storing 
+\emph{genomic tuples} rather than \emph{genomic ranges}. 
+
+The MTuples API will be familiar to anyone who has used the 
+\linkS4class{GRanges} class from the \pkg{GenomicRanges} package. As shown 
+in the examples below, an MTuples object behaves much like a 
+\linkS4class{GRanges} object. The  main difference is in how genomic 
+overlaps are computed since we are dealing with tuples rather than ranges; 
+please see \code{?\linkS4class{GTuples}} for full details. Compared to a 
+\linkS4class{GTuples} object, an MTuples object has an additional slot, 
+\code{methinfo}, that stores the information about the type 
+of methylation loci that are stored in the MTuples object.
+}
+\examples{
+#------------------------------------------------------------------------------
+# Construct two simple MTuples object
+mt_pos <- MTuples(seqnames = c("chr1", "chr1", "chr2", "chr2", "chr2"),
+                  tuples = matrix(c(10, 15, 100, 110, 150,
+                                    15, 27, 110, 150, 154,
+                                    27, 33, 150, 154, 166), 
+                                  ncol = 3),
+                  strand = "+",
+                  methinfo = MethInfo("CG"))
+mt_pos
+
+# NOTE: mt_neg stores the cytosine on the negative strand for each CpG in 
+#       mt_pos
+mt_neg <- MTuples(seqnames = c("chr1", "chr1", "chr2", "chr2", "chr2"),
+                  tuples = matrix(c(11, 16, 101, 111, 151,
+                                    16, 28, 111, 151, 155,
+                                    28, 34, 151, 155, 167), 
+                                  ncol = 3),
+                  strand = "-",
+                  methinfo = MethInfo("CG"))
+mt_neg
+
+#------------------------------------------------------------------------------
+# Getters and setters
+
+# Common getters and setters (inherited from GRanges)
+seqnames(mt_pos)
+strand(mt_pos)
+seqinfo(mt_pos)
+strand(mt_pos)
+
+# Common getters and setters (inherited from GTuples)
+tuples(mt_pos)
+
+# New getters and setters defined specfically for MTuples
+methinfo(mt_pos)
+methtype(mt_pos)
+# Change the methinfo
+methinfo(mt_pos) <- MethInfo(c("CG", "CHG"))
+methinfo(mt_pos)
+# And change methtype back
+methtype(mt_pos) <- "CG"
+methinfo(mt_pos)
+
+#------------------------------------------------------------------------------
+# Combining
+c(mt_pos, mt_neg)
+
+#------------------------------------------------------------------------------
+# Collapse by strand (currently only works with CG methtype)
+strandCollapse(mt_neg)
+
+#------------------------------------------------------------------------------
+# Finding overlaps
+
+# No 'equal' overlaps, even when ignoring strand
+findOverlaps(mt_pos, mt_neg, type = "equal", ignore.strand = TRUE)
+# However, there are 'equal' overlaps if we first collapse the negative 
+# strand tuples onto the foward strand
+findOverlaps(mt_pos, strandCollapse(mt_neg), type = "equal")
+
+}
+\seealso{
+\itemize{
+ \item \code{\link{MTuples}}, \code{\link{MTuplesFromGTuples}}, and 
+   \code{\link{MTuplesFromBSgenome}} for ways to construct an MTuples object
+ \item \linkS4class{GTuples} for the class from which MTuples inherits
+}
 }
 

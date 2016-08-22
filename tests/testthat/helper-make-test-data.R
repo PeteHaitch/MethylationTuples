@@ -50,3 +50,44 @@ mt1 <- MTuplesFromGTuples(gt1, mi)
 mt2 <- MTuplesFromGTuples(gt2, mi)
 mt3 <- MTuplesFromGTuples(gt3, mi)
 mq3 <- MTuplesFromGTuples(q3, mi)
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### DNAString
+###
+
+# A string containing all trinucleotides beginning with C, as well as 
+# special methtype strings CHG, CHH, and CN
+# the different methylation types separated by poly-A
+
+c_tri_nucleotides <-
+  data.frame(tri = apply(expand.grid("C", Biostrings::DNA_BASES, 
+                                     Biostrings::DNA_BASES,
+                                     stringsAsFactors = FALSE), 
+                         1, paste, collapse = ""),
+             stringsAsFactors = FALSE)
+c_tri_nucleotides$rc_tri <- 
+  as.character(Biostrings::reverseComplement(
+    Biostrings::DNAStringSet(c_tri_nucleotides$tri)))
+special_methtypes <- data.frame(tri = c("CHG", "CHH", "CN"),
+                                rc_tri = c("CDG", "DDG", "NG"))
+methtype_df <- rbind(c_tri_nucleotides, special_methtypes)
+methtype_string <- paste(methtype_df$tri,
+                         collapse = "NNN")
+dnastring <- c(Biostrings::DNAString(methtype_string), 
+               Biostrings::reverseComplement(
+                 Biostrings::DNAString(methtype_string)))
+                 
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### IRanges objects used in tests
+###
+
+one_tuples <- MTuples(seqnames = "chr1", 
+                      tuples = matrix(c(seq(1L, 100L, 10L), 
+                                        seq(6L, 105L, 10L)), 
+                                      ncol = 1),
+                      strand = Rle(c("+", "-"), c(10, 10)),
+                      seqinfo = seqinfo,
+                      methinfo = mi)
+
+# one_tuples <- IRanges(c(seq(1, 100, 10), seq(6, 105, 10)), width = 1)
+# mcols(one_tuples) <- DataFrame(strand = strand(Rle(c("+", "-"), c(10, 10))))

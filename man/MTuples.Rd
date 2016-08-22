@@ -67,9 +67,11 @@ There are three ways to construct a \linkS4class{MTuples} object:
 
 \code{MTuplesFromBSgenome()} will construct an \linkS4class{MTuples} object 
 by extracting \emph{adjacent} m-tuples from a \linkS4class{BSgenome} object 
-containing the full genome sequence of a given organism.
+containing the full genome sequence of a given organism. The \code{'CN'} 
+\code{methtype} is not currently supported.
+
 The \code{...} are passed through to a call the construction of a 
-\linkS4class{BSParams} object. This can be useful, for example, to 
+\linkS4class{BSParams} object; this can be useful, for example, to 
 exclude certain \code{seqlevels} from the \linkS4class{BSgenome} object, 
 such as unassigned contigs; see 'Examples' and 
 \code{?\linkS4class{BSParams}} for further detail.
@@ -96,6 +98,6 @@ unique(seqnames(x))
 }
 }
 \seealso{
-\linkS4class{MTuples}
+The \linkS4class{MTuples} class description
 }
 

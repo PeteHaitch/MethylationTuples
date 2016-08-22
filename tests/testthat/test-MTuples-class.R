@@ -1,9 +1,6 @@
 # NB: Several objects used in testing are defined in 
 # tests/testthat/helper-make-test-data.R
 
-# UP TO HERE: Test MTuples(), MTuplesFromGTuples(), and MTuplesFromBSGenome(); 
-#             update tests accordingly
-
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Validity
 ###
@@ -23,12 +20,12 @@ test_that("methinfo slot is checked", {
 ###
 context("MTuples()")
 
-test_that("MTuples() returns a valid MTuples object when m = 0", {
+test_that("MTuples() returns a valid MTuples object when size = 0", {
   expect_true(validObject(new("MTuples")))
   expect_true(validObject(MTuples()))
 })
 
-test_that("MTuples() returns a valid object when m > 0", {
+test_that("MTuples() returns a valid object when size > 0", {
   m <- 1:4
   lapply(m, function(mm) {
     expect_true(validObject(MTuples("chr1", matrix(seq.int(1, mm), ncol = mm))))
@@ -36,7 +33,7 @@ test_that("MTuples() returns a valid object when m > 0", {
 })
 
 test_that("MTuples() returns warnings on unexpected input", {
-  expect_warning(MTuples("chr1",  matrix(c(1.1, 2, 3), ncol = 1)), 
+  expect_warning(MTuples("chr1", matrix(c(1.1, 2, 3), ncol = 1)), 
                  "Converting 'tuples' to integer mode")
 })
 
@@ -52,34 +49,215 @@ test_that("MTuples() returns errors on bad input", {
                       " 'CHH' or 'CN'"))
 })
 
-# TODO
 context("MTuplesFromGTuples()")
-test_that("MTuplesFromGTuples() works when m = 0", {
-  expect_true(FALSE)
-})
-test_that("MTuplesFromGTuples() works when m > 0", {
-  expect_true(FALSE)
-})
-test_that("MTuplesFromGTuples() returns warnings on unexpected input", {
-  expect_true(FALSE)
-})
-test_that("MTuplesFromGTuples() returns errors on bad input", {
-  expect_true(FALSE)
+
+test_that("MTuplesFromGTuples() works when size = 0", {
+  expect_true(validObject(MTuplesFromGTuples(gt0)))
 })
 
-# TODO
+test_that("MTuplesFromGTuples() works when size > 0", {
+  expect_true(validObject(MTuplesFromGTuples(gt1)))
+  expect_true(validObject(MTuplesFromGTuples(gt2)))
+  expect_true(validObject(MTuplesFromGTuples(gt3)))
+})
+
+test_that("MTuplesFromGTuples() returns errors on bad input", {
+  expect_error(MTuplesFromGTuples(as(gt2, "GRanges"), methinfo = MethInfo('CG')), 
+               paste0("'gtuples' must be a 'GTuples' object"))
+  expect_error(MTuplesFromGTuples(gt1, methinfo = MethInfo('CpG')), 
+               paste0("Invalid 'methtype'. Must be one or more of 'CG', 'CHG',", 
+                      " 'CHH' or 'CN'"))
+})
+
 context("MTuplesFromBSgenome()")
-test_that("MTuplesFromBSgenome() works when m = 0", {
-  expect_true(FALSE)
+
+test_that(".OneTuplesFromDNAString() finds matches", {
+  ir_cg <- .OneTuplesFromDNAString(dnastring, "CG")
+  ir_chg <- .OneTuplesFromDNAString(dnastring, "CHG")
+  ir_chh <- .OneTuplesFromDNAString(dnastring, "CHH")
+  
+  match_sequence <- mapply(function(ir, methtype) {
+    n <- nchar(methtype[[1]])
+    val <- logical(length(ir))
+    for (i in seq_len(length(ir))) {
+      if (as.logical(mcols(ir)$strand[i] == "+")) {
+        val[i] <- dnastring[seq(start(ir)[i], 
+                                start(ir)[i] + n - 1)] %in% 
+          DNAStringSet(methtype)
+      } else if (as.logical(mcols(ir)$strand[i] == "-")) {
+        val[i] <- dnastring[seq(start(ir)[i] - n + 1, 
+                                start(ir)[i])] %in% 
+          reverseComplement(DNAStringSet(methtype))
+      }
+    }
+    all(val)
+  }, ir = list(ir_cg, ir_chg, ir_chh), 
+  methtype = list(CG = c("CG"),
+                  CHG = c("CAG", "CCG", "CTG", "CHG"),
+                  CHH = c("CAA", "CAC", "CAT", "CCA", "CCC", "CCT", "CTA", 
+                          "CTC", "CTT", "CHH")))
+  
+  expect_true(all(match_sequence))
 })
-test_that("MTuplesFromBSgenome() works when m > 0", {
-  expect_true(FALSE)
+
+test_that(".OneTuplesFromDNAString() works on compound methtype", {
+  
+  ir_cg <- .OneTuplesFromDNAString(dnastring, "CG")
+  ir_chg <- .OneTuplesFromDNAString(dnastring, "CHG")
+  ir_chh <- .OneTuplesFromDNAString(dnastring, "CHH")
+  ir_cg_chg <- .OneTuplesFromDNAString(dnastring, c("CG", "CHG"))
+  ir_cg_chh <- .OneTuplesFromDNAString(dnastring, c("CG", "CHH"))
+  ir_chg_chh <- .OneTuplesFromDNAString(dnastring, c("CHG", "CHH"))
+  ir_cg_chg_chh <- .OneTuplesFromDNAString(dnastring, c("CG", "CHG", "CHH"))
+  
+  
+  expect_identical(sort(.OneTuplesFromDNAString(dnastring, c("CG", "CHG"))),
+                   sort(c(ir_cg, ir_chg)))
+  expect_identical(sort(.OneTuplesFromDNAString(dnastring, c("CG", "CHH"))),
+                   sort(c(ir_cg, ir_chh)))
+  expect_identical(sort(.OneTuplesFromDNAString(dnastring, c("CHG", "CHH"))),
+                   sort(c(ir_chg, ir_chh)))
+  expect_identical(
+    sort(.OneTuplesFromDNAString(dnastring, c("CG", "CHG", "CHH"))),
+    sort(c(ir_cg, ir_chg, ir_chh)))
 })
-test_that("MTuplesFromBSgenome() returns warnings on unexpected input", {
-  expect_true(FALSE)
+
+test_that(".MTuplesFromOneTuples() errors when size < 1", {
+  expect_error(.MTuplesFromOneTuples(one_tuples = one_tuples, 
+                                     size = 0,
+                                     ignore.strand = FALSE), 
+               "'size' must be a positive integer")
 })
+  
+
+test_that(".MTuplesFromOneTuples() works when size = 1", {
+  expect_identical(.MTuplesFromOneTuples(one_tuples = one_tuples, 
+                                         size = 1,
+                                         ignore.strand = FALSE),
+                   MTuples(seqnames = "chr1", 
+                           tuples = matrix(c(seq(1L, 100L, 10L), 
+                                             seq(6L, 105L, 10L)), 
+                                           ncol = 1),
+                           strand = strand(Rle(c("+", "-"), c(10, 10))),
+                           seqinfo = seqinfo,
+                           methinfo = mi))
+})
+
+test_that(".MTuplesFromOneTuples() works when size > 1", {
+  expect_identical(.MTuplesFromOneTuples(one_tuples = one_tuples, 
+                                         size = 2,
+                                         ignore.strand = FALSE),
+                   MTuples(seqnames = "chr1", 
+                           tuples = matrix(c(seq(1L, 90L, 10L), 
+                                             seq(6L, 95L, 10L), 
+                                             seq(11L, 100L, 10L),
+                                             seq(16L, 105L, 10L)),
+                                           ncol = 2),
+                           strand = strand(Rle(c("+", "-"), c(9, 9))),
+                           seqinfo = seqinfo,
+                           methinfo = mi))
+  expect_identical(.MTuplesFromOneTuples(one_tuples = one_tuples, 
+                                         size = 3,
+                                         ignore.strand = FALSE),
+                   MTuples(seqnames = "chr1", 
+                           tuples = matrix(c(seq(1L, 80L, 10L), 
+                                             seq(6L, 85L, 10L), 
+                                             seq(11L, 90L, 10L),
+                                             seq(16L, 95L, 10L),
+                                             seq(21L, 100L, 10L),
+                                             seq(26L, 105L, 10L)),
+                                           ncol = 3),
+                           strand = strand(Rle(c("+", "-"), c(8, 8))),
+                           seqinfo = seqinfo,
+                           methinfo = mi))
+})
+
+test_that(".MTuplesFromOneTuples() works when ignore.strand = TRUE", {
+  expect_identical(.MTuplesFromOneTuples(one_tuples = one_tuples, 
+                                         size = 1,
+                                         ignore.strand = TRUE),
+                   MTuples(seqnames = "chr1", 
+                           tuples = matrix(c(seq(1L, 100L, 5L)), 
+                                           ncol = 1),
+                           strand = strand(Rle("*", 20)),
+                           seqinfo = seqinfo,
+                           methinfo = mi))
+  expect_identical(.MTuplesFromOneTuples(one_tuples = one_tuples, 
+                                         size = 2,
+                                         ignore.strand = TRUE),
+                   MTuples(seqnames = "chr1", 
+                           tuples = matrix(c(seq(1L, 95L, 5L),
+                                             seq(6L, 100L, 5L)), 
+                                           ncol = 2),
+                           strand = strand(Rle("*", 19)),
+                           seqinfo = seqinfo,
+                           methinfo = mi))
+  expect_identical(.MTuplesFromOneTuples(one_tuples = one_tuples, 
+                                         size = 3,
+                                         ignore.strand = TRUE),
+                   MTuples(seqnames = "chr1", 
+                           tuples = matrix(c(seq(1L, 90L, 5L),
+                                             seq(6L, 95L, 5L),
+                                             seq(11L, 100L, 5L)), 
+                                           ncol = 3),
+                           strand = strand(Rle("*", 18)),
+                           seqinfo = seqinfo,
+                           methinfo = mi))
+})
+
+test_that(".MTuplesFromOneTuples() errors when size is too big", {
+  expect_error(.MTuplesFromOneTuples(one_tuples = one_tuples,
+                                     size = 100,
+                                     ignore.strand = FALSE),
+               "Cannot create tuples of size = 100 for seqnames = 'chr1")
+})
+
+test_that(".MTuplesFromOneTuples() errors on bad input", {
+  expect_error(.MTuplesFromOneTuples(one_tuples = as(mt1, "GTuples"), 
+                                     size = 2, 
+                                     ignore.strand = TRUE),
+               paste0("'one_tuples' must be an 'MTuples' object with 'size\\(", 
+                      "one_tuples\\)' = 1"))
+  expect_error(.MTuplesFromOneTuples(one_tuples = mt2, 
+                                     size = 2, 
+                                     ignore.strand = TRUE),
+               paste0("'one_tuples' must be an 'MTuples' object with 'size\\(", 
+                      "one_tuples\\)' = 1"))
+})
+  
+test_that("MTuplesFromBSgenome() errors when size = 0", {
+  expect_error(MTuplesFromBSgenome(bsgenome = BSgenome.Hsapiens.UCSC.hg19,
+                                   size = 0, 
+                                   methinfo = mi,
+                                   exclude = c(paste0("chr", c(1:9, "X", "Y")))),
+               "'size' must be a positive integer")
+})
+test_that("MTuplesFromBSgenome() works when size > 0", {
+  lapply(1:4, function(size) {
+    x <- MTuplesFromBSgenome(bsgenome = BSgenome.Hsapiens.UCSC.hg19,
+                             size = size, 
+                             methinfo = mi,
+                             exclude = c(paste0("chr", c(1:9, "X", "Y")), "_"))
+    expect_true(is(x, "MTuples"))
+    expect_identical(size(x), size)
+  })
+
+})
+
 test_that("MTuplesFromBSgenome() returns errors on bad input", {
-  expect_true(FALSE)
+  expect_error(
+    MTuplesFromBSgenome(bsgenome = BSgenome.Hsapiens.UCSC.hg19[["chrM"]],
+                        size = 1,
+                        methinfo = mi),
+    "'bsgenome' must be a 'BSgenome' object")
+  expect_error(MTuplesFromBSgenome(bsgenome = BSgenome.Hsapiens.UCSC.hg19, 
+                                   methinfo = "CG",
+                                   size = 1),
+               "'methinfo' must be a 'MethInfo' object")
+  expect_error(MTuplesFromBSgenome(bsgenome = BSgenome.Hsapiens.UCSC.hg19, 
+                                   methinfo = MethInfo("CN"),
+                                   size = 1), 
+               "'CN' methtype not yet supported")
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -237,11 +415,12 @@ test_that("clone,MTuples-method works", {
 
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### Combining
+### Combining and collapsing
 ###
-context("Combining MTuples")
+context("Combining and collapsings MTuples")
 
 test_that("c,MTuples-method works", {
+  expect_identical(c(mt1), mt1)
   expect_identical(c(mt1[1:5], mt1[6:10]), mt1)
   expect_identical(c(mt2[1:5], mt2[6:10]), mt2)
   expect_identical(c(mt3[1:5], mt3[6:10]), mt3)
@@ -260,6 +439,11 @@ test_that("c,MTuples-method works", {
   methinfo(mt1_) <- MethInfo("CHG")
   expect_identical(c(mt1, mt1_),
                    MTuplesFromGTuples(c(gt1, gt1), MethInfo(c("CG", "CHG"))))
+})
+
+# TODO
+test_that("strandCollapse,MTuples-method works", {
+  expect_true(FALSE)
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
