@@ -441,9 +441,30 @@ test_that("c,MTuples-method works", {
                    MTuplesFromGTuples(c(gt1, gt1), MethInfo(c("CG", "CHG"))))
 })
 
-# TODO
-test_that("strandCollapse,MTuples-method works", {
-  expect_true(FALSE)
+test_that("strandCollapse,MTuples-method works on good input", {
+   mt_pos <- MTuples(seqnames = c("chr1", "chr1", "chr2", "chr2", "chr2"),
+                     tuples = matrix(c(10, 15, 100, 110, 150,
+                                       15, 27, 110, 150, 154,
+                                       27, 33, 150, 154, 166),
+                                     ncol = 3),
+                     strand = "+",
+                     methinfo = MethInfo("CG"))
+   mt_neg <- MTuples(seqnames = c("chr1", "chr1", "chr2", "chr2", "chr2"),
+                     tuples = matrix(c(11, 16, 101, 111, 151,
+                                       16, 28, 111, 151, 155,
+                                       28, 34, 151, 155, 167),
+                                     ncol = 3),
+                     strand = "-",
+                     methinfo = MethInfo("CG"))
+  expect_identical(strandCollapse(mt_neg), mt_pos)
+})
+
+test_that("strandCollapse,MTuples-method errors on bad input", {
+  expect_error(strandCollapse(mt1), "Object contains unstranded tuples")
+  methtype(mt1) <- "CHG"
+  expect_error(strandCollapse(mt1), 
+               paste0("strandCollapse\\(\\) only supports 'MTuples' objects ",
+                      "with the 'CG' methtype"))
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -523,8 +523,8 @@ NULL
 setMethod("strandCollapse", "MTuples",
           function(x, ...) {
             if (methtype(x) != "CG") {
-              stop("strandCollapse() only supports ", class(x), " objects with the 'CG'", 
-                   " methtype")
+              stop("strandCollapse() only supports '", class(x), "' objects ", 
+                   "with the 'CG' methtype")
             }
             if (any(strand(x) == "*")) {
               stop("Object contains unstranded tuples")
