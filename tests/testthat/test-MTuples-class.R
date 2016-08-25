@@ -75,19 +75,23 @@ test_that(".OneTuplesFromDNAString() finds matches", {
   ir_cg <- .OneTuplesFromDNAString(dnastring, "CG")
   ir_chg <- .OneTuplesFromDNAString(dnastring, "CHG")
   ir_chh <- .OneTuplesFromDNAString(dnastring, "CHH")
-  
+
   match_sequence <- mapply(function(ir, methtype) {
     n <- nchar(methtype[[1]])
     val <- logical(length(ir))
     for (i in seq_len(length(ir))) {
       if (as.logical(mcols(ir)$strand[i] == "+")) {
-        val[i] <- dnastring[seq(start(ir)[i], 
-                                start(ir)[i] + n - 1)] %in% 
-          DNAStringSet(methtype)
+        # NOTE: This unusual call to %in% is because otherwise base::`%in%` is 
+        #       used and results in an error
+        val[i] <- S4Vectors::`%in%`(
+          dnastring[seq(start(ir)[i],  start(ir)[i] + n - 1)],
+          DNAStringSet(methtype))
       } else if (as.logical(mcols(ir)$strand[i] == "-")) {
-        val[i] <- dnastring[seq(start(ir)[i] - n + 1, 
-                                start(ir)[i])] %in% 
-          reverseComplement(DNAStringSet(methtype))
+        # NOTE: This unusual call to %in% is because otherwise base::`%in%` is 
+        #       used and results in an error
+        val[i] <- S4Vectors::`%in%`(
+          dnastring[seq(start(ir)[i] - n + 1, start(ir)[i])],
+          reverseComplement(DNAStringSet(methtype)))
       }
     }
     all(val)
