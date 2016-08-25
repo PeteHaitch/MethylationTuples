@@ -38,5 +38,6 @@ Collate:
     'AllUtilities.R'
     'MethInfo-class.R'
     'MTuples-class.R'
+    'MTuplesList-class.R'
     'MethylationTuples.R'
 RoxygenNote: 5.0.1

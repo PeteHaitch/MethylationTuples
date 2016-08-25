@@ -51,14 +51,30 @@ mt2 <- MTuplesFromGTuples(gt2, mi)
 mt3 <- MTuplesFromGTuples(gt3, mi)
 mq3 <- MTuplesFromGTuples(q3, mi)
 
+one_tuples <- MTuples(seqnames = "chr1", 
+                      tuples = matrix(c(seq(1L, 100L, 10L), 
+                                        seq(6L, 105L, 10L)), 
+                                      ncol = 1),
+                      strand = Rle(c("+", "-"), c(10, 10)),
+                      seqinfo = seqinfo,
+                      methinfo = mi)
+
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### DNAString
+### MTuplesList objects used in tests
+###
+mtl0 <- MTuplesList(mt0)
+mtl1 <- MTuplesList(mt1)
+mtl2 <- MTuplesList(mt2)
+mtl3 <- MTuplesList(mt3)
+mql3 <- MTuplesList(mq3)
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### DNAString objects used in tests
 ###
 
 # A string containing all trinucleotides beginning with C, as well as 
 # special methtype strings CHG, CHH, and CN
 # the different methylation types separated by poly-A
-
 c_tri_nucleotides <-
   data.frame(tri = apply(expand.grid("C", Biostrings::DNA_BASES, 
                                      Biostrings::DNA_BASES,
@@ -76,18 +92,3 @@ methtype_string <- paste(methtype_df$tri,
 dnastring <- c(Biostrings::DNAString(methtype_string), 
                Biostrings::reverseComplement(
                  Biostrings::DNAString(methtype_string)))
-                 
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### IRanges objects used in tests
-###
-
-one_tuples <- MTuples(seqnames = "chr1", 
-                      tuples = matrix(c(seq(1L, 100L, 10L), 
-                                        seq(6L, 105L, 10L)), 
-                                      ncol = 1),
-                      strand = Rle(c("+", "-"), c(10, 10)),
-                      seqinfo = seqinfo,
-                      methinfo = mi)
-
-# one_tuples <- IRanges(c(seq(1, 100, 10), seq(6, 105, 10)), width = 1)
-# mcols(one_tuples) <- DataFrame(strand = strand(Rle(c("+", "-"), c(10, 10))))
