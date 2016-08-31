@@ -4,6 +4,7 @@ cache: packages
 warnings_are_errors: false
 # Used for code coverage testing with covr and codecov
 r_github_packages:
+  - PeteHaitch/DSArray
   - jimhester/covr
 after_success:
   - Rscript -e 'covr::codecov()'
