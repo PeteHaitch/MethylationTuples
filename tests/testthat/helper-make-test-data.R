@@ -92,3 +92,73 @@ methtype_string <- paste(methtype_df$tri,
 dnastring <- c(Biostrings::DNAString(methtype_string), 
                Biostrings::reverseComplement(
                  Biostrings::DNAString(methtype_string)))
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### MethPat objects used in tests
+###
+
+c1a <- array(c(10:1, 1:10, 11:20, 20:11), 
+             dim = c(10, 2, 2), 
+             dimnames = list(NULL, c("s1", "s2"), c("M", "U")))
+c1d <- DSArray::DSArray(c1a, 2)
+c1h <- HDF5Array::HDF5Array(c1a)
+
+c2a <- array(c(10:1, 1:10, 11:20, 20:11, 30:21, 21:30, 31:40, 40:31),
+             dim = c(10, 2, 4), 
+             dimnames = list(NULL, 
+                             c("s1", "s2"), 
+                             c("MM", "MU", "UM", "UU")))
+c2d <- DSArray::DSArray(c2a, 2)
+c2h <- HDF5Array::HDF5Array(c2a)
+
+c3a <- array(c(10:1, 1:10, 11:20, 20:11, 30:21, 21:30, 31:40, 40:31,
+               50:41, 41:50, 51:60, 60:51, 70:61, 61:70, 71:80, 80:71),
+             dim = c(10, 2, 8), 
+             dimnames = list(NULL, 
+                             c("s1", "s2"),
+                             c("MMM", "MMU", "MUM", "MUU", 
+                               "UMM", "UMU", "UUM", "UUU")))
+c3d <- DSArray::DSArray(c3a, 2)
+c3h <- HDF5Array::HDF5Array(c3a)
+
+cd <- DataFrame(row.names = c("s1", "s2"))
+
+# Empty MethPat object
+mp0 <- MethPat()
+
+# 1-tuples
+mp1a <- MethPat(assays = c1a, 
+                rowTuples = mt1, 
+                colData = cd)
+mp1d <- MethPat(assays = c1d, 
+                rowTuples = mt1, 
+                colData = cd)
+mp1h <- MethPat(assays = c1h,
+                rowTuples = mt1,
+                colData = cd)
+lmp1 <- list(mp1a = mp1a, mp1d = mp1d, mp1h = mp1h)
+
+# 2-tuples
+mp2a <- MethPat(assays = c2a, 
+                rowTuples = mt2, 
+                colData = cd)
+mp2d <- MethPat(assays = c2d, 
+                rowTuples = mt2, 
+                colData = cd)
+mp2h <- MethPat(assays = c2h,
+                rowTuples = mt2,
+                colData = cd)
+lmp2 <- list(mp2a = mp2a, mp2d = mp2d, mp2h = mp2h)
+
+# 3-tuples
+mp3a <- MethPat(assays = c3a, 
+                rowTuples = mt3, 
+                colData = cd)
+mp3d <- MethPat(assays = c3d, 
+                rowTuples = mt3, 
+                colData = cd)
+mp3h <- MethPat(assays = c3h,
+                rowTuples = mt3,
+                colData = cd)
+lmp3 <- list(mp3a = mp3a, mp3d = mp3d, mp3h = mp3h)
+

@@ -7,6 +7,9 @@
 #' Please refer to the vignettes to see how to use the \pkg{MethylationTuples}
 #' package.
 #'
+#' @import SummarizedExperiment
+#' @import BiocGenerics
+#' 
 #' @docType package
 #' @name MethylationTuples-package
 #' 

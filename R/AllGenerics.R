@@ -19,11 +19,7 @@
 #' @rdname methinfo
 #' @importFrom methods setGeneric
 #' @export
-setGeneric("methinfo", 
-           function(x) {
-             standardGeneric("methinfo")
-           }
-)
+setGeneric("methinfo", function(x) standardGeneric("methinfo"))
 
 #' @rdname methinfo
 #' @inheritParams methinfo
@@ -34,11 +30,7 @@ setGeneric("methinfo",
 #' 
 #' @importFrom methods setGeneric
 #' @export
-setGeneric("methinfo<-", 
-           function(x, value) {
-             standardGeneric("methinfo<-")
-           }
-)
+setGeneric("methinfo<-", function(x, value) standardGeneric("methinfo<-"))
 
 ### -------------------------------------------------------------------------
 ### methtype
@@ -49,22 +41,14 @@ setGeneric("methinfo<-",
 #' 
 #' @importFrom methods setGeneric
 #' @export
-setGeneric("methtype", 
-           function(x) {
-             standardGeneric("methtype")
-           }
-)
+setGeneric("methtype", function(x) standardGeneric("methtype"))
 
 #' @rdname methinfo
 #' @inheritParams methinfo<-
 #' 
 #' @importFrom methods setGeneric
 #' @export
-setGeneric("methtype<-", 
-           function(x, value) {
-             standardGeneric("methtype<-")
-           }
-)
+setGeneric("methtype<-", function(x, value) standardGeneric("methtype<-"))
 
 ### -------------------------------------------------------------------------
 ### strandCollapse
@@ -100,8 +84,27 @@ setGeneric("methtype<-",
 #' @rdname strandCollapse
 #' @importFrom methods setGeneric
 #' @export
-setGeneric("strandCollapse", 
-           function(x, ...) {
-             standardGeneric("strandCollapse")
-           }
-)
+setGeneric("strandCollapse", function(x, ...) standardGeneric("strandCollapse"))
+
+### -------------------------------------------------------------------------
+### MethPat
+###
+
+#' @rdname MethPat-class
+#' @importFrom methods setGeneric
+#' @export
+setGeneric("MethPat", function(assays, rowTuples, ...) standardGeneric("MethPat"))
+
+### -------------------------------------------------------------------------
+### rowTuples
+###
+
+#' @rdname MethPat-class
+#' @importFrom methods setGeneric
+#' @export
+setGeneric("rowTuples", function(x, ...) standardGeneric("rowTuples"))
+
+#' @rdname MethPat-class
+#' @importFrom methods setGeneric
+#' @export
+setGeneric("rowTuples<-", function(x, ..., value) standardGeneric("rowTuples<-"))

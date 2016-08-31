@@ -27,3 +27,30 @@
   
   return(val)
 }
+
+#' Create the names of the possible methylation patterns at an m-tuple.
+#'
+#' This helper function constructs m-tuple names in the correct (alphabetical) 
+#' order for a given value of m
+#' @param m The size of the m-tuple. Must be an int.
+#' 
+#' @keywords internal
+#' 
+#' @examples
+#' .makeMethPatNames(1L)
+#' .makeMethPatNames(2L)
+#' .makeMethPatNames(3L)
+#' 
+#' @return A character vector
+.makeMethPatNames <- function(m) {
+  m <- as.integer(m)
+  sort(do.call(paste0, 
+               expand.grid(lapply(seq_len(m), function(x) {c("M", "U")}))))
+}
+
+#' Analogous to rownames and colnames
+#' A general version of \code{\link[DSArray]{slicenames}}
+#' @keywords internals
+.slicenames <- function(x) {
+  dimnames(x)[[3L]]
+}

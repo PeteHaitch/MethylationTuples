@@ -17,16 +17,19 @@ biocViews: DNAMethylation, DataImport, Software, MethylSeq
 VignetteBuilder: knitr
 Depends:
     R (>= 3.3.0),
-    GenomicTuples
+    GenomicTuples,
+    SummarizedExperiment
 Imports:
     BiocGenerics,
     Biostrings,
     BSgenome,
+    DSArray,
     GenomeInfoDb,
     GenomicRanges,
+    HDF5Array,
     IRanges,
     methods,
-    S4Vectors
+    S4Vectors,
 Suggests:
     BiocStyle,
     BSgenome.Hsapiens.UCSC.hg19,
@@ -39,5 +42,6 @@ Collate:
     'MethInfo-class.R'
     'MTuples-class.R'
     'MTuplesList-class.R'
+    'MethPat-class.R'
     'MethylationTuples.R'
 RoxygenNote: 5.0.1
